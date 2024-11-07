@@ -20,14 +20,18 @@ resources:
 - name: opsman-product
   type: s3
   source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
     access_key_id: ((s3_access_key_id))
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
-    regexp: \[ops-manager,(.*)\]ops-manager-vsphere*.ova
+    regexp: \[ops-manager,(.*)\]ops-manager-vsphere*.ova 
 
 # - name: pks-product
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -37,6 +41,8 @@ resources:
 # - name: pks-stemcell
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -46,6 +52,8 @@ resources:
 # - name: tas-product
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -55,6 +63,8 @@ resources:
 # - name: tas-stemcell
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -64,6 +74,8 @@ resources:
 # - name: healthwatch-product
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -73,6 +85,8 @@ resources:
 # - name: healthwatch-pas-exporter
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -82,6 +96,8 @@ resources:
 # - name: healthwatch-pks-exporter
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -91,6 +107,8 @@ resources:
 # - name: healthwatch-stemcell
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -100,6 +118,8 @@ resources:
 # - name: telemetry-product
 #   type: s3
 #   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
 #     access_key_id: ((minio_s3/access_key_id))
 #     secret_access_key: ((minio_s3/secret_access_key))
 #     aws_role_arn: ((minio_s3.role_arn))
@@ -119,7 +139,7 @@ resources:
 - name: platform-automation-image
   type: s3
   source:
-    endpoint: http://172.30.4.7:9000
+    endpoint: ((s3_endpoint))
     disable_ssl: true
     access_key_id: ((minio_s3/access_key_id))
     secret_access_key: ((minio_s3/secret_access_key))
