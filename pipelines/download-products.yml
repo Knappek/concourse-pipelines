@@ -294,6 +294,7 @@ jobs:
       - get: daily
         trigger: true
       - get: platform-automation-image
+        passed: [ fetch-platform-automation ]
         params:
           unpack: true
       - get: platform-automation-tasks
