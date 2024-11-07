@@ -1,7 +1,5 @@
-# The following line helps maintain current documentation at http://docs.pivotal.io.
-# code_snippet put-resources-pipeline start yaml
+# reference pipeline: https://docs.vmware.com/en/Platform-Automation-Toolkit-for-VMware-Tanzu/5.2/vmware-automation-toolkit/GUID-docs-pipelines-multiple-products.html
 
-# code_snippet resources-pipeline-resource-types start yaml
 resource_types:
 - name: pivnet
   type: docker-image
@@ -13,9 +11,7 @@ resource_types:
   source:
     repository: concourse/s3-resource
     tag: 1.2.1-ubuntu
-# code_snippet resources-pipeline-resource-types end yaml
 
-# code_snippet resources-pipeline-products start yaml
 resources:
 - name: opsman-product
   type: s3
@@ -27,107 +23,96 @@ resources:
     bucket: ((s3_pivnet_products_bucket))
     regexp: \[ops-manager,(.*)\]ops-manager-vsphere.*.ova
 
-# - name: pks-product
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: \[pivotal-container-service,(.*)\]pivotal-container-service-.*.pivotal
+- name: pks-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[pivotal-container-service,(.*)\]pivotal-container-service-.*.pivotal
 
-# - name: pks-stemcell
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: pks-stemcell/\[stemcells-ubuntu-jammy,(.*)\]light-bosh-stemcell-.*-google.*\.tgz
+- name: pks-stemcell
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: pks-stemcell/\[stemcells-ubuntu-jammy,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
 
-# - name: tas-product
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: \[elastic-runtime,(.*)\]srt-.*.pivotal
+- name: tas-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[elastic-runtime,(.*)\]cf-.*.pivotal
 
-# - name: tas-stemcell
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: tas-stemcell/\[stemcells-ubuntu-jammy,(.*)\]light-bosh-stemcell-.*-google.*\.tgz
+- name: tas-stemcell
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: tas-stemcell/\[stemcells-ubuntu-jammy,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
 
-# - name: healthwatch-product
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: \[p-healthwatch,(.*)\]healthwatch-\d.*.pivotal
+- name: healthwatch-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[p-healthwatch,(.*)\]healthwatch-\d.*.pivotal
 
-# - name: healthwatch-pas-exporter
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: \[p-healthwatch,(.*)\]healthwatch-pas-exporter.*.pivotal
+- name: healthwatch-pas-exporter
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[p-healthwatch,(.*)\]healthwatch-pas-exporter.*.pivotal
 
-# - name: healthwatch-pks-exporter
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: \[p-healthwatch,(.*)\]healthwatch-pks-exporter.*.pivotal
+- name: healthwatch-pks-exporter
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[p-healthwatch,(.*)\]healthwatch-pks-exporter.*.pivotal
 
-# - name: healthwatch-stemcell
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: healthwatch-stemcell/\[stemcells-ubuntu-jammy,(.*)\]light-bosh-stemcell-.*-google.*\.tgz
+- name: healthwatch-stemcell
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: healthwatch-stemcell/\[stemcells-ubuntu-jammy,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
 
-# - name: telemetry-product
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((minio_s3/access_key_id))
-#     secret_access_key: ((minio_s3/secret_access_key))
-#     aws_role_arn: ((minio_s3.role_arn))
-#     bucket: ((s3_pivnet_products_bucket))
-#     regexp: \[pivotal-telemetry-collector,(.*)\]telemetry-collector-.*.tgz
-# code_snippet resources-pipeline-products end yaml
+- name: telemetry-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[pivotal-telemetry-collector,(.*)\]telemetry-collector-.*.tgz
 
-# code_snippet resources-pipeline-platform-automation start yaml
 - name: platform-automation-pivnet
   type: pivnet
   source:
@@ -141,13 +126,11 @@ resources:
   source:
     endpoint: ((s3_endpoint))
     disable_ssl: true
-    access_key_id: ((minio_s3/access_key_id))
-    secret_access_key: ((minio_s3/secret_access_key))
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
     regexp: platform-automation-image-(.*).tgz
-# code_snippet resources-pipeline-platform-automation end yaml
 
-# code_snippet resources-pipeline-configurations start yaml
 - name: platform-automation-tasks
   type: git
   source:
@@ -155,6 +138,7 @@ resources:
     uri: ((pipeline-git-repo-uri))
     branch: main
     depth: 1
+
 - name: configuration
   type: git
   source:
@@ -162,16 +146,12 @@ resources:
     uri: ((pipeline-git-repo-uri))
     branch: main
     depth: 1
-# code_snippet resources-pipeline-configurations end yaml
 
-# code_snippet resources-pipeline-triggers start yaml
 - name: daily
   type: time
   source:
     interval: 24h
-# code_snippet resources-pipeline-triggers end yaml
 
-# code_snippet resources-pipeline-prepare-tasks-with-secrets start yaml
 # This task is used in multiple jobs
 # The yaml anchor "*prepare-tasks-with-secrets" is used in its place
 prepare-tasks-with-secrets: &prepare-tasks-with-secrets
@@ -184,16 +164,24 @@ prepare-tasks-with-secrets: &prepare-tasks-with-secrets
     config: configuration
   output_mapping:
     tasks: platform-automation-tasks
-# # code_snippet resources-pipeline-prepare-tasks-with-secrets end yaml
 
-# code_snippet resources-pipeline-jobs start yaml
 jobs:
+- name: fetch-platform-automation
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+  - in_parallel:
+    - put: platform-automation-image
+      params:
+        file: platform-automation-pivnet/*image*.tgz
+
 - name: fetch-opsman
   plan:
   - in_parallel:
     - get: daily
       trigger: true
     - get: platform-automation-image
+      passed: [ fetch-platform-automation ]
       params:
         unpack: true
     - get: platform-automation-tasks
@@ -213,186 +201,165 @@ jobs:
       params:
         file: downloaded-product/*
 
-# # code_snippet download-product-usage start yaml
-# - name: fetch-pks
-#   plan:
-#   - in_parallel:
-#     - get: daily
-#       trigger: true
-#     - get: platform-automation-image
-#       params:
-#         unpack: true
-#     - get: platform-automation-tasks
-#       params:
-#         unpack: true
-#     - get: configuration
-#   - task: prepare-tasks-with-secrets
-#     <<: *prepare-tasks-with-secrets
-#   - task: download-pks-product-and-stemcell
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/download-product.yml
-#     params:
-#       CONFIG_FILE: download-product-pivnet/download-pks.yml
-#     input_mapping:
-#       config: configuration
-#     output_mapping: {downloaded-stemcell: pks-stemcell}
-#   - in_parallel:
-#       - put: pks-product
-#         params:
-#           file: downloaded-product/*.pivotal
-#       - put: pks-stemcell
-#         params:
-#           file: pks-stemcell/*.tgz
-# # code_snippet download-product-usage end
-
-# - name: fetch-tas
-#   plan:
-#     - in_parallel:
-#       - get: daily
-#         trigger: true
-#       - get: platform-automation-image
-#         params:
-#           unpack: true
-#       - get: platform-automation-tasks
-#         params:
-#           unpack: true
-#       - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-tas-product-and-stemcell
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       params:
-#         CONFIG_FILE: download-product-pivnet/download-tas.yml
-#       input_mapping:
-#         config: configuration
-#       output_mapping: {downloaded-stemcell: tas-stemcell}
-#     - in_parallel:
-#         - put: tas-product
-#           params:
-#             file: downloaded-product/*.pivotal
-#         - put: tas-stemcell
-#           params:
-#             file: tas-stemcell/*.tgz
-
-# - name: fetch-healthwatch
-#   plan:
-#     - in_parallel:
-#       - get: daily
-#         trigger: true
-#       - get: platform-automation-image
-#         params:
-#           unpack: true
-#       - get: platform-automation-tasks
-#         params:
-#           unpack: true
-#       - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-healthwatch-product-and-stemcell
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       params:
-#         CONFIG_FILE: download-product-pivnet/download-healthwatch.yml
-#       input_mapping:
-#         config: configuration
-#       output_mapping: {downloaded-stemcell: healthwatch-stemcell}
-#     - in_parallel:
-#         - put: healthwatch-product
-#           params:
-#             file: downloaded-product/*healthwatch-2*.pivotal
-#         - put: healthwatch-stemcell
-#           params:
-#             file: healthwatch-stemcell/*.tgz
-
-# - name: fetch-healthwatch-pas-exporter
-#   plan:
-#     - in_parallel:
-#       - get: daily
-#         trigger: true
-#       - get: platform-automation-image
-#         params:
-#           unpack: true
-#       - get: platform-automation-tasks
-#         params:
-#           unpack: true
-#       - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-healthwatch-pas-exporter-and-stemcell
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       params:
-#         CONFIG_FILE: download-product-pivnet/download-healthwatch-pas-exporter.yml
-#       input_mapping:
-#         config: configuration
-#     - in_parallel:
-#         - put: healthwatch-pas-exporter
-#           params:
-#             file: downloaded-product/*healthwatch-pas-exporter*.pivotal
-
-# - name: fetch-healthwatch-pks-exporter
-#   plan:
-#     - in_parallel:
-#       - get: daily
-#         trigger: true
-#       - get: platform-automation-image
-#         params:
-#           unpack: true
-#       - get: platform-automation-tasks
-#         params:
-#           unpack: true
-#       - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-healthwatch-pks-exporter-and-stemcell
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       params:
-#         CONFIG_FILE: download-product-pivnet/download-healthwatch-pks-exporter.yml
-#       input_mapping:
-#         config: configuration
-#     - in_parallel:
-#         - put: healthwatch-pks-exporter
-#           params:
-#             file: downloaded-product/*healthwatch-pks-exporter*.pivotal
-
-# - name: fetch-telemetry-collector
-#   plan:
-#     - in_parallel:
-#         - get: daily
-#           trigger: true
-#         - get: platform-automation-image
-#           params:
-#             unpack: true
-#         - get: platform-automation-tasks
-#           params:
-#             unpack: true
-#         - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-telemetry-product
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       params:
-#         CONFIG_FILE: download-product-pivnet/download-telemetry.yml
-#       input_mapping:
-#         config: configuration
-#     - in_parallel:
-#         - put: telemetry-product
-#           params:
-#             file: downloaded-product/*
-
-- name: fetch-platform-automation
-  # We use the pivnet resource to bootstrap the pipeline,
-  # and because this product is part of the pipeline, not the foundation
+- name: fetch-pks
   plan:
-  - get: platform-automation-pivnet
-    trigger: true
   - in_parallel:
-    - put: platform-automation-image
+    - get: daily
+      trigger: true
+    - get: platform-automation-image
+      passed: [ fetch-platform-automation ]
       params:
-        file: platform-automation-pivnet/*image*.tgz
-# code_snippet resources-pipeline-jobs end yaml
-# code_snippet put-resources-pipeline end
-# The previous line helps maintain current documentation at http://docs.pivotal.io.
+        unpack: true
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: download-pks-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: download-product-pivnet/download-pks.yml
+    input_mapping:
+      config: configuration
+    output_mapping: {downloaded-stemcell: pks-stemcell}
+  - in_parallel:
+      - put: pks-product
+        params:
+          file: downloaded-product/*.pivotal
+      - put: pks-stemcell
+        params:
+          file: pks-stemcell/*.tgz
+
+- name: fetch-tas
+  plan:
+    - in_parallel:
+      - get: daily
+        trigger: true
+      - get: platform-automation-image
+        passed: [ fetch-platform-automation ]
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-tas-product-and-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-tas.yml
+      input_mapping:
+        config: configuration
+      output_mapping: {downloaded-stemcell: tas-stemcell}
+    - in_parallel:
+        - put: tas-product
+          params:
+            file: downloaded-product/*.pivotal
+        - put: tas-stemcell
+          params:
+            file: tas-stemcell/*.tgz
+
+- name: fetch-healthwatch
+  plan:
+    - in_parallel:
+      - get: daily
+        trigger: true
+      - get: platform-automation-image
+        passed: [ fetch-platform-automation ]
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-healthwatch-product-and-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-healthwatch.yml
+      input_mapping:
+        config: configuration
+      output_mapping: {downloaded-stemcell: healthwatch-stemcell}
+    - in_parallel:
+        - put: healthwatch-product
+          params:
+            file: downloaded-product/*healthwatch-2*.pivotal
+        - put: healthwatch-stemcell
+          params:
+            file: healthwatch-stemcell/*.tgz
+
+- name: fetch-healthwatch-pas-exporter
+  plan:
+    - in_parallel:
+      - get: daily
+        trigger: true
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-healthwatch-pas-exporter-and-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-healthwatch-pas-exporter.yml
+      input_mapping:
+        config: configuration
+    - in_parallel:
+        - put: healthwatch-pas-exporter
+          params:
+            file: downloaded-product/*healthwatch-pas-exporter*.pivotal
+
+- name: fetch-healthwatch-pks-exporter
+  plan:
+    - in_parallel:
+      - get: daily
+        trigger: true
+      - get: platform-automation-image
+        passed: [ fetch-platform-automation ]
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-healthwatch-pks-exporter-and-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-healthwatch-pks-exporter.yml
+      input_mapping:
+        config: configuration
+    - in_parallel:
+        - put: healthwatch-pks-exporter
+          params:
+            file: downloaded-product/*healthwatch-pks-exporter*.pivotal
+
+- name: fetch-telemetry-collector
+  plan:
+    - in_parallel:
+        - get: daily
+          trigger: true
+        - get: platform-automation-image
+          passed: [ fetch-platform-automation ]
+          params:
+            unpack: true
+        - get: platform-automation-tasks
+        - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-telemetry-product
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-telemetry.yml
+      input_mapping:
+        config: configuration
+    - in_parallel:
+        - put: telemetry-product
+          params:
+            file: downloaded-product/*
+
+
