@@ -198,6 +198,7 @@ jobs:
         unpack: true
     - get: platform-automation-tasks
     - get: configuration
+      trigger: true
   - task: prepare-tasks-with-secrets
     <<: *prepare-tasks-with-secrets
   - task: download-opsman-image
