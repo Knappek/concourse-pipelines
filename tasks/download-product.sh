@@ -4,8 +4,6 @@
 cat /var/version && echo ""
 set -eux
 
-ls -la 
-
 if [ -z "${SOURCE}" ]; then
   echo "No source was provided."
   echo "Please provide pivnet, s3, gcs, or azure."
