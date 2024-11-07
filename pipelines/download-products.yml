@@ -125,16 +125,6 @@ resources:
     product_version: 5\.(.*)
     sort_by: semver
 
-- name: platform-automation-tasks
-  type: s3
-  source:
-    endpoint: http://172.30.4.7:9000
-    disable_ssl: true
-    access_key_id: ((minio_s3/access_key_id))
-    secret_access_key: ((minio_s3/secret_access_key))
-    bucket: ((s3_pivnet_products_bucket))
-    regexp: platform-automation-tasks-(.*).zip
-
 - name: platform-automation-image
   type: s3
   source:
@@ -147,16 +137,19 @@ resources:
 # code_snippet resources-pipeline-platform-automation end yaml
 
 # code_snippet resources-pipeline-configurations start yaml
+- name: platform-automation-tasks
+  type: git
+  source:
+    private_key: ((pipeline-git-repo-key.private_key))
+    uri: ((pipeline-git-repo-uri))
+    branch: main
+    depth: 1
 - name: configuration
   type: git
   source:
     private_key: ((pipeline-git-repo-key.private_key))
     uri: ((pipeline-git-repo-uri))
     branch: main
-    submodules:
-    - concourse-pipelines
-    paths:
-    - concourse-pipelines
     depth: 1
 # code_snippet resources-pipeline-configurations end yaml
 
@@ -198,29 +191,6 @@ jobs:
     - get: configuration
   - task: prepare-tasks-with-secrets
     <<: *prepare-tasks-with-secrets
-  - task: debug
-    image: platform-automation-image
-    config:
-      platform: linux
-      run:
-        path: sh
-        args:
-          - -c
-          - |
-            cat platform-automation-tasks/tasks/download-product.yml
-            echo
-            echo
-            echo
-            echo
-            echo "##############################################"
-            echo
-            echo
-            echo
-            echo
-            cat download-product-pivnet/download-opsman.yml
-            exit 1
-    input_mapping:
-      config: configuration
   - task: download-opsman-image
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
