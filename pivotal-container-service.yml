@@ -1,0 +1,2202 @@
+addons: []
+instance_groups:
+- azs:
+  - az1
+  env:
+    bosh:
+      password: $6$d7ee738e732ee646$If/D67bZAVvM.ulsA5bUEJv3T30uknpW3DGVh1eILssfYcNGn07w59EJT7EyvuW8c9IH2Mm/LIVtSpZRjodhU1
+  instances: 1
+  jobs:
+  - consumes: {}
+    name: bpm
+    provides: {}
+    release: bpm
+  - consumes:
+      galera-agent:
+        from: galera-agent
+      mysql:
+        from: pxc-mysql
+    name: pxc-mysql
+    properties:
+      admin_password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_mysql_admin_password.value))
+      engine_config:
+        binlog:
+          enabled: true
+          expire_logs_days: 3
+        galera:
+          enabled: true
+        innodb_flush_log_at_trx_commit: 2
+      port: 3333
+      pxc_enabled: true
+      seeded_databases:
+      - name: pks
+        password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_pks_db_password.value))
+        username: pks
+      - name: uaa
+        password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_uaa_db_password.value))
+        username: uaa
+      - name: telemetry
+        password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_telemetry_db_password.value))
+        username: telemetry
+      tls:
+        client:
+          ca: ((pks_db_client_2020.ca))
+        enforce_tls_v1_2: true
+        galera: ((galera_server_certificate))
+        server: ((mysql_server_certificate_proxy))
+    provides:
+      mysql:
+        as: pxc-mysql
+    release: pxc
+  - consumes: {}
+    name: tune-mysql
+    properties:
+      timeout: 600000
+    provides: {}
+    release: pks-api
+  - consumes:
+      galera-agent:
+        from: galera-agent
+    name: bootstrap
+    provides: {}
+    release: pxc
+  - consumes:
+      mysql:
+        from: pxc-mysql
+    name: cluster-health-logger
+    properties:
+      db_password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_mysql_cluster_health_password.value))
+    provides: {}
+    release: pxc
+  - consumes:
+      mysql:
+        from: pxc-mysql
+    name: galera-agent
+    properties:
+      db_password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_mysql_galera_healthcheck_db_password.value))
+      endpoint_password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_mysql_galera_healthcheck_endpoint_password.value))
+    provides:
+      galera-agent:
+        as: galera-agent
+    release: pxc
+  - consumes:
+      mysql:
+        from: pxc-mysql
+    name: gra-log-purger
+    provides: {}
+    release: pxc
+  - consumes:
+      galera-agent:
+        from: galera-agent
+      mysql:
+        from: pxc-mysql
+    name: proxy
+    properties:
+      api_password: ((proxy_api_credentials.password))
+      logging.format.timestamp: rfc3339
+    provides:
+      mysql-database:
+        as: mysql-database
+        shared: true
+      proxy:
+        as: proxy
+        shared: true
+    release: pxc
+  - consumes:
+      proxy:
+        from: proxy
+    name: pks-proxy-aliases
+    provides: {}
+    release: pks-api
+  - consumes: {}
+    name: syslog_forwarder
+    properties:
+      syslog:
+        migration:
+          disabled: true
+    provides: {}
+    release: syslog
+  lifecycle: service
+  name: pks-db
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: tkgi
+  persistent_disk_type: "10240"
+  properties: {}
+  stemcell: bosh-vsphere-esxi-ubuntu-jammy-go_agent
+  update:
+    max_in_flight: 1
+  vm_type: large.disk
+- azs:
+  - az1
+  env:
+    bosh:
+      password: $6$91a6b627cd614e97$d17CPJpbCzvCeKmN1Ei8U8lTv5zIXzd.OIRHD0Cwo1hSxtG8GScr8GEPs6UzIniKJ9FHo9mQhkbfjCw9LSm42.
+  instances: 1
+  jobs:
+  - consumes: {}
+    name: service-adapter
+    properties:
+      deployment:
+        broker_deployment_name: pivotal-container-service-5d2a0f9aeb38cb92c13b
+        director_url: https://172.30.4.3:25555
+        kubo_odb_ca_2018: ((pks_api_internal_2018.ca))
+      nsxt:
+        ncp_upgradable:
+          ha:
+            heartbeat_period: 6
+            master_timeout: 18
+            update_timeout: 12
+          k8s:
+            enable_lb_crd: true
+          nsx_v3:
+            enable_nsx_err_crd: true
+            insecure: true
+            nsx_api_ca_cert: |-
+              -----BEGIN CERTIFICATE-----
+              MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+              BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+              MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+              VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+              OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+              U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+              BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+              AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+              9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+              NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+              q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+              ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+              CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+              BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+              8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+              yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+              wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+              +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+              NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+              a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+              -----END CERTIFICATE-----
+            nsx_api_managers: 172.20.16.11
+        upgrade_defaults:
+          nsxt_dns_lookup_mode: NO_LOOKUP
+          nsxt_fip_pool_ids: []
+          nsxt_ingress_prefix: ""
+          nsxt_lb_service_id: ""
+          nsxt_lb_service_size: ""
+          nsxt_pod_ip_block_cidrs: ""
+          nsxt_pod_subnet_prefix: 0
+          nsxt_single_tier_topology: false
+          nsxt_t0_router_id: ""
+          nsxt_top_tier_router_id: ""
+      syslog:
+        migration:
+          disabled: true
+    provides: {}
+    release: kubo-service-adapter
+  - consumes:
+      broker:
+        from: proxy-broker
+      proxy:
+        from: proxy
+    name: pks-api
+    properties:
+      pks:
+        api:
+          private_registries_enabled: true
+          retry_enabled: false
+        bosh_credhub_api:
+          url: https://172.30.4.3:8844
+        bosh_director_root_ca_cert: |
+          -----BEGIN CERTIFICATE-----
+          MIIDUTCCAjmgAwIBAgIVAPC2zGjoLauAoe/urzMBbPbZfdxNMA0GCSqGSIb3DQEB
+          CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjEw
+          Mzk0NVoXDTI4MTAwNjEwMzk0NFowHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+          dm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZFS+7fqECD+9R
+          loAMlipQ646EqIv1zZ2vHERnRn9qrJtJTRGjDz0ohYo+lG9KjPTAAWSWfifZqvln
+          kTzyfLhNdh5ejXCQS7+X+BhQPJjLXz9RdIeckseocvnFQQVEeeswteCpJczJ4gla
+          kFsONq2Y/3r5kmsagH7xYTEnFEB2wlGyMG9jscJwyScZjp2k+7eD4uG2tu8ak9SF
+          PA2hnqz+xAbvVAPV+mi9D2Esf46Q4ojvMx2xxaAClsYk6QW4bqZ63XY72jlm+wEa
+          UFxiSNxE3ggVpqJylR5aS9HQ2gYlP/uvsCaHEihOVrgH/7M+mBfnl9+faIpbFS6J
+          q+8UWKSJAgMBAAGjgYMwgYAwHQYDVR0OBBYEFNW43JdRJDZ4SnPdTe9/bd11NnQF
+          MB8GA1UdIwQYMBaAFNW43JdRJDZ4SnPdTe9/bd11NnQFMB0GA1UdJQQWMBQGCCsG
+          AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB
+          BjANBgkqhkiG9w0BAQsFAAOCAQEAkTtHXlH+BW4uZAbS+neforyHE1T7aNTHdibZ
+          0CUeaSCyuESJhaPHKRSD/6uYnqXHul2DXe7f9iWOSxuQL+QUs4SADjh+BrG0OOHz
+          C9Z7gS5TNUllfKEV2hvZ25IHymd3DT2/vLHrfrDLPfvVvuamv0soaN6ZrFPZEMmE
+          196ygRZV286hbcwv8gkgnRvCqvblVDGu8yqZKEXG/sYGt9KswDJz/5pA6OXi1bfG
+          9tqaBnErsGjHOVyEjsZLcYPYtFH4t5hjy8CZpuLvV5GLHC726yn4BAVpRIU5E0ec
+          A53R5deXD7NTEWMBB24sb9pTSAa2TydZ1aCWdMYto2qZQuvWzA==
+          -----END CERTIFICATE-----
+        bosh_uaa_api:
+          authentication:
+            client_credentials:
+              client_id: pivotal-container-service-5d2a0f9aeb38cb92c13b
+              client_secret: ((/opsmgr/director/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_client_secret.value))
+          url: https://172.30.4.3:8443
+        db_client_tls: ((pks_db_client_2020))
+        db_password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_pks_db_password.value))
+        feign_client_read_timeout: 60000
+        fqdn: api.tkgi.local.knappster.de
+        iaas:
+          name: vSphere
+        internal_tls:
+          certificate: ((pks_api_internal_2018.certificate))
+          private_key: ((pks_api_internal_2018.private_key))
+        internal_tls_ca:
+          certificate: ((pks_api_internal_2018.ca))
+        nsxt:
+          ca_cert: |-
+            -----BEGIN CERTIFICATE-----
+            MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+            BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+            MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+            VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+            OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+            U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+            BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+            AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+            9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+            NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+            q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+            ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+            CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+            BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+            8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+            yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+            wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+            +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+            NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+            a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+            -----END CERTIFICATE-----
+          host: 172.20.16.11
+          insecure: true
+          policy_mode: true
+          proxy: null
+          proxy_enabled: true
+          superuser_cert: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.cert_pem))
+          superuser_key: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.private_key_pem))
+        password: ((pks_api_basicauth.password))
+        pks_client_secret: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pks_api_uaa_client.value))
+        telemetry:
+          authenticationMode: service_account
+          enabled: true
+          eventEmitterBaseUrl: https://localhost:8888
+          tls:
+            certificate: ((pks_api_internal_2018.certificate))
+            private_key: ((pks_api_internal_2018.private_key))
+        tls:
+          certificate: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pivotal-container-service/pks_tls.cert_pem))
+          private_key: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pivotal-container-service/pks_tls.private_key_pem))
+        uaa_service_admin_client_id: service_admin_client
+        uaa_service_admin_client_secret: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pks_services_admin_uaa_client.value))
+        username: ((pks_api_basicauth.username))
+        vm-catalog:
+        - builtin: true
+          cpu: 1
+          ephemeral_disk: 8192
+          name: nano
+          ram: 512
+        - builtin: true
+          cpu: 1
+          ephemeral_disk: 8192
+          name: micro
+          ram: 1024
+        - builtin: true
+          cpu: 2
+          ephemeral_disk: 8192
+          name: micro.ram
+          ram: 1024
+        - builtin: true
+          cpu: 1
+          ephemeral_disk: 8192
+          name: small
+          ram: 2048
+        - builtin: true
+          cpu: 1
+          ephemeral_disk: 16384
+          name: small.disk
+          ram: 2048
+        - builtin: true
+          cpu: 2
+          ephemeral_disk: 8192
+          name: medium
+          ram: 4096
+        - builtin: true
+          cpu: 1
+          ephemeral_disk: 8192
+          name: medium.mem
+          ram: 8192
+        - builtin: true
+          cpu: 2
+          ephemeral_disk: 32768
+          name: medium.disk
+          ram: 4096
+        - builtin: true
+          cpu: 4
+          ephemeral_disk: 8192
+          name: medium.cpu
+          ram: 2048
+        - builtin: true
+          cpu: 2
+          ephemeral_disk: 16384
+          name: large
+          ram: 8192
+        - builtin: true
+          cpu: 1
+          ephemeral_disk: 16384
+          name: large.mem
+          ram: 16384
+        - builtin: true
+          cpu: 2
+          ephemeral_disk: 65536
+          name: large.disk
+          ram: 8192
+        - builtin: true
+          cpu: 4
+          ephemeral_disk: 16384
+          name: large.cpu
+          ram: 4096
+        - builtin: true
+          cpu: 4
+          ephemeral_disk: 32768
+          name: xlarge
+          ram: 16384
+        - builtin: true
+          cpu: 2
+          ephemeral_disk: 32768
+          name: xlarge.mem
+          ram: 32768
+        - builtin: true
+          cpu: 4
+          ephemeral_disk: 131072
+          name: xlarge.disk
+          ram: 16384
+        - builtin: true
+          cpu: 8
+          ephemeral_disk: 32768
+          name: xlarge.cpu
+          ram: 8192
+        - builtin: true
+          cpu: 8
+          ephemeral_disk: 65536
+          name: 2xlarge
+          ram: 32768
+        - builtin: true
+          cpu: 4
+          ephemeral_disk: 65536
+          name: 2xlarge.mem
+          ram: 65536
+        - builtin: true
+          cpu: 8
+          ephemeral_disk: 262144
+          name: 2xlarge.disk
+          ram: 32768
+        - builtin: true
+          cpu: 16
+          ephemeral_disk: 65536
+          name: 2xlarge.cpu
+          ram: 16384
+    provides:
+      pks_api:
+        as: pks_api_http
+      pks_api_fqdn_only:
+        as: pks_api_fqdn_only_http
+        shared: true
+      pks_api_shared:
+        as: pks_api_shared_http
+        shared: true
+      pks_uaa_service_admin_client:
+        as: pks_uaa_service_admin_client
+        shared: true
+    release: pks-api
+  - consumes: {}
+    name: bosh-update-config
+    properties:
+      bosh:
+        authentication:
+          uaa:
+            client_id: pivotal-container-service-5d2a0f9aeb38cb92c13b
+            client_secret: ((/opsmgr/director/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_client_secret.value))
+            url: https://172.30.4.3:8443
+        root_ca_cert: |
+          -----BEGIN CERTIFICATE-----
+          MIIDUTCCAjmgAwIBAgIVAPC2zGjoLauAoe/urzMBbPbZfdxNMA0GCSqGSIb3DQEB
+          CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjEw
+          Mzk0NVoXDTI4MTAwNjEwMzk0NFowHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+          dm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZFS+7fqECD+9R
+          loAMlipQ646EqIv1zZ2vHERnRn9qrJtJTRGjDz0ohYo+lG9KjPTAAWSWfifZqvln
+          kTzyfLhNdh5ejXCQS7+X+BhQPJjLXz9RdIeckseocvnFQQVEeeswteCpJczJ4gla
+          kFsONq2Y/3r5kmsagH7xYTEnFEB2wlGyMG9jscJwyScZjp2k+7eD4uG2tu8ak9SF
+          PA2hnqz+xAbvVAPV+mi9D2Esf46Q4ojvMx2xxaAClsYk6QW4bqZ63XY72jlm+wEa
+          UFxiSNxE3ggVpqJylR5aS9HQ2gYlP/uvsCaHEihOVrgH/7M+mBfnl9+faIpbFS6J
+          q+8UWKSJAgMBAAGjgYMwgYAwHQYDVR0OBBYEFNW43JdRJDZ4SnPdTe9/bd11NnQF
+          MB8GA1UdIwQYMBaAFNW43JdRJDZ4SnPdTe9/bd11NnQFMB0GA1UdJQQWMBQGCCsG
+          AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB
+          BjANBgkqhkiG9w0BAQsFAAOCAQEAkTtHXlH+BW4uZAbS+neforyHE1T7aNTHdibZ
+          0CUeaSCyuESJhaPHKRSD/6uYnqXHul2DXe7f9iWOSxuQL+QUs4SADjh+BrG0OOHz
+          C9Z7gS5TNUllfKEV2hvZ25IHymd3DT2/vLHrfrDLPfvVvuamv0soaN6ZrFPZEMmE
+          196ygRZV286hbcwv8gkgnRvCqvblVDGu8yqZKEXG/sYGt9KswDJz/5pA6OXi1bfG
+          9tqaBnErsGjHOVyEjsZLcYPYtFH4t5hjy8CZpuLvV5GLHC726yn4BAVpRIU5E0ec
+          A53R5deXD7NTEWMBB24sb9pTSAa2TydZ1aCWdMYto2qZQuvWzA==
+          -----END CERTIFICATE-----
+        url: https://172.30.4.3:25555
+      cloud_config:
+        vm_extensions:
+        - cloud_properties:
+            vmx_options:
+              disk.enableUUID: "1"
+          name: disk_enable_uuid
+        - cloud_properties:
+            upgrade_hw_version: true
+          name: set_version_hardware
+      cloud_config_name: pivotal-container-service-5d2a0f9aeb38cb92c13b
+    provides: {}
+    release: pks-api
+  - consumes: {}
+    name: metric-sink-pks-control-plane
+    properties:
+      inputs:
+        node_exporter:
+          enabled: false
+        telegraf:
+          enabled: false
+      outputs: |
+        [[outputs.discard]]
+    provides: {}
+    release: bosh-metric-sink
+  - consumes: {}
+    name: metric-sink-ops-file
+    properties:
+      inputs:
+        etcd:
+          enabled: false
+        kube_apiserver:
+          enabled: false
+        kube_controller_manager:
+          enabled: false
+        kube_scheduler:
+          enabled: false
+        kubelet:
+          ca_name: kubo_ca_2018
+          enabled: false
+        node_exporter_master:
+          enabled: false
+        node_exporter_worker:
+          enabled: false
+        telegraf:
+          enabled: false
+      outputs: |
+        [[outputs.discard]]
+    provides: {}
+    release: bosh-metric-sink
+  - consumes: {}
+    name: broker
+    provides:
+      broker:
+        as: odb-broker
+    release: pks-api
+  - consumes:
+      broker:
+        from: odb-broker
+    name: pks-nsx-t-osb-proxy
+    properties:
+      bosh:
+        authentication:
+          uaa:
+            client_id: pivotal-container-service-5d2a0f9aeb38cb92c13b
+            client_secret: ((/opsmgr/director/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_client_secret.value))
+        cloud_config_dns: 192.168.178.1
+        cloud_config_prefix: service-instance
+        log_level: INFO
+        root_ca_cert: |
+          -----BEGIN CERTIFICATE-----
+          MIIDUTCCAjmgAwIBAgIVAPC2zGjoLauAoe/urzMBbPbZfdxNMA0GCSqGSIb3DQEB
+          CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjEw
+          Mzk0NVoXDTI4MTAwNjEwMzk0NFowHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+          dm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZFS+7fqECD+9R
+          loAMlipQ646EqIv1zZ2vHERnRn9qrJtJTRGjDz0ohYo+lG9KjPTAAWSWfifZqvln
+          kTzyfLhNdh5ejXCQS7+X+BhQPJjLXz9RdIeckseocvnFQQVEeeswteCpJczJ4gla
+          kFsONq2Y/3r5kmsagH7xYTEnFEB2wlGyMG9jscJwyScZjp2k+7eD4uG2tu8ak9SF
+          PA2hnqz+xAbvVAPV+mi9D2Esf46Q4ojvMx2xxaAClsYk6QW4bqZ63XY72jlm+wEa
+          UFxiSNxE3ggVpqJylR5aS9HQ2gYlP/uvsCaHEihOVrgH/7M+mBfnl9+faIpbFS6J
+          q+8UWKSJAgMBAAGjgYMwgYAwHQYDVR0OBBYEFNW43JdRJDZ4SnPdTe9/bd11NnQF
+          MB8GA1UdIwQYMBaAFNW43JdRJDZ4SnPdTe9/bd11NnQFMB0GA1UdJQQWMBQGCCsG
+          AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB
+          BjANBgkqhkiG9w0BAQsFAAOCAQEAkTtHXlH+BW4uZAbS+neforyHE1T7aNTHdibZ
+          0CUeaSCyuESJhaPHKRSD/6uYnqXHul2DXe7f9iWOSxuQL+QUs4SADjh+BrG0OOHz
+          C9Z7gS5TNUllfKEV2hvZ25IHymd3DT2/vLHrfrDLPfvVvuamv0soaN6ZrFPZEMmE
+          196ygRZV286hbcwv8gkgnRvCqvblVDGu8yqZKEXG/sYGt9KswDJz/5pA6OXi1bfG
+          9tqaBnErsGjHOVyEjsZLcYPYtFH4t5hjy8CZpuLvV5GLHC726yn4BAVpRIU5E0ec
+          A53R5deXD7NTEWMBB24sb9pTSAa2TydZ1aCWdMYto2qZQuvWzA==
+          -----END CERTIFICATE-----
+        url: https://172.30.4.3:25555
+      create_network_with_lb: false
+      enabled: true
+      fip_address_parameter: nsxt_fip_address
+      generate_lb_name: true
+      kubernetes_master_host_parameter: kubernetes_master_host
+      kubo-odb-ca-removed: true
+      lb_service_id_parameter: nsxt_lb_service_id
+      log_level: INFO
+      maintenance_info:
+        public:
+          docker: 18.09.9
+          kubernetes: 1.15.5
+          pks: 1.20.0-build.52
+          stemcell: "1.555"
+      network_name_parameter: nsxt_network_name
+      network_profile_name_parameter: network_profile_name
+      nsxt:
+        ca_cert: |-
+          -----BEGIN CERTIFICATE-----
+          MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+          BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+          MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+          VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+          OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+          U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+          BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+          AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+          9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+          NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+          q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+          ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+          CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+          BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+          8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+          yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+          wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+          +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+          NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+          a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+          -----END CERTIFICATE-----
+        floating_ip_pool_ids:
+        - tkgi-floating-ips
+        host: 172.20.16.11
+        insecure: true
+        ip_block_id: tkgi-nodes
+        log_level: INFO
+        nat_mode: true
+        network_prefix: pks
+        pod_ip_block_id: tkgi-pods
+        policy_api: true
+        superuser_cert: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.cert_pem))
+        superuser_key: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.private_key_pem))
+        t0_router_id: t0-router
+      original_network_profile_content_parameter: original_network_profile_content
+      password: ((odb_broker_basicauth.password))
+      plans:
+      - description: 'Example: This plan will configure a lightweight kubernetes cluster.
+          Not recommended for production workloads.'
+        instance_groups:
+        - azs:
+          - az1
+          instances: 1
+          name: master
+          networks:
+          - tkgi
+          persistent_disk_type: "10240"
+          vm_extensions: []
+          vm_type: medium.disk
+        - azs:
+          - az1
+          instances: 1
+          name: worker
+          networks:
+          - tkgi
+          persistent_disk_type: "51200"
+          vm_extensions: []
+          vm_type: xlarge
+        - azs:
+          - az1
+          instances: 1
+          lifecycle: errand
+          name: apply-addons
+          networks:
+          - tkgi
+          vm_extensions: []
+          vm_type: micro
+        lifecycle_errands:
+          post_deploy:
+          - name: apply-addons
+          - name: wavefront-proxy-errand
+          - disabled: false
+            name: attach-to-tmc
+          - name: vrops-errand
+          - name: telemetry-agent
+          pre_delete:
+          - disabled: false
+            name: detach-from-tmc
+          - name: drain-cluster
+        metadata:
+          allow-privileged-containers: false
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          master_instances: 1
+          master_vm_type: medium.disk
+          max_worker_instances: 50
+          worker_instances: 1
+          worker_vm_type: xlarge
+        name: small
+        plan_id: 8A0E21A8-8072-4D80-B365-D1F502085560
+        properties:
+          addons-spec: |+
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: pks-system
+            ---
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: observability-manager
+              namespace: pks-system
+              labels:
+                app: observability-manager
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  app: observability-manager
+              template:
+                metadata:
+                  labels:
+                    app: observability-manager
+                spec:
+                  serviceAccountName: observability-manager
+                  containers:
+                  - name: observability-manager
+                    image: cnabu-docker-local.artifactory.eng.vmware.com/oratos/observability-manager:451e147f8717f1ac477a4bbe95782d870e877673
+                    imagePullPolicy: Never
+                    securityContext:
+                      readOnlyRootFilesystem: true
+                    env:
+                    - name: DEPLOY_LOGS
+                      value: "true"
+                    - name: DEPLOY_METRICS
+                      value: "true"
+                    - name: DEPLOY_NODE_EXPORTER
+                      value: "false"
+                    - name: FLUENT_BIT_CONTAINER_MEM_LIMIT
+                      value: "100"
+                    volumeMounts:
+                    - mountPath: /tmp
+                      name: tmp-storage
+                  volumes:
+                  - emptyDir: {}
+                    name: tmp-storage
+            ---
+            kind: ClusterRole
+            apiVersion: rbac.authorization.k8s.io/v1
+            metadata:
+              name: observability-manager
+            rules:
+            - apiGroups: ["apps", "extensions"]
+              resources: ["deployments","daemonsets"]
+              verbs: ["get", "create", "delete", "list", "watch", "patch"]
+            - apiGroups: [""]
+              resources: ["configmaps","namespaces", "services"]
+              verbs:  ["get", "create","patch","delete"]
+            - apiGroups: [""]
+              resources: ["serviceaccounts"]
+              verbs:  ["get", "create", "delete"]
+            - apiGroups: ["rbac.authorization.k8s.io"]
+              resources: ["roles", "clusterroles", "rolebindings", "clusterrolebindings"]
+              verbs: ["create","get","delete","bind","patch","escalate"]
+            - apiGroups: ["batch"]
+              resources: ["jobs"]
+              verbs:  ["get", "create", "list"]
+            - apiGroups: ["admissionregistration.k8s.io"]
+              resources: ["validatingwebhookconfigurations"]
+              verbs: ["get", "create","delete","list", "patch"]
+            - apiGroups: ["apiextensions.k8s.io"]
+              resources: ["customresourcedefinitions"]
+              verbs:  ["get", "create"]
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs:  ["list", "delete"]
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["delete"]
+            ---
+            kind: ClusterRoleBinding
+            apiVersion: rbac.authorization.k8s.io/v1
+            metadata:
+              name: observability-manager
+            subjects:
+            - kind: ServiceAccount
+              name: observability-manager
+              namespace: pks-system
+            roleRef:
+              kind: ClusterRole
+              name: observability-manager
+              apiGroup: rbac.authorization.k8s.io
+            ---
+            apiVersion: v1
+            kind: ServiceAccount
+            metadata:
+              name: observability-manager
+              namespace: pks-system
+            ---
+
+          allow-privileged-containers: false
+          enable-windows-workers: []
+          eviction-hard: null
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          max_worker_instances: 50
+          system-reserved: null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      port: 3000
+      proxy: null
+      target_network_profile_content_parameter: target_network_profile_content
+      tls_ca: ((pks_api_internal_2018.ca))
+      tls_cert: ((pks_api_internal_2018.certificate))
+      tls_key: ((pks_api_internal_2018.private_key))
+      username: ((odb_broker_basicauth.username))
+    provides: {}
+    release: pks-nsx-t
+  - consumes: {}
+    name: uaa
+    properties:
+      encryption:
+        active_key_label: key-1
+        encryption_keys:
+        - label: key-1
+          passphrase: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_encryption_passphrase.value))
+      login:
+        defaultIdentityProvider: ""
+        saml:
+          activeKeyId: active-pks-saml-key
+          keys:
+            active-pks-saml-key:
+              certificate: ((uaa_active_pks_saml_key_2018.certificate))
+              key: ((uaa_active_pks_saml_key_2018.private_key))
+              passphrase: ""
+          providers: null
+          signRequest: true
+          signatureAlgorithm: SHA256
+          wantAssertionSigned: false
+      uaa:
+        ca_certs:
+        - ((mysql_server_certificate_proxy.ca))
+        clients:
+          admin:
+            authorities: uaa.admin,clients.read,clients.write,clients.secret,scim.read,scim.write,clients.admin,pks.clusters.admin,pks.clusters.admin.read,pks.clusters.manage
+            authorized-grant-types: client_credentials
+            scope: uaa.none
+            secret: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pks_uaa_management_admin_client.value))
+          pks_cli:
+            access-token-validity: 600
+            authorities: uaa.resource
+            authorized-grant-types: password,authorization_code,refresh_token
+            autoapprove: false
+            redirect-uri: https://api.tkgi.local.knappster.de:8443,http://localhost:61235/callback
+            refresh-token-validity: 21600
+            scope: pks.clusters.admin,pks.clusters.admin.read,pks.clusters.manage
+            secret: ""
+          pks_client:
+            access-token-validity: 86400
+            authorities: pks.clusters.admin,pks.clusters.admin.read,pks.clusters.manage,uaa.resource
+            authorized-grant-types: client_credentials
+            scope: uaa.none
+            secret: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pks_api_uaa_client.value))
+          pks_cluster_client:
+            access-token-validity: 600
+            authorities: uaa.resource
+            authorized-grant-types: password,authorization_code,refresh_token
+            autoapprove: false
+            redirect-uri: https://api.tkgi.local.knappster.de:8443,http://localhost:61235/callback
+            refresh-token-validity: 21600
+            scope: openid,roles
+            secret: ""
+          service_admin_client:
+            authorities: clients.admin
+            authorized-grant-types: client_credentials
+            scope: uaa.none
+            secret: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pks_services_admin_uaa_client.value))
+        jwt:
+          policy:
+            active_key_id: key-1
+            keys:
+              key-1:
+                signingKey: ((uaa_jwt_signing_key_1.private_key))
+        ldap:
+          emailDomain: []
+          enabled: false
+          externalGroupsWhitelist:
+          - '*'
+          groups:
+            groupSearchFilter: member={0}
+            maxSearchDepth: "1"
+            profile_type: no-groups
+            searchBase: null
+          mailAttributeName: mail
+          referral: follow
+          searchBase: null
+          searchFilter: cn={0}
+          sslCertificate: null
+          url: null
+          userDN: null
+          userPassword: null
+        localhost_http_port: 35684
+        logging_level: INFO
+        scim:
+          groups:
+            pks.clusters.admin: Allows a user to admin PKS
+            pks.clusters.admin.read: Allow a user to audit PKS clusters
+            pks.clusters.manage: Allows a user to manage PKS clusters
+          user:
+            override: true
+          users:
+          - groups:
+            - uaa.admin
+            - pks.clusters.admin
+            name: admin
+            password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_admin_password.value))
+        servlet:
+          session-store: database
+        ssl:
+          ciphers: TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256,TLS_AES_256_GCM_SHA384
+          enabled_protocols: TLSv1.2,TLSv1.3
+        sslCertificate: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pivotal-container-service/pks_tls.cert_pem))
+        sslPrivateKey: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pivotal-container-service/pks_tls.private_key_pem))
+        url: https://api.tkgi.local.knappster.de:8443
+      uaadb:
+        address: proxy.pks.internal
+        databases:
+        - name: uaa
+          tag: uaa
+        db_scheme: mysql
+        port: 3306
+        roles:
+        - name: uaa
+          password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cf_mysql_uaa_db_password.value))
+          tag: admin
+        tls: enabled
+        tls_protocols: TLSv1.2
+    provides: {}
+    release: uaa
+  - consumes: {}
+    name: bbr-uaadb
+    properties:
+      release_level_backup: true
+      uaadb:
+        ca_cert: ((mysql_server_certificate_proxy.ca))
+    provides: {}
+    release: uaa
+  - consumes: {}
+    name: database-backup-restorer
+    provides: {}
+    release: backup-and-restore-sdk
+  - consumes:
+      pks_api:
+        from: pks_api_http
+      pks_api_shared:
+        from: pks_api_shared_http
+    name: upgrade-all-service-instances
+    provides: {}
+    release: pks-api
+  - consumes: {}
+    name: syslog_forwarder
+    properties:
+      syslog:
+        migration:
+          disabled: true
+    provides: {}
+    release: syslog
+  - consumes: {}
+    name: sink-resources-images-ops-files
+    provides: {}
+    release: sink-resources-release
+  - consumes:
+      pks_api:
+        from: pks_api_http
+      pks_api_shared:
+        from: pks_api_shared_http
+    name: delete-all-clusters
+    provides: {}
+    release: pks-api
+  - consumes: {}
+    name: pks-nsx-t-precheck
+    properties:
+      floating-ip-pool-ids:
+      - tkgi-floating-ips
+      ip-block-id: tkgi-pods
+      network-automation: true
+      nodes-ip-block-id: tkgi-nodes
+      nsx-t-ca-cert: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+        BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+        MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+        VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+        OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+        U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+        BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+        AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+        9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+        NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+        q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+        ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+        CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+        BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+        8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+        yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+        wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+        +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+        NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+        a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+        -----END CERTIFICATE-----
+      nsx-t-host: 172.20.16.11
+      nsx-t-insecure: true
+      nsx-t-superuser-certificate: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.cert_pem))
+      nsx-t-superuser-key: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.private_key_pem))
+      policy-api: true
+      proxy: null
+      t0-router-id: t0-router
+      vcenter-cluster: compute
+      vcenter-datacenter: Lab
+      vcenter-host: 172.20.16.10
+      vcenter-insecure: true
+      vcenter-password: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/cloud_provider/vsphere/vcenter_master_creds.password))
+      vcenter-user: administrator@vsphere.local
+    provides: {}
+    release: pks-nsx-t
+  - consumes: {}
+    name: pks-nsx-t-ops-files
+    properties:
+      fip_address_parameter: nsxt_fip_address
+      floating-ip-pool-ids:
+      - tkgi-floating-ips
+      kubo-odb-ca-removed: true
+      lb-created-by-proxy: false
+      ncp-ha-heartbeat-period: 6
+      ncp-ha-master-timeout: 18
+      ncp-ha-update-timeout: 12
+      nodes-ip-block-id: tkgi-nodes
+      nsx-t-ca-cert: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+        BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+        MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+        VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+        OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+        U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+        BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+        AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+        9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+        NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+        q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+        ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+        CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+        BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+        8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+        yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+        wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+        +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+        NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+        a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+        -----END CERTIFICATE-----
+      nsx-t-host: 172.20.16.11
+      nsx-t-insecure: true
+      nsx-t-superuser-certificate: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.cert_pem))
+      nsx-t-superuser-key: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.private_key_pem))
+      pod-ip-block-id: tkgi-pods
+      pod-network-cidr: ignored
+      policy-api: true
+      service-cidr: ignored
+      t0-router-id: t0-router
+    provides: {}
+    release: pks-nsx-t
+  - consumes: {}
+    name: pks-vrops-ops-files
+    properties:
+      vrops_enabled: "false"
+    provides: {}
+    release: pks-vrops
+  - consumes: {}
+    name: pks-wavefront-ops-files
+    properties:
+      wavefront-api-url: ignored
+      wavefront-token: ignored
+    provides: {}
+    release: wavefront-proxy
+  - consumes: {}
+    name: pks-delete-wavefront-ops-files
+    properties:
+      wavefront-api-url: ignored
+      wavefront-token: ignored
+    provides: {}
+    release: wavefront-proxy
+  - consumes: {}
+    name: tmc-ops-files
+    properties:
+      cluster-name-prefix: pks-
+      tmc-api-token: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/tmc/enabled/tmc_api_token.value))
+      tmc-api-url: https://katemea.tmc.cloud.vmware.com
+      tmc-group-name: andy-cg
+    provides: {}
+    release: pks-api
+  - consumes: {}
+    name: pks-vrli-ops-files
+    properties:
+      fluentd_vrli_ca_cert: ignored
+      fluentd_vrli_host: ignored
+      fluentd_vrli_rate_limit_msec: ignored
+      fluentd_vrli_skip_cert_verify: ignored
+      fluentd_vrli_use_ssl: ignored
+    provides: {}
+    release: pks-vrli
+  - consumes: {}
+    name: pks-vrli-control-plane-fluentd
+    properties:
+      fluentd_vrli_ca_cert: ignored
+      fluentd_vrli_host: ignored
+      fluentd_vrli_rate_limit_msec: ignored
+      fluentd_vrli_skip_cert_verify: ignored
+      fluentd_vrli_use_ssl: ignored
+    provides: {}
+    release: pks-vrli
+  - consumes: {}
+    name: telemetry-server
+    properties:
+      cloud-provider: vSphere
+      customer-number: ""
+      environment-provider: none
+      hostname: telemetry.pks.internal
+      installation-label: ""
+      installation-purpose: demo_or_poc
+      networking: nsx
+      participation-level: none
+      pks-instance-id: pivotal-container-service-5d2a0f9aeb38cb92c13b
+      product-version: 1.20.0-build.52
+      proxy: null
+      telemetry-enabled: false
+      tls:
+        forward: ((telemetry_forward_tls_2020))
+        http: ((pks_api_internal_2018))
+      vac-server-url: https://vcsa.vmware.com/ph
+      vcenter-server-url: https://172.20.16.10
+    provides:
+      telemetry-server:
+        as: telemetry-server
+        shared: true
+    release: pks-telemetry
+  - consumes: {}
+    name: send-api-started-event
+    properties:
+      metrics:
+        authentication_mode: service_account
+        c_advisor: disabled
+        control_plane_ephemeral_disk: 65536
+        control_plane_instances: 1
+        control_plane_persistence_disk: 10240
+        control_plane_ram: 8192
+        http_proxy: Disabled
+        ldap_referral_strategy: follow
+        log_sink_resources_enabled: true
+        max_worker_vms_in_flight: 4
+        metric_sink_resources_enabled: true
+        network: nsx
+        oidc_groups_claim: roles
+        oidc_groups_prefix: 'oidc:'
+        oidc_username_claim: user_name
+        oidc_username_prefix: 'oidc:'
+        outbound_internet_access_enabled_for_k8s: false
+        plans:
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: small
+          number: 1
+          number_of_master_instances: 1
+          number_of_worker_instances: 1
+          state: Plan Active
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: xlarge
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: medium
+          number: 2
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: large
+          number: 3
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-4
+          number: 4
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-5
+          number: 5
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-6
+          number: 6
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-7
+          number: 7
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-8
+          number: 8
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-9
+          number: 9
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: false
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-10
+          number: 10
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: medium.disk
+        - allow_privileged_containers: false
+          enable_windows_workers: true
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-11-Windows
+          number: 11
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: xlarge
+        - allow_privileged_containers: false
+          enable_windows_workers: true
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-12-Windows
+          number: 12
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: xlarge
+        - allow_privileged_containers: false
+          enable_windows_workers: true
+          errand_vm_type: micro
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          kubelet_eviction_hard: false
+          kubelet_system_reserved: false
+          master_persistent_disk_type: "10240"
+          master_vm_type: medium.disk
+          max_number_of_worker_instances: 50
+          name: Plan-13-Windows
+          number: 13
+          number_of_master_instances: 3
+          number_of_worker_instances: 5
+          state: Plan Inactive
+          worker_persistent_disk_type: "51200"
+          worker_vm_type: xlarge
+        stemcell_version: "1.555"
+        syslog: disabled
+        uaa_user_account_store: internal
+        vrli: disabled
+        wavefront: disabled
+    provides: {}
+    release: pks-telemetry
+  - consumes: {}
+    name: telemetry-ops-files
+    properties:
+      telemetry-agent:
+        telemetry:
+          polling-interval-seconds: 21600
+          telemetry-agent-enabled: false
+      telemetry-server:
+        ca:
+          certificate: |
+            ((telemetry_forward_tls_2020.ca))
+    provides: {}
+    release: pks-telemetry
+  - consumes: {}
+    name: bpm
+    provides: {}
+    release: bpm
+  - consumes:
+      pks_api:
+        from: pks_api_http
+      pks_api_shared:
+        from: pks_api_shared_http
+    name: smoke-tests
+    properties:
+      smoke_tests:
+        client: admin
+        network_profile_name: none
+        secret: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pks_uaa_management_admin_client.value))
+    provides: {}
+    release: pks-api
+  - consumes:
+      proxy:
+        from: proxy
+    name: pks-proxy-aliases
+    provides: {}
+    release: pks-api
+  - consumes:
+      pks_api_shared:
+        from: pks_api_shared_http
+    name: pks-security-aliases
+    provides: {}
+    release: pks-api
+  - consumes: {}
+    name: antrea-ops-files
+    properties:
+      fip_address_parameter: nsxt_fip_address
+      floating-ip-pool-ids:
+      - tkgi-floating-ips
+      kubo-odb-ca-removed: true
+      lb-created-by-proxy: false
+      ncp-ha-heartbeat-period: 6
+      ncp-ha-master-timeout: 18
+      ncp-ha-update-timeout: 12
+      nodes-ip-block-id: tkgi-nodes
+      nsx-t-ca-cert: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+        BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+        MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+        VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+        OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+        U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+        BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+        AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+        9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+        NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+        q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+        ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+        CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+        BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+        8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+        yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+        wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+        +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+        NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+        a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+        -----END CERTIFICATE-----
+      nsx-t-host: 172.20.16.11
+      nsx-t-insecure: true
+      nsx-t-superuser-certificate: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.cert_pem))
+      nsx-t-superuser-key: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/network_selector/nsx/nsx-t-superuser-certificate.private_key_pem))
+      pod-ip-block-id: tkgi-pods
+      pod-network-cidr: ignored
+      policy-api: true
+      service-cidr: ignored
+      t0-router-id: t0-router
+    provides: {}
+    release: antrea
+  lifecycle: service
+  name: pivotal-container-service
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: tkgi
+  persistent_disk_type: "10240"
+  properties:
+    bosh:
+      authentication:
+        uaa:
+          client_id: pivotal-container-service-5d2a0f9aeb38cb92c13b
+          client_secret: ((/opsmgr/director/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_client_secret.value))
+          url: https://172.30.4.3:8443
+      root_ca_cert: |
+        -----BEGIN CERTIFICATE-----
+        MIIDUTCCAjmgAwIBAgIVAPC2zGjoLauAoe/urzMBbPbZfdxNMA0GCSqGSIb3DQEB
+        CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjEw
+        Mzk0NVoXDTI4MTAwNjEwMzk0NFowHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+        dm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZFS+7fqECD+9R
+        loAMlipQ646EqIv1zZ2vHERnRn9qrJtJTRGjDz0ohYo+lG9KjPTAAWSWfifZqvln
+        kTzyfLhNdh5ejXCQS7+X+BhQPJjLXz9RdIeckseocvnFQQVEeeswteCpJczJ4gla
+        kFsONq2Y/3r5kmsagH7xYTEnFEB2wlGyMG9jscJwyScZjp2k+7eD4uG2tu8ak9SF
+        PA2hnqz+xAbvVAPV+mi9D2Esf46Q4ojvMx2xxaAClsYk6QW4bqZ63XY72jlm+wEa
+        UFxiSNxE3ggVpqJylR5aS9HQ2gYlP/uvsCaHEihOVrgH/7M+mBfnl9+faIpbFS6J
+        q+8UWKSJAgMBAAGjgYMwgYAwHQYDVR0OBBYEFNW43JdRJDZ4SnPdTe9/bd11NnQF
+        MB8GA1UdIwQYMBaAFNW43JdRJDZ4SnPdTe9/bd11NnQFMB0GA1UdJQQWMBQGCCsG
+        AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB
+        BjANBgkqhkiG9w0BAQsFAAOCAQEAkTtHXlH+BW4uZAbS+neforyHE1T7aNTHdibZ
+        0CUeaSCyuESJhaPHKRSD/6uYnqXHul2DXe7f9iWOSxuQL+QUs4SADjh+BrG0OOHz
+        C9Z7gS5TNUllfKEV2hvZ25IHymd3DT2/vLHrfrDLPfvVvuamv0soaN6ZrFPZEMmE
+        196ygRZV286hbcwv8gkgnRvCqvblVDGu8yqZKEXG/sYGt9KswDJz/5pA6OXi1bfG
+        9tqaBnErsGjHOVyEjsZLcYPYtFH4t5hjy8CZpuLvV5GLHC726yn4BAVpRIU5E0ec
+        A53R5deXD7NTEWMBB24sb9pTSAa2TydZ1aCWdMYto2qZQuvWzA==
+        -----END CERTIFICATE-----
+      url: https://172.30.4.3:25555
+    bosh_credhub_api:
+      authentication:
+        uaa:
+          client_credentials:
+            client_id: pivotal-container-service-5d2a0f9aeb38cb92c13b
+            client_secret: ((/opsmgr/director/pivotal-container-service-5d2a0f9aeb38cb92c13b/uaa_client_secret.value))
+      root_ca_cert: |
+        -----BEGIN CERTIFICATE-----
+        MIIDUTCCAjmgAwIBAgIVAPC2zGjoLauAoe/urzMBbPbZfdxNMA0GCSqGSIb3DQEB
+        CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjEw
+        Mzk0NVoXDTI4MTAwNjEwMzk0NFowHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+        dm90YWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDZFS+7fqECD+9R
+        loAMlipQ646EqIv1zZ2vHERnRn9qrJtJTRGjDz0ohYo+lG9KjPTAAWSWfifZqvln
+        kTzyfLhNdh5ejXCQS7+X+BhQPJjLXz9RdIeckseocvnFQQVEeeswteCpJczJ4gla
+        kFsONq2Y/3r5kmsagH7xYTEnFEB2wlGyMG9jscJwyScZjp2k+7eD4uG2tu8ak9SF
+        PA2hnqz+xAbvVAPV+mi9D2Esf46Q4ojvMx2xxaAClsYk6QW4bqZ63XY72jlm+wEa
+        UFxiSNxE3ggVpqJylR5aS9HQ2gYlP/uvsCaHEihOVrgH/7M+mBfnl9+faIpbFS6J
+        q+8UWKSJAgMBAAGjgYMwgYAwHQYDVR0OBBYEFNW43JdRJDZ4SnPdTe9/bd11NnQF
+        MB8GA1UdIwQYMBaAFNW43JdRJDZ4SnPdTe9/bd11NnQFMB0GA1UdJQQWMBQGCCsG
+        AQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIB
+        BjANBgkqhkiG9w0BAQsFAAOCAQEAkTtHXlH+BW4uZAbS+neforyHE1T7aNTHdibZ
+        0CUeaSCyuESJhaPHKRSD/6uYnqXHul2DXe7f9iWOSxuQL+QUs4SADjh+BrG0OOHz
+        C9Z7gS5TNUllfKEV2hvZ25IHymd3DT2/vLHrfrDLPfvVvuamv0soaN6ZrFPZEMmE
+        196ygRZV286hbcwv8gkgnRvCqvblVDGu8yqZKEXG/sYGt9KswDJz/5pA6OXi1bfG
+        9tqaBnErsGjHOVyEjsZLcYPYtFH4t5hjy8CZpuLvV5GLHC726yn4BAVpRIU5E0ec
+        A53R5deXD7NTEWMBB24sb9pTSAa2TydZ1aCWdMYto2qZQuvWzA==
+        -----END CERTIFICATE-----
+      url: https://172.30.4.3:8844
+    disable_cf_startup_checks: true
+    enable_secure_manifests: true
+    expose_operational_errors: true
+    password: ((odb_broker_basicauth.password))
+    port: 8080
+    service_adapter:
+      mount_paths:
+      - /var/vcap/jobs
+      - /var/vcap/data/jobs
+      path: /var/vcap/jobs/service-adapter/bin/service-adapter
+    service_catalog:
+      bindable: true
+      global_properties:
+        authorization_mode: rbac
+        deployments_network: tkgi
+        iaas: vsphere
+        oidc: false
+        oidc_ca: ((/opsmgr/pivotal-container-service-5d2a0f9aeb38cb92c13b/pivotal-container-service/pks_tls.cert_pem))
+        oidc_client_id: pks_cluster_client
+        oidc_groups_claim: roles
+        oidc_groups_prefix: 'oidc:'
+        oidc_issuer_url: https://api.tkgi.local.knappster.de:8443/oauth/token
+        oidc_username_claim: user_name
+        oidc_username_prefix: 'oidc:'
+        ops_files_paths:
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/add_pks_nsx_t.yml
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/prepare_master_vm.yml
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/add_fip_to_tls_certs.yml
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/remove_flannel.yml
+        - ""
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/add_master_vms_to_nsgroup.yml
+        - null
+        - null
+        - null
+        - /var/vcap/jobs/pks-delete-wavefront-ops-files/manifests/del-wavefront-job.yml
+        - null
+        - /var/vcap/jobs/tmc-ops-files/manifests/add-tmc-job.yml
+        - /var/vcap/jobs/telemetry-ops-files/manifests/add-telemetry-dns.yml
+        - /var/vcap/jobs/telemetry-ops-files/manifests/add-telemetry-agent-image.yml
+        - /var/vcap/jobs/telemetry-ops-files/manifests/add-telemetry-agent-deploy-errand.yml
+        - /var/vcap/jobs/sink-resources-images-ops-files/manifests/add-sink-resources-images.yml
+        - /var/vcap/jobs/metric-sink-ops-file/config/bosh-metric-sink-ops-file.yaml
+        - /var/vcap/jobs/pks-vrops-ops-files/manifests/remove-vrops.yml
+        pks_api_fqdn: api.tkgi.local.knappster.de
+        pod_network_cidr: null
+        proxy: null
+        routing_mode: external
+        service_cluster_cidr: 100.68.0.0/16
+        vcenter_dc: Lab
+        vcenter_ds: datastore-esx1
+        vcenter_ip: 172.20.16.10
+        vcenter_vms: pcf_vms
+        vsphere_csi_enabled: true
+        windows_ops_files_paths:
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/add_pks_nsx_t_windows.yml
+        - /var/vcap/jobs/pks-nsx-t-ops-files/manifests/remove_flannel_windows.yml
+        worker_max_in_flight: 4
+      id: DF8EECC4-7225-42D0-8459-4A6C584314CA
+      maintenance_info:
+        public:
+          containerd: 1.6.28
+          kubernetes: 1.29.6
+          pks: 1.20.0-build.52
+          stemcell: "1.555"
+      metadata:
+        display_name: Kubernetes
+        documentation_url: TBA
+        image_url: ""
+        provider_display_name: Pivotal
+        support_url: TBA
+      plan_updatable: true
+      plans:
+      - description: 'Example: This plan will configure a lightweight kubernetes cluster.
+          Not recommended for production workloads.'
+        instance_groups:
+        - azs:
+          - az1
+          instances: 1
+          name: master
+          networks:
+          - tkgi
+          persistent_disk_type: "10240"
+          vm_extensions: []
+          vm_type: medium.disk
+        - azs:
+          - az1
+          instances: 1
+          name: worker
+          networks:
+          - tkgi
+          persistent_disk_type: "51200"
+          vm_extensions: []
+          vm_type: xlarge
+        - azs:
+          - az1
+          instances: 1
+          lifecycle: errand
+          name: apply-addons
+          networks:
+          - tkgi
+          vm_extensions: []
+          vm_type: micro
+        lifecycle_errands:
+          post_deploy:
+          - name: apply-addons
+          - name: wavefront-proxy-errand
+          - disabled: false
+            name: attach-to-tmc
+          - name: vrops-errand
+          - name: telemetry-agent
+          pre_delete:
+          - disabled: false
+            name: detach-from-tmc
+          - name: drain-cluster
+        metadata:
+          allow-privileged-containers: false
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          master_instances: 1
+          master_vm_type: medium.disk
+          max_worker_instances: 50
+          worker_instances: 1
+          worker_vm_type: xlarge
+        name: small
+        plan_id: 8A0E21A8-8072-4D80-B365-D1F502085560
+        properties:
+          addons-spec: |+
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: pks-system
+            ---
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: observability-manager
+              namespace: pks-system
+              labels:
+                app: observability-manager
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  app: observability-manager
+              template:
+                metadata:
+                  labels:
+                    app: observability-manager
+                spec:
+                  serviceAccountName: observability-manager
+                  containers:
+                  - name: observability-manager
+                    image: cnabu-docker-local.artifactory.eng.vmware.com/oratos/observability-manager:451e147f8717f1ac477a4bbe95782d870e877673
+                    imagePullPolicy: Never
+                    securityContext:
+                      readOnlyRootFilesystem: true
+                    env:
+                    - name: DEPLOY_LOGS
+                      value: "true"
+                    - name: DEPLOY_METRICS
+                      value: "true"
+                    - name: DEPLOY_NODE_EXPORTER
+                      value: "false"
+                    - name: FLUENT_BIT_CONTAINER_MEM_LIMIT
+                      value: "100"
+                    volumeMounts:
+                    - mountPath: /tmp
+                      name: tmp-storage
+                  volumes:
+                  - emptyDir: {}
+                    name: tmp-storage
+            ---
+            kind: ClusterRole
+            apiVersion: rbac.authorization.k8s.io/v1
+            metadata:
+              name: observability-manager
+            rules:
+            - apiGroups: ["apps", "extensions"]
+              resources: ["deployments","daemonsets"]
+              verbs: ["get", "create", "delete", "list", "watch", "patch"]
+            - apiGroups: [""]
+              resources: ["configmaps","namespaces", "services"]
+              verbs:  ["get", "create","patch","delete"]
+            - apiGroups: [""]
+              resources: ["serviceaccounts"]
+              verbs:  ["get", "create", "delete"]
+            - apiGroups: ["rbac.authorization.k8s.io"]
+              resources: ["roles", "clusterroles", "rolebindings", "clusterrolebindings"]
+              verbs: ["create","get","delete","bind","patch","escalate"]
+            - apiGroups: ["batch"]
+              resources: ["jobs"]
+              verbs:  ["get", "create", "list"]
+            - apiGroups: ["admissionregistration.k8s.io"]
+              resources: ["validatingwebhookconfigurations"]
+              verbs: ["get", "create","delete","list", "patch"]
+            - apiGroups: ["apiextensions.k8s.io"]
+              resources: ["customresourcedefinitions"]
+              verbs:  ["get", "create"]
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs:  ["list", "delete"]
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["delete"]
+            ---
+            kind: ClusterRoleBinding
+            apiVersion: rbac.authorization.k8s.io/v1
+            metadata:
+              name: observability-manager
+            subjects:
+            - kind: ServiceAccount
+              name: observability-manager
+              namespace: pks-system
+            roleRef:
+              kind: ClusterRole
+              name: observability-manager
+              apiGroup: rbac.authorization.k8s.io
+            ---
+            apiVersion: v1
+            kind: ServiceAccount
+            metadata:
+              name: observability-manager
+              namespace: pks-system
+            ---
+
+          allow-privileged-containers: false
+          enable-windows-workers: []
+          eviction-hard: null
+          kubelet_drain_delete_local_data: true
+          kubelet_drain_force: true
+          kubelet_drain_force_node: false
+          kubelet_drain_grace_period: 10
+          kubelet_drain_ignore_daemonsets: true
+          kubelet_drain_timeout: 0
+          max_worker_instances: 50
+          system-reserved: null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
+      service_description: Default on-demand Kubernetes service.
+      service_name: p.pks
+      tags:
+      - pivotal
+      - kubernetes
+      - k8s
+    service_deployment:
+      releases:
+      - jobs:
+        - kube-apiserver
+        - kube-controller-manager
+        - kube-scheduler
+        - kubelet
+        - kube-proxy
+        - kubernetes-roles
+        - flanneld
+        - nginx
+        - kubernetes-api-route-registrar
+        - apply-specs
+        - secure-var-vcap
+        - etcd
+        - docker
+        name: kubo
+        version: 1.20.0-build.36.main
+      - jobs:
+        - flanneld-windows
+        - kube-proxy-windows
+        - kubelet-windows
+        - kubo-dns-aliases
+        - docker-windows
+        - drain-cluster-windows
+        name: kubo-windows
+        version: 1.20.0-build.8.main
+      - jobs:
+        - join-domain
+        - join-gmsa
+        - remove-domain
+        name: windows-gmsa
+        version: 0.1.0-build.4
+      - jobs:
+        - enable_ssh
+        name: windows-utilities
+        version: 0.11.0
+      - jobs:
+        - pks-nsx-t-prepare-master-vm
+        - pks-nsx-t-ncp
+        name: pks-nsx-t
+        version: 1.115.0
+      - jobs:
+        - ncp
+        - nsx-node-agent
+        - openvswitch
+        - nsx-cni
+        - nsx-kube-proxy
+        name: nsx-cf-cni
+        version: 4.2.0.0.24016753
+      - jobs:
+        - nsx-node-agent-windows
+        - openvswitch-windows
+        - nsx-cni-windows
+        - nsx-kube-proxy-windows
+        name: nsx-cf-cni-windows
+        version: 4.2.0.0.24016753
+      - jobs:
+        - deploy-antrea
+        - deploy-proxy-agent
+        - load-antrea-images
+        - prepare-antrea-nodes
+        - proxy-server
+        name: antrea
+        version: 1.13.3-build.2
+      - jobs:
+        - fluentd
+        name: pks-vrli
+        version: 0.19.0-build.7
+      - jobs:
+        - csi-controller
+        - csi-images
+        - csi-node-service
+        name: vsphere-csi
+        version: 3.3.0-build.1
+      - jobs:
+        - aws-cloud-controller-manager
+        name: aws-cpi
+        version: 1.29.2-build.1
+      - jobs:
+        - vsphere-cloud-controller-manager
+        name: vsphere-cpi
+        version: 1.29.0-build.3
+      - jobs:
+        - azure-cloud-controller-manager
+        - azure-cloud-node-manager
+        name: azure-cpi
+        version: 1.29.7-build.1
+      - jobs:
+        - syslog_forwarder
+        name: syslog
+        version: 12.3.1
+      - jobs:
+        - bpm
+        name: bpm
+        version: 1.2.23
+      - jobs:
+        - wavefront-proxy
+        name: wavefront-proxy
+        version: 0.34.0
+      - jobs:
+        - pks-vrops
+        name: pks-vrops
+        version: 0.25.2
+      - jobs:
+        - drain-cluster
+        name: pks-api
+        version: 1.20.0-build.115
+      - jobs:
+        - telemetry-dns-alias
+        name: pks-telemetry
+        version: 2.0.0-build.688
+      - jobs:
+        - sink-resources-images
+        name: sink-resources-release
+        version: 3.1.32
+      - jobs:
+        - metric-sink-pks-control-plane
+        name: bosh-metric-sink
+        version: 0.3.37
+      stemcells:
+      - os: ubuntu-jammy
+        version: "1.555"
+      - os: windows2019
+        version: "0:0:0"
+    startup_banner: true
+    tls:
+      certificate: ((pks_api_internal_2018.certificate))
+      private_key: ((pks_api_internal_2018.private_key))
+    username: ((odb_broker_basicauth.username))
+  stemcell: bosh-vsphere-esxi-ubuntu-jammy-go_agent
+  update:
+    max_in_flight: 1
+  vm_type: large.disk
+memo:
+  comment: This entire section is just informational. It is NOT used by BOSH.
+  ops_manager:
+    overrides: []
+name: pivotal-container-service-5d2a0f9aeb38cb92c13b
+releases:
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: pxc
+  url: file:///var/tempest/releases/pxc-1.0.29-ubuntu-jammy-1.506.tgz
+  version: 1.0.29
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: kubo
+  url: file:///var/tempest/releases/kubo-1.20.0-build.36.main-ubuntu-jammy-1.506.tgz
+  version: 1.20.0-build.36.main
+- exported_from:
+  - os: windows2019
+    version: "2019.75"
+  name: kubo-windows
+  url: file:///var/tempest/releases/kubo-windows-1.20.0-build.8.main-windows2019-2019.75.tgz
+  version: 1.20.0-build.8.main
+- name: windows-utilities
+  url: file:///var/tempest/releases/windows-utilities-0.11.0-windows2019-2019.75.tgz
+  version: 0.11.0
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: kubo-service-adapter
+  url: file:///var/tempest/releases/kubo-service-adapter-1.20.0-build.115-ubuntu-jammy-1.506.tgz
+  version: 1.20.0-build.115
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: pks-api
+  url: file:///var/tempest/releases/pks-api-1.20.0-build.115-ubuntu-jammy-1.506.tgz
+  version: 1.20.0-build.115
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: pks-nsx-t
+  url: file:///var/tempest/releases/pks-nsx-t-1.115.0-ubuntu-jammy-1.506.tgz
+  version: 1.115.0
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: nsx-cf-cni
+  url: file:///var/tempest/releases/nsx-cf-cni-4.2.0.0.24016753-ubuntu-jammy-1.506.tgz
+  version: 4.2.0.0.24016753
+- exported_from:
+  - os: windows2019
+    version: "2019.75"
+  name: nsx-cf-cni-windows
+  url: file:///var/tempest/releases/nsx-cf-cni-windows-4.2.0.0.24016753-windows2019-2019.75.tgz
+  version: 4.2.0.0.24016753
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: pks-vrli
+  url: file:///var/tempest/releases/pks-vrli-0.19.0-build.7-ubuntu-jammy-1.506.tgz
+  version: 0.19.0-build.7
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: syslog
+  url: file:///var/tempest/releases/syslog-12.3.1-ubuntu-jammy-1.506.tgz
+  version: 12.3.1
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: pks-vrops
+  url: file:///var/tempest/releases/pks-vrops-0.25.2-ubuntu-jammy-1.506.tgz
+  version: 0.25.2
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: sink-resources-release
+  url: file:///var/tempest/releases/sink-resources-release-3.1.32-ubuntu-jammy-1.506.tgz
+  version: 3.1.32
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: bosh-metric-sink
+  url: file:///var/tempest/releases/bosh-metric-sink-0.3.37-ubuntu-jammy-1.506.tgz
+  version: 0.3.37
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: pks-telemetry
+  url: file:///var/tempest/releases/pks-telemetry-2.0.0-build.688-ubuntu-jammy-1.506.tgz
+  version: 2.0.0-build.688
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: uaa
+  url: file:///var/tempest/releases/uaa-77.14.0-ubuntu-jammy-1.506.tgz
+  version: 77.14.0
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: bpm
+  url: file:///var/tempest/releases/bpm-1.2.23-ubuntu-jammy-1.506.tgz
+  version: 1.2.23
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: backup-and-restore-sdk
+  url: file:///var/tempest/releases/backup-and-restore-sdk-1.18.118-ubuntu-jammy-1.506.tgz
+  version: 1.18.118
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: wavefront-proxy
+  url: file:///var/tempest/releases/wavefront-proxy-0.34.0-ubuntu-jammy-1.506.tgz
+  version: 0.34.0
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: antrea
+  url: file:///var/tempest/releases/antrea-1.13.3-build.2-ubuntu-jammy-1.506.tgz
+  version: 1.13.3-build.2
+- name: windows-gmsa
+  url: file:///var/tempest/releases/windows-gmsa-0.1.0-build.4-windows2019-2019.75.tgz
+  version: 0.1.0-build.4
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: vsphere-csi
+  url: file:///var/tempest/releases/vsphere-csi-3.3.0-build.1-ubuntu-jammy-1.506.tgz
+  version: 3.3.0-build.1
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: aws-cpi
+  url: file:///var/tempest/releases/aws-cpi-1.29.2-build.1-ubuntu-jammy-1.506.tgz
+  version: 1.29.2-build.1
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: vsphere-cpi
+  url: file:///var/tempest/releases/vsphere-cpi-1.29.0-build.3-ubuntu-jammy-1.506.tgz
+  version: 1.29.0-build.3
+- exported_from:
+  - os: ubuntu-jammy
+    version: "1.506"
+  name: azure-cpi
+  url: file:///var/tempest/releases/azure-cpi-1.29.7-build.1-ubuntu-jammy-1.506.tgz
+  version: 1.29.7-build.1
+stemcells:
+- alias: bosh-vsphere-esxi-ubuntu-jammy-go_agent
+  name: bosh-vsphere-esxi-ubuntu-jammy-go_agent
+  os: ubuntu-jammy
+  version: "1.555"
+update:
+  canaries: 1
+  canary_watch_time: 30000-300000
+  max_errors: 2
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 30000-300000
+variables:
+- name: kubo_odb_ca_2018
+  options:
+    common_name: ca
+    duration: 1461
+    is_ca: true
+  type: certificate
+- name: pks_api_internal_2018
+  options:
+    alternative_names:
+    - localhost
+    - 127.0.0.1
+    ca: kubo_odb_ca_2018
+    common_name: localhost
+    duration: 1461
+  type: certificate
+- name: uaa_jwt_signing_key_1
+  type: rsa
+- name: uaa_active_pks_saml_key_2018
+  options:
+    common_name: ca
+    duration: 1461
+    is_ca: true
+  type: certificate
+- name: pks_api_basicauth
+  type: user
+- name: odb_broker_basicauth
+  type: user
+- name: telemetry_forward_tls_2020
+  options:
+    ca: kubo_odb_ca_2018
+    common_name: telemetry.pks.internal
+    duration: 1461
+  type: certificate
+- name: pxc_galera_ca
+  options:
+    common_name: pxc_galera_ca
+    duration: 1461
+    is_ca: true
+  type: certificate
+- name: pxc_server_ca
+  options:
+    common_name: pxc_server_ca
+    duration: 1461
+    is_ca: true
+  type: certificate
+- name: telemetry_db_client_2020
+  options:
+    ca: pxc_server_ca
+    common_name: telemetry.pks.internal
+    duration: 1461
+  type: certificate
+- name: galera_server_certificate
+  options:
+    ca: pxc_galera_ca
+    common_name: galera_server_certificate
+    duration: 1461
+    extended_key_usage:
+    - server_auth
+    - client_auth
+  type: certificate
+- name: mysql_server_certificate
+  options:
+    alternative_names:
+    - localhost
+    - 127.0.0.1
+    ca: pxc_server_ca
+    common_name: localhost
+    duration: 1461
+  type: certificate
+- name: proxy_api_credentials
+  options:
+    username: proxy
+  type: user
+- name: mysql_server_certificate_proxy
+  options:
+    ca: pxc_server_ca
+    common_name: proxy.pks.internal
+    duration: 1461
+  type: certificate
+- name: pks_api_db_maintenance_user_password
+  type: password
+- name: pks_db_client_2020
+  options:
+    ca: pxc_server_ca
+    common_name: api.pks.internal
+    duration: 1461
+  type: certificate
