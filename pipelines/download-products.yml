@@ -25,7 +25,7 @@ resources:
     access_key_id: ((s3_access_key_id))
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
-    regexp: \[ops-manager,(.*)\]ops-manager-vsphere(.*).ova
+    regexp: \[ops-manager,(.*)\]ops-manager-vsphere.*.ova
 
 # - name: pks-product
 #   type: s3
