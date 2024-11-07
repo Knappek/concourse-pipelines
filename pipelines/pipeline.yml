@@ -44,7 +44,6 @@ resources:
   source:
     access_key_id: ((minio_s3/access_key_id))
     secret_access_key: ((minio_s3/secret_access_key))
-    region_name: ((s3_region_name))
     bucket: ((s3_pivnet_products_bucket))
     regexp: .*tasks-(.*).zip
 
@@ -54,7 +53,6 @@ resources:
     access_key_id: ((minio_s3/access_key_id))
     secret_access_key: ((minio_s3/secret_access_key))
     aws_role_arn: ((minio_s3.role_arn))
-    region_name: ((s3_region_name))
     bucket: ((s3_pivnet_products_bucket))
     regexp: .*image-(.*).tgz
 
@@ -64,7 +62,6 @@ resources:
     access_key_id: ((minio_s3/access_key_id))
     secret_access_key: ((minio_s3/secret_access_key))
     aws_role_arn: ((minio_s3.role_arn))
-    region_name: ((s3_region_name))
     bucket: ((s3_pivnet_products_bucket))
     regexp: .*telemetry-(.*).tgz
 # code_snippet reference-resources-s3 end yaml
@@ -76,7 +73,6 @@ resources:
     access_key_id: ((minio_s3/access_key_id))
     secret_access_key: ((minio_s3/secret_access_key))
     aws_role_arn: ((minio_s3.role_arn))
-    region_name: ((s3_region_name))
     bucket: ((s3_installation_bucket))
     regexp: ((foundation))-installation-(.*).zip
 # code_snippet export-installation-resource-usage end
@@ -90,7 +86,6 @@ resources:
     secret_access_key: ((minio_s3/secret_access_key))
     aws_role_arn: ((minio_s3.role_arn))
     bucket: ((s3_foundation_state_bucket))
-    region_name: ((s3_region_name))
     versioned_file: state-((foundation)).yml
     initial_content_text: '{}'
     initial_version: 'empty-start'
