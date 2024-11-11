@@ -1,72 +1,47 @@
 ---
-az-configuration:
-  - name: ((availability_zones.0))
-  - name: ((availability_zones.1))
-  - name: ((availability_zones.2))
+az-configuration: (( availability_zones ))
+iaas-configurations:
+- additional_cloud_properties: {}
+  bosh_disk_path: (( bosh_disk_path ))
+  bosh_template_folder: (( bosh_template_folder ))
+  bosh_vm_folder: (( bosh_vm_folder ))
+  datacenter: (( vcenter_datacenter ))
+  disk_type: (( disk_type ))
+  enable_human_readable_name: false
+  ensure_no_ip_conflicts: true
+  ephemeral_datastore_clusters_string: ""
+  ephemeral_datastores_string: (( vcenter_datastore ))
+  name: default
+  nsx_address: (( nsx_address ))
+  nsx_ca_certificate: (( nsx_ca_certificate))
+  nsx_mode: nsx-t
+  nsx_networking_enabled: true
+  nsx_password: (( nsx_credentials.password ))
+  nsx_t_auth_type: local_user
+  nsx_t_tag_nsx_vm_objects: false
+  nsx_t_use_policy_api: true
+  nsx_t_use_policy_api_migration_mode: false
+  nsx_username: (( nsx_credentials.username ))
+  persistent_datastore_clusters_string: ""
+  persistent_datastores_string: (( vcenter_datastore ))
+  ssl_verification_enabled: false
+  vcenter_host: (( vcenter_server ))
+  vcenter_password: (( vcenter_credentials.password ))
+  vcenter_username: (( vcenter_credentials.username ))
 network-assignment:
   network:
-    name: management
+    name: ((management_network_name))
+  other_availability_zones: []
   singleton_availability_zone:
-    name: ((availability_zones.0))
+    name: ((availability_zones.0.name))
 networks-configuration:
   icmp_checks_enabled: false
-  networks:
-    - name: management
-      subnets:
-        - availability_zone_names:
-            - ((availability_zones.0))
-            - ((availability_zones.1))
-            - ((availability_zones.2))
-          cidr: ((management_subnet_cidr))
-          dns: 169.254.169.254
-          gateway: ((management_subnet_gateway))
-          iaas_identifier: ((network_name))/((management_subnet_name))/((region))
-          reserved_ip_ranges: ((management_subnet_reserved_ip_ranges))
-    - name: pas
-      subnets:
-        - availability_zone_names:
-            - ((availability_zones.0))
-            - ((availability_zones.1))
-            - ((availability_zones.2))
-          cidr: ((pas_subnet_cidr))
-          dns: 169.254.169.254
-          gateway: ((pas_subnet_gateway))
-          iaas_identifier: ((network_name))/((pas_subnet_name))/((region))
-          reserved_ip_ranges: ((pas_subnet_reserved_ip_ranges))
-    - name: pks
-      subnets:
-        - availability_zone_names:
-            - ((availability_zones.0))
-            - ((availability_zones.1))
-            - ((availability_zones.2))
-          cidr: ((pks_subnet_cidr))
-          dns: 168.63.129.16
-          gateway: ((pks_subnet_gateway))
-          iaas_identifier: ((network_name))/((pks_subnet_name))/((region))
-          reserved_ip_ranges: ((pks_subnet_reserved_ip_ranges))
-    - name: services
-      subnets:
-        - availability_zone_names:
-            - ((availability_zones.0))
-            - ((availability_zones.1))
-            - ((availability_zones.2))
-          cidr: ((services_subnet_cidr))
-          dns: 169.254.169.254
-          gateway: ((services_subnet_gateway))
-          iaas_identifier: ((network_name))/((services_subnet_name))/((region))
-          reserved_ip_ranges: ((services_subnet_reserved_ip_ranges))
+  networks: ((networks))
 properties-configuration:
-  iaas_configuration:
-    project: ((project))
-    auth_json: ((ops_manager_service_account_key))
-    default_deployment_tag: ((platform_vms_tag))
   director_configuration:
-    ntp_servers_string: 169.254.169.254
+    ntp_servers_string: ((ntp_servers_string))
   security_configuration:
-    trusted_certificates: ((ca_certificate.certificate))
+    clear_default_trusted_certificates_store: false
     opsmanager_root_ca_trusted_certs: true
     generate_vm_passwords: true
-# resource-configuration:
-#  compilation:
-#    instance_type:
-#      id: xlarge.disk
+vmextensions-configuration: ((vmextensions_configuration))

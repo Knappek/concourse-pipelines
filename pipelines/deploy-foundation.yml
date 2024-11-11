@@ -2,10 +2,10 @@
 
 groups:
 - jobs:
-    # - install-opsman
+    - test-platform-automation
+    - install-opsman
     # - expiring-certificates
     # - delete-installation
-    - test-platform-automation
     # - export-installation
     # - upgrade-opsman
     # - download-upload-and-stage-healthwatch-pas-exporter
@@ -63,28 +63,28 @@ resources:
 #     bucket: ((s3_pivnet_products_bucket))
 #     regexp: .*telemetry-(.*).tgz
 
-# - name: installation
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((s3_access_key_id))
-#     secret_access_key: ((s3_secret_access_key))
-#     bucket: ((s3_installation_bucket))
-#     regexp: ((foundation))-installation-(.*).zip
+- name: installation
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_installation_bucket))
+    regexp: ((foundation))-installation-(.*).zip
 
-# # VM state and foundation configuration
-# - name: state
-#   type: s3
-#   source:
-#     endpoint: ((s3_endpoint))
-#     disable_ssl: true
-#     access_key_id: ((s3_access_key_id))
-#     secret_access_key: ((s3_secret_access_key))
-#     bucket: ((s3_foundation_state_bucket))
-#     versioned_file: state-((foundation)).yml
-#     initial_content_text: '{}'
-#     initial_version: 'empty-start'
+# VM state and foundation configuration
+- name: state
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_foundation_state_bucket))
+    versioned_file: state-((foundation)).yml
+    initial_content_text: '{}'
+    initial_version: 'empty-start'
 
 # configurations
 - name: configuration
@@ -93,19 +93,18 @@ resources:
     private_key: ((pipeline-git-repo-key.private_key))
     uri: ((pipeline-git-repo-uri))
     branch: main
-    paths:
-    - concourse-pipelines
+    depth: 1
 
 # triggers used to have jobs do something in a timely manner
-# - name: one-time-trigger
-#   type: time
-#   source:
-#     interval: 999999h
-
-# - name: daily-trigger
+- name: one-time-trigger
   type: time
   source:
-    interval: 24h
+    interval: 999999h
+
+# - name: daily-trigger
+#   type: time
+#   source:
+#     interval: 24h
 
 prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   image: platform-automation-image
@@ -120,11 +119,11 @@ prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   output_mapping:
     tasks: platform-automation-tasks
 
-prepare-image: &prepare-image
-  image: platform-automation-image
-  file: platform-automation-tasks/tasks/prepare-image.yml
-  params:
-    CA_CERTS: ((opsman-ssl.ca))
+# prepare-image: &prepare-image
+#   image: platform-automation-image
+#   file: platform-automation-tasks/tasks/prepare-image.yml
+#   params:
+#     CA_CERTS: ((opsman-ssl.ca))
 
 jobs:
 - name: test-platform-automation
@@ -152,114 +151,114 @@ jobs:
       image: platform-automation-image
   # code_snippet test-usage end
 
-# - name: install-opsman
-#   serial: true
-#   serial_groups: [ install ]
-#   plan:
-#   - in_parallel:
-#     - get: platform-automation-image
-#       params:
-#         unpack: true
-#     - get: one-time-trigger
-#       trigger: true
-#     - get: platform-automation-tasks
-#     - get: configuration
-#     - get: state
-#   - task: prepare-tasks-with-secrets
-#     <<: *prepare-tasks-with-secrets
-#   - task: prepare-image
-#     <<: *prepare-image
-#   - task: download-opsman-image
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/download-product.yml
-#     input_mapping:
-#       config: configuration
-#       vars: configuration
-#     params:
-#       CONFIG_FILE: foundations/((foundation))/config/download-opsman.yml
-#       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-#       SOURCE: pivnet
-#     output_mapping:
-#       downloaded-product: opsman-image
-#   # code_snippet create-vm-usage start yaml
-#   - task: create-vm
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/create-vm.yml
-#     input_mapping:
-#       image: opsman-image
-#       config: configuration
-#       vars: configuration
-#     params:
-#       OPSMAN_CONFIG_FILE: foundations/((foundation))/config/opsman.yml
-#       STATE_FILE: state-((foundation)).yml
-#       VARS_FILES: vars/foundations/((foundation))/vars/director.yml
-#     ensure: &put-state
-#       do:
-#       - put: state
-#         params:
-#           file: generated-state/state-((foundation)).yml
-#   # code_snippet create-vm-usage end
-#   # code_snippet configure-authentication-usage start yaml
-#   - task: configure-authentication
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/configure-authentication.yml
-#     attempts: 10
-#     input_mapping:
-#       env: configuration
-#       config: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#       AUTH_CONFIG_FILE: foundations/config/auth.yml
-#   # code_snippet configure-authentication-usage end
-#   # code_snippet configure-opsman-usage start yaml
-#   - task: configure-opsman
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/configure-opsman.yml
-#     input_mapping:
-#       env: configuration
-#       config: configuration
-#       vars: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#       OPSMAN_CONFIG_FILE: foundations/((foundation))/config/opsman.yml
-#       VARS_FILES: vars/foundations/((foundation))/vars/director.yml
-#   # code_snippet configure-opsman-usage end
-#   # code_snippet configure-director-usage start yaml
-#   - task: configure-director
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/configure-director.yml
-#     input_mapping:
-#       config: configuration
-#       env: configuration
-#       vars: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#       DIRECTOR_CONFIG_FILE: foundations/((foundation))/config/director.yml
-#       VARS_FILES: |
-#         vars/foundations/((foundation))/vars/director.yml
-#         vars/foundations/((foundation))/vars/tas.yml
-#   # code_snippet configure-director-usage end
-#   # code_snippet apply-director-changes-usage start yaml
-#   - task: apply-director-changes
-#     image: platform-automation-image
-#     attempts: 3
-#     file: platform-automation-tasks/tasks/apply-director-changes.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#   # code_snippet apply-director-changes-usage end
-#   - task: export-installation
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/export-installation.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
-#       ENV_FILE: foundations/config/env.yml
-#   - put: installation
-#     params:
-#       file: installation/((foundation))-installation*.zip
+- name: install-opsman
+  serial: true
+  serial_groups: [ install ]
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: one-time-trigger
+      trigger: true
+    - get: platform-automation-tasks
+    - get: configuration
+    - get: state
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  # - task: prepare-image
+  #   <<: *prepare-image
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: configuration
+      vars: configuration
+    params:
+      CONFIG_FILE: foundations/((foundation))/config/download-opsman.yml
+      VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+      SOURCE: pivnet
+    output_mapping:
+      downloaded-product: opsman-image
+  # code_snippet create-vm-usage start yaml
+  - task: create-vm
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/create-vm.yml
+    input_mapping:
+      image: opsman-image
+      config: configuration
+      vars: configuration
+    params:
+      OPSMAN_CONFIG_FILE: foundations/((foundation))/config/opsman.yml
+      STATE_FILE: state-((foundation)).yml
+      VARS_FILES: vars/foundations/((foundation))/vars/director.yml
+    ensure: &put-state
+      do:
+      - put: state
+        params:
+          file: generated-state/state-((foundation)).yml
+  # code_snippet create-vm-usage end
+  # code_snippet configure-authentication-usage start yaml
+  - task: configure-authentication
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-authentication.yml
+    attempts: 10
+    input_mapping:
+      env: configuration
+      config: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      AUTH_CONFIG_FILE: foundations/config/auth.yml
+  # code_snippet configure-authentication-usage end
+  # code_snippet configure-opsman-usage start yaml
+  - task: configure-opsman
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-opsman.yml
+    input_mapping:
+      env: configuration
+      config: configuration
+      vars: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      OPSMAN_CONFIG_FILE: foundations/((foundation))/config/opsman.yml
+      VARS_FILES: vars/foundations/((foundation))/vars/director.yml
+  # code_snippet configure-opsman-usage end
+  # code_snippet configure-director-usage start yaml
+  - task: configure-director
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-director.yml
+    input_mapping:
+      config: configuration
+      env: configuration
+      vars: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      DIRECTOR_CONFIG_FILE: foundations/((foundation))/config/director.yml
+      # TODO: needed in VARS_FILES??? => vars/foundations/((foundation))/vars/tas.yml
+      VARS_FILES: |
+        vars/foundations/((foundation))/vars/director.yml
+  # code_snippet configure-director-usage end
+  # code_snippet apply-director-changes-usage start yaml
+  - task: apply-director-changes
+    image: platform-automation-image
+    attempts: 3
+    file: platform-automation-tasks/tasks/apply-director-changes.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  # code_snippet apply-director-changes-usage end
+  - task: export-installation
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/export-installation.yml
+    input_mapping:
+      env: configuration
+    params:
+      INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
+      ENV_FILE: foundations/config/env.yml
+  - put: installation
+    params:
+      file: installation/((foundation))-installation*.zip
 
 # - name: export-installation
 #   serial_groups: [ install ]

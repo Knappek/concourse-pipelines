@@ -1,33 +1,75 @@
-# All infrastructure was created using https://github.com/pivotal/paving for GCP
-# This file was generated from the location of terraform.tfstate:
-# terraform output stable_config_opsmanager > ~/workspace/docs-platform-automation-reference-pipeline-config/foundations/sandbox/vars/director.yml
-# Secrets are stored in Credhub
-{
-  "availability_zones": [
-    "us-central1-a",
-    "us-central1-b",
-    "us-central1-c"
-  ],
-  "environment_name": "reference-gcp",
-  "hosted_zone_name_servers": [
-    "ns-cloud-c1.googledomains.com.",
-    "ns-cloud-c2.googledomains.com.",
-    "ns-cloud-c3.googledomains.com.",
-    "ns-cloud-c4.googledomains.com."
-  ],
-  "management_subnet_cidr": "10.0.0.0/26",
-  "management_subnet_gateway": "10.0.0.1",
-  "management_subnet_name": "reference-gcp-management-subnet",
-  "management_subnet_reserved_ip_ranges": "10.0.0.1-10.0.0.9",
-  "network_name": "reference-gcp-network",
-  "ops_manager_bucket": "cf-norm-ci-reference-gcp-ops-manager-17391",
-  "ops_manager_public_ip": "34.170.152.208",
-  "ops_manager_tags": "reference-gcp-ops-manager",
-  "platform_vms_tag": "reference-gcp-vms",
-  "project": "cf-norm-ci",
-  "region": "us-central1",
-  "services_subnet_cidr": "10.0.8.0/24",
-  "services_subnet_gateway": "10.0.8.1",
-  "services_subnet_name": "reference-gcp-services-subnet",
-  "services_subnet_reserved_ip_ranges": "10.0.8.1-10.0.8.9"
-}
+availability_zones:
+- name: az1
+  iaas_configuration_name: default
+  clusters:
+  - cluster: compute
+    drs_rule: MUST
+    resource_pool: sandbox
+bosh_disk_path: pcf_disk_sandbox
+bosh_template_folder: pcf_templates_sandbox
+bosh_vm_folder: pcf_vms_sandbox
+disk_type: thin
+vcenter_server: 172.20.16.10
+vcenter_datacenter: Lab
+vcenter_datastore: datastore-esx1
+vcenter_cluster: compute
+dns_server: 192.168.178.1
+nsx_ca_certificate: |-
+  -----BEGIN CERTIFICATE-----
+  MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+  BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+  MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+  VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+  OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+  U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+  BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+  AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+  9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+  NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+  q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+  ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+  CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+  BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+  8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+  yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+  wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+  +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+  NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+  a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+  -----END CERTIFICATE-----
+management_subnet_gateway: 172.30.4.1
+management_subnet_name: infra
+management_subnet_netmask: 255.255.255.192
+management_subnet_cidr: 172.30.4.64/26
+ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNre3RSDIQIbswU/AbFMrdGDTRNIxXs1L1aY9ozDm/TsTKBf85Kr/0Bi3Az1DgOifR3s7SblZFhqKtGueqyv4NKoNy8dgxUsFzGKaRBmwGfCn9rp0hAV/r6BdyhRGloltaZ4KuR3v3AQTTjpyWPsf55wUIMYtOtrQ1tnNspmZmEyh11e8Hbwsq6jaVDCpSWkLPgir4lDTFANRpA/MaU9XUG3PjYszaNFgIScUwQVl0otmCpFgZgf9jXwy4K5CpG4u/1CSIA6H+5XAJaAzDNGcAIGQKaIAj6Cvd8QyUs+UEV5n6rJSsp+gnfu0gEYx4QmeWwcVdGu1Re18qHVgAP56gF58uV7p/V60Tlf9IFqkz67lwLlOuq9dfNmPGIJ/lydcLgcvXmJObyntm1jFi5ChtIrBd7uShh9b6wwOLhekv3TwOn0nHPjXDabVDcmfXVhAgyJyknCFv1Hm3UFwTngoc4WFm38wgxzajOzxt83b8bXXhMNaU8L8VXtVpfIrDHbAKhho6Aaf8JahKa46UxFa4yjkVfN75N4++8CdCpGiruLUp1rW4zYkrjxBuIBcib/06QTsvdPIsYVsPic/mYoxBVTclvLi/ELVdwFFSavwNKI+XwH6ENI7vckkVs6HpM0GJu4qsvmhrlkGVmNM0BkaJN1i1CQgn01OTz+um1rjr+Q== andy.knapp.ak@gmail.com
+ops_manager_ip: 172.30.4.65
+network_configuration:
+  networks:
+  - name: (( management_subnet_name ))
+    subnets:
+    - iaas_identifier: infra-seg
+      cidr: (( management_subnet_cidr ))
+      dns: (( dns_server ))
+      gateway: (( management_subnet_gateway ))
+      reserved_ip_ranges: (( ops_manager_ip ))
+      availability_zone_names:
+      - az1
+  - name: tas
+    subnets:
+    - iaas_identifier: tas-seg
+      cidr: 172.30.5.128/25
+      dns: (( dns_server ))
+      gateway: 172.30.5.1
+      reserved_ip_ranges: ""
+      availability_zone_names:
+      - az1
+  - name: tkgi
+    subnets:
+    - iaas_identifier: tkgi-infra-seg
+      cidr: 172.30.6.128/25
+      dns: (( dns_server ))
+      gateway: 172.30.6.1
+      reserved_ip_ranges: ""
+      availability_zone_names:
+      - az1
+ntp_servers_string: (( dns_server ))

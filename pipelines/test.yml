@@ -11,4 +11,4 @@ jobs:
           repository: ubuntu
       run:
         path: bash
-        args: [-c, "echo Hello world"]
+        args: [-c, "echo ((sandbox/vcenter_server))"]

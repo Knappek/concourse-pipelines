@@ -6,4 +6,5 @@ echo "Setting test pipeline..."
 
 fly -t ci sp -p test-pipeline \
   -c  ./pipelines/test.yml \
+  --var foundation=sandbox \
   --check-creds

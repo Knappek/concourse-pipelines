@@ -130,7 +130,6 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
     regexp: platform-automation-image-(.*).tgz
-    initial_version: latest
 
 - name: platform-automation-tasks
   type: git
