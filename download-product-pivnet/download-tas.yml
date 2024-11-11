@@ -4,7 +4,7 @@ pivnet-api-token: ((pivnet_token))
 pivnet-product-slug: elastic-runtime
 
 file-glob: "srt*.pivotal"
-product-version-regex: ^4\.0\..*$
+product-version-regex: ^6\.0\..*$
 stemcell-iaas: vsphere
 
 s3-access-key-id: ((s3_access_key_id))

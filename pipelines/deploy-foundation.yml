@@ -51,7 +51,7 @@ resources:
     access_key_id: ((s3_access_key_id))
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
-    versioned_file: platform-automation-image-5.2.2.tgz
+    regexp: platform-automation-image-(.*).tgz
 
 # - name: telemetry-collector-binary
 #   type: s3
@@ -75,16 +75,16 @@ resources:
 
 # # VM state and foundation configuration
 # - name: state
-  type: s3
-  source:
-    endpoint: ((s3_endpoint))
-    disable_ssl: true
-    access_key_id: ((s3_access_key_id))
-    secret_access_key: ((s3_secret_access_key))
-    bucket: ((s3_foundation_state_bucket))
-    versioned_file: state-((foundation)).yml
-    initial_content_text: '{}'
-    initial_version: 'empty-start'
+#   type: s3
+#   source:
+#     endpoint: ((s3_endpoint))
+#     disable_ssl: true
+#     access_key_id: ((s3_access_key_id))
+#     secret_access_key: ((s3_secret_access_key))
+#     bucket: ((s3_foundation_state_bucket))
+#     versioned_file: state-((foundation)).yml
+#     initial_content_text: '{}'
+#     initial_version: 'empty-start'
 
 # configurations
 - name: configuration

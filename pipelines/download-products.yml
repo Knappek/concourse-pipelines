@@ -51,7 +51,7 @@ resources:
     access_key_id: ((s3_access_key_id))
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
-    regexp: \[elastic-runtime,(.*)\]cf-.*.pivotal
+    regexp: \[elastic-runtime,(.*)\]srt-.*.pivotal
 
 - name: tas-stemcell
   type: s3
@@ -130,6 +130,7 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
     regexp: platform-automation-image-(.*).tgz
+    initial_version: latest
 
 - name: platform-automation-tasks
   type: git
@@ -146,11 +147,6 @@ resources:
     uri: ((pipeline-git-repo-uri))
     branch: main
     depth: 1
-
-- name: daily
-  type: time
-  source:
-    interval: 24h
 
 # This task is used in multiple jobs
 # The yaml anchor "*prepare-tasks-with-secrets" is used in its place
@@ -178,8 +174,6 @@ jobs:
 - name: fetch-opsman
   plan:
   - in_parallel:
-    - get: daily
-      trigger: true
     - get: platform-automation-image
       passed: [ fetch-platform-automation ]
       params:
@@ -204,8 +198,6 @@ jobs:
 - name: fetch-pks
   plan:
   - in_parallel:
-    - get: daily
-      trigger: true
     - get: platform-automation-image
       passed: [ fetch-platform-automation ]
       params:
@@ -233,8 +225,6 @@ jobs:
 - name: fetch-tas
   plan:
     - in_parallel:
-      - get: daily
-        trigger: true
       - get: platform-automation-image
         passed: [ fetch-platform-automation ]
         params:
@@ -262,8 +252,6 @@ jobs:
 - name: fetch-healthwatch
   plan:
     - in_parallel:
-      - get: daily
-        trigger: true
       - get: platform-automation-image
         passed: [ fetch-platform-automation ]
         params:
@@ -291,8 +279,6 @@ jobs:
 - name: fetch-healthwatch-pas-exporter
   plan:
     - in_parallel:
-      - get: daily
-        trigger: true
       - get: platform-automation-image
         passed: [ fetch-platform-automation ]
         params:
@@ -316,8 +302,6 @@ jobs:
 - name: fetch-healthwatch-pks-exporter
   plan:
     - in_parallel:
-      - get: daily
-        trigger: true
       - get: platform-automation-image
         passed: [ fetch-platform-automation ]
         params:
@@ -341,8 +325,6 @@ jobs:
 - name: fetch-telemetry-collector
   plan:
     - in_parallel:
-        - get: daily
-          trigger: true
         - get: platform-automation-image
           passed: [ fetch-platform-automation ]
           params:

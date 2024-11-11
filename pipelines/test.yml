@@ -4,10 +4,11 @@ jobs:
   - task: display-cred
     config:
       platform: linux
+      platform: windows
       image_resource:
         type: registry-image
         source:
           repository: ubuntu
       run:
         path: bash
-        args: [-c, "echo Hello, ((minio_s3.secret_access_key))"]
+        args: [-c, "echo Hello world"]
