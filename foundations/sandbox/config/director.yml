@@ -30,7 +30,7 @@ iaas-configurations:
   vcenter_username: (( vcenter_credentials.username ))
 network-assignment:
   network:
-    name: ((management_network_name))
+    name: ((infra_network_name))
   other_availability_zones: []
   singleton_availability_zone:
     name: ((availability_zones.0.name))
