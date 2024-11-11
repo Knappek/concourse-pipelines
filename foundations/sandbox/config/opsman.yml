@@ -4,7 +4,7 @@ opsman-configuration:
     vcenter:
       datacenter: ((vcenter_datacenter))
       datastore: ((vcenter_datastore))
-      folder: /Lab/vm
+      folder: ((bosh_vm_folder))
       url: ((vcenter_server))
       username: ((vcenter_credentials.username))
       password: ((vcenter_credentials.password))
