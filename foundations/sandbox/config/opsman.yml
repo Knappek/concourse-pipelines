@@ -4,7 +4,7 @@ opsman-configuration:
     vcenter:
       datacenter: ((vcenter_datacenter))
       datastore: ((vcenter_datastore))
-      folder: ((bosh_vm_folder))
+      folder: /Lab/vm
       url: ((vcenter_server))
       username: ((vcenter_credentials.username))
       password: ((vcenter_credentials.password))
@@ -12,10 +12,10 @@ opsman-configuration:
       insecure: true
     disk_type: thin
     dns: (( dns_server ))
-    gateway: ((management_network_gateway))
+    gateway: ((infra_network_gateway))
     hostname: opsman
-    netmask: ((management_network_netmask))
-    network: ((management_network_name))
+    netmask: ((infra_network_netmask))
+    network: ((infra_network_name))
     ntp: ((dns_server))
     private_ip: ((ops_manager_ip))
     ssh_public_key: ((ssh_public_key))
