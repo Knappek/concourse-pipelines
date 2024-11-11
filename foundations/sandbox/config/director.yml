@@ -36,7 +36,7 @@ network-assignment:
     name: ((availability_zones.0.name))
 networks-configuration:
   icmp_checks_enabled: false
-  networks: ((networks))
+  networks: ((network_configuration.networks))
 properties-configuration:
   director_configuration:
     ntp_servers_string: ((ntp_servers_string))
@@ -44,4 +44,3 @@ properties-configuration:
     clear_default_trusted_certificates_store: false
     opsmanager_root_ca_trusted_certs: true
     generate_vm_passwords: true
-vmextensions-configuration: ((vmextensions_configuration))

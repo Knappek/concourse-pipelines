@@ -12,10 +12,10 @@ opsman-configuration:
       insecure: true
     disk_type: thin
     dns: (( dns_server ))
-    gateway: ((management_subnet_gateway))
+    gateway: ((management_network_gateway))
     hostname: opsman
-    netmask: ((ops_manager_netmask))
-    network: ((management_subnet_name))
+    netmask: ((management_network_netmask))
+    network: ((management_network_name))
     ntp: ((dns_server))
     private_ip: ((ops_manager_ip))
     ssh_public_key: ((ssh_public_key))
