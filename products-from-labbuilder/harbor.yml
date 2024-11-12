@@ -1,0 +1,155 @@
+product-name: harbor-container-registry
+product-properties:
+  .harbor-app.static_ips:
+    value: 172.30.6.15
+  .properties.admin_password:
+    value:
+      secret: VMware1!
+  .properties.admin_password_for_smoketest:
+    value:
+      secret: VMware1!
+  .properties.auth_mode:
+    selected_option: db_auth
+    value: db_auth
+  .properties.customize_container_network:
+    selected_option: default
+    value: default
+  .properties.hostname:
+    value: harbor.tkgi.local
+  .properties.initial_delay_minutes:
+    value: 60
+  .properties.log_insight:
+    selected_option: disabled
+    value: disabled
+  .properties.no_proxy:
+    value: 127.0.0.1,localhost,.local,.internal,log,db,redis,nginx,core,portal,postgresql,jobservice,registry,registryctl,clair-adapter,chartmuseum,notary-server
+  .properties.registry_storage:
+    selected_option: filesystem
+    value: filesystem
+  .properties.server_cert_ca:
+    value: |-
+      -----BEGIN CERTIFICATE-----
+      MIIDgDCCAmigAwIBAgIVAJm0EI58AR0On6s/v0CCZF/fSrHyMA0GCSqGSIb3DQEB
+      CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjE5
+      NTk1MVoXDTI2MTAwNzE5NTk1MVowOzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+      dm90YWwxGjAYBgNVBAMMEWhhcmJvci50a2dpLmxvY2FsMIIBIjANBgkqhkiG9w0B
+      AQEFAAOCAQ8AMIIBCgKCAQEAqRtYuuLZ4rR0n5cbg/3EOtWYJXjNKPINpKY7vKUm
+      ApfJc4nU4TaLz0D9wLbbXMSWxsGaVIfRYL3fNw3Udl7Tvi1HgPSDxIKCbvGq18XW
+      72Xa6IhI1S+JfsKOt+9tS6ghW6T4fGcI68OGJCqJqDeqE2+aBuS2rSkzhqW9BgPs
+      9ihJq6iVcT+1sR1AhEuwacy+J8To5+2k3n8Eb/Z4R/kx0iTBZFGOlFUYno8wtCF8
+      A04epEXliiLtNS05TXVqQCTeZbd9P9qswytMrK+GU1MFKh4yRGiCq7y8GCnsWEVX
+      /jERcw+GOjoTZq9R/BwRhsknqeuXSKckfpO4qN7UKMCJJQIDAQABo4GWMIGTMB0G
+      A1UdDgQWBBQ31AzztMlDPb/e3GYGnUfKm6I0TzAfBgNVHSMEGDAWgBTVuNyXUSQ2
+      eEpz3U3vf23ddTZ0BTAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDgYD
+      VR0PAQH/BAQDAgWgMCIGA1UdEQQbMBmCEWhhcmJvci50a2dpLmxvY2FshwSsHgYP
+      MA0GCSqGSIb3DQEBCwUAA4IBAQBeseCDJLtKEhVa+4mVwPV8KaV1KpUDSWR+zo/n
+      HIuZeDWDC7sCinfn49XfP/gvICGIXoHqrmCFZaGj2xCQLMS6HETg/wopGmo+43Vc
+      eQj6hD1egdOQmxXEi7KGR3yu9Dz3FiVaYg/el3X1sthG3JfjgrZDTtf04CMutlqw
+      XuFA+Yovay1T7b7zsPK0ySOvwvyTzVhbmCMjDe1WO2aIn21eTWKeYXZXuSIJbgIi
+      eib4digR9HUvpSnLlwqtULAvpBGLxWgFsMU8zOfqpyxputyshDwqnfOlj73R33E8
+      xhC1a+OJTFtpbMaUKXl/n77cAfCOPmf/ZOawTG2bOYEkaHgY
+      -----END CERTIFICATE-----
+  .properties.server_cert_key:
+    value:
+      cert_pem: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDgDCCAmigAwIBAgIVAJm0EI58AR0On6s/v0CCZF/fSrHyMA0GCSqGSIb3DQEB
+        CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTAwNjE5
+        NTk1MVoXDTI2MTAwNzE5NTk1MVowOzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+        dm90YWwxGjAYBgNVBAMMEWhhcmJvci50a2dpLmxvY2FsMIIBIjANBgkqhkiG9w0B
+        AQEFAAOCAQ8AMIIBCgKCAQEAqRtYuuLZ4rR0n5cbg/3EOtWYJXjNKPINpKY7vKUm
+        ApfJc4nU4TaLz0D9wLbbXMSWxsGaVIfRYL3fNw3Udl7Tvi1HgPSDxIKCbvGq18XW
+        72Xa6IhI1S+JfsKOt+9tS6ghW6T4fGcI68OGJCqJqDeqE2+aBuS2rSkzhqW9BgPs
+        9ihJq6iVcT+1sR1AhEuwacy+J8To5+2k3n8Eb/Z4R/kx0iTBZFGOlFUYno8wtCF8
+        A04epEXliiLtNS05TXVqQCTeZbd9P9qswytMrK+GU1MFKh4yRGiCq7y8GCnsWEVX
+        /jERcw+GOjoTZq9R/BwRhsknqeuXSKckfpO4qN7UKMCJJQIDAQABo4GWMIGTMB0G
+        A1UdDgQWBBQ31AzztMlDPb/e3GYGnUfKm6I0TzAfBgNVHSMEGDAWgBTVuNyXUSQ2
+        eEpz3U3vf23ddTZ0BTAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDgYD
+        VR0PAQH/BAQDAgWgMCIGA1UdEQQbMBmCEWhhcmJvci50a2dpLmxvY2FshwSsHgYP
+        MA0GCSqGSIb3DQEBCwUAA4IBAQBeseCDJLtKEhVa+4mVwPV8KaV1KpUDSWR+zo/n
+        HIuZeDWDC7sCinfn49XfP/gvICGIXoHqrmCFZaGj2xCQLMS6HETg/wopGmo+43Vc
+        eQj6hD1egdOQmxXEi7KGR3yu9Dz3FiVaYg/el3X1sthG3JfjgrZDTtf04CMutlqw
+        XuFA+Yovay1T7b7zsPK0ySOvwvyTzVhbmCMjDe1WO2aIn21eTWKeYXZXuSIJbgIi
+        eib4digR9HUvpSnLlwqtULAvpBGLxWgFsMU8zOfqpyxputyshDwqnfOlj73R33E8
+        xhC1a+OJTFtpbMaUKXl/n77cAfCOPmf/ZOawTG2bOYEkaHgY
+        -----END CERTIFICATE-----
+      private_key_pem: |-
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEowIBAAKCAQEAqRtYuuLZ4rR0n5cbg/3EOtWYJXjNKPINpKY7vKUmApfJc4nU
+        4TaLz0D9wLbbXMSWxsGaVIfRYL3fNw3Udl7Tvi1HgPSDxIKCbvGq18XW72Xa6IhI
+        1S+JfsKOt+9tS6ghW6T4fGcI68OGJCqJqDeqE2+aBuS2rSkzhqW9BgPs9ihJq6iV
+        cT+1sR1AhEuwacy+J8To5+2k3n8Eb/Z4R/kx0iTBZFGOlFUYno8wtCF8A04epEXl
+        iiLtNS05TXVqQCTeZbd9P9qswytMrK+GU1MFKh4yRGiCq7y8GCnsWEVX/jERcw+G
+        OjoTZq9R/BwRhsknqeuXSKckfpO4qN7UKMCJJQIDAQABAoIBAAGdLrQd7SlyQnix
+        dwRD/Eb5eenFpOOip8muAnzy8JFuxG/zXVJG9H+mZaWcuSxB/hRojaIH59IuDb7X
+        RXNZxViX0wpiiw1pl3gam2BS1ZHUXYoBnvxV51CL59POl7L0qFjZErwROa8SXyni
+        NA0kdt2Xn5c4QJwXfBPpagvwJqdUyCGQxl7oPgHx6iGdE5c9EcgSnekpFVgl93hr
+        kkH74xPixNb7fHDFC0JJ4P904/aKXIzvPqG5Ymco6Dq+fRpOz1TGGIY2iQH2jCi+
+        F9safypZ0I130AcWoBw0BsF+X27DIXZj5BeHwIlqmbsnuerRYQvmYRIHBMycJgkz
+        o56/YDECgYEA2P6GrSTqqO7Nclu75RndjZ2oBq3FfDu9nf6R/kl9hwsZkg6HqSlo
+        RoZdJM7lyLZjq36d9Wio6OyEhYAIW9/YBEuimfZ37ET8CD8gyqaiSgEmtC/LGqvl
+        WrsqIGfzcb2bCd3qxtqSKOX6r8lrcowOOIOPKOVMJfXnfi78nzZknW0CgYEAx4Es
+        kxhO8hRnGkWI9SI8H+fgujWoQlM6s263E6c/rvaVBHaaCvdP2lk2osebTGWLQbVk
+        /qw2o61q8pBa5/zh+ZTkrSLjyX9jzw1619V5KiKhlbPgh1loy6O/Wlt/J3nbt/hz
+        vpZbjyp/Xidz0Hu8A0tuPyfFERplKPBL30AfX5kCgYBJoxZQ65Y2fdN6W2cH+B8X
+        T8kVeyLpZdyTITCp+oZ+rWWgCw4+ea7JQA+bzhpsYniwWeeAwGORp7HRHAG6K9xC
+        mOg1F07a/w4IPmQCYUnxkzJvM0jZZDwQ7jL9jEkw8AcM8iIaGVJATssjnFa6KI0q
+        4HpUhnuw5iII0CkqXmsGgQKBgFVprkXDkHj/1yxePMaGQ6t9QK84LbNHosgTTHoz
+        joY/t4jTphuvyhY3P7btMkXA65/UI0sNO89TfYgf2Wuczrplzol5eIBZ88c/hCpH
+        kLpDXV6URjpsQvt8PX5X0dZ6y2C2FAeyo7xle2Y6CdFmSBY5Axgy1KH/5PNj/Xe1
+        IjlxAoGBALdaUBa/dEnH033A0Iyk5rdfu9FsUnMLxDYWImtlFNoZo4pDuU/TSDKB
+        9cqMU9ZJj/d0r09uoMXCbmiy9MuYieaemoFFI/5OQX82g5RzZ1N7wgF/oYbqpIep
+        Xahml9rkkvVVpCEZuEQHMk+qPRj8s1YCSIdYMaez96jdlvoTt40N
+        -----END RSA PRIVATE KEY-----
+  .properties.trivy_offline_scan:
+    value: true
+  .properties.trivy_skip_update:
+    value: false
+  .properties.vm_monitor:
+    selected_option: no_monitor
+    value: no_monitor
+  .properties.with_trivy:
+    value: true
+network-properties:
+  network:
+    name: tkgi
+  other_availability_zones:
+  - name: az1
+  singleton_availability_zone:
+    name: az1
+resource-config:
+  harbor-app:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  smoke-testing:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  smoke-testing:
+    post-deploy-state: true
+  uaa-deregistration:
+    pre-delete-state: false
+

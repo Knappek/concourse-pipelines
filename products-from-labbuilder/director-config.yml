@@ -1,0 +1,170 @@
+az-configuration:
+- name: az1
+  iaas_configuration_name: default
+  clusters:
+  - cluster: compute
+    drs_rule: MUST
+    guid: dea459855377b5da8fb6
+    host_group: null
+    resource_pool: null
+  guid: 36c8351257dbd250c9b1
+iaas-configurations:
+- additional_cloud_properties: {}
+  bosh_disk_path: pcf_disk
+  bosh_template_folder: pcf_templates
+  bosh_vm_folder: pcf_vms
+  datacenter: Lab
+  disk_type: thin
+  enable_human_readable_name: false
+  ensure_no_ip_conflicts: true
+  ephemeral_datastore_clusters_string: ""
+  ephemeral_datastores_string: datastore-esx1
+  name: default
+  nsx_address: 172.20.16.11
+  nsx_ca_certificate: |-
+    -----BEGIN CERTIFICATE-----
+    MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
+    BQAwcDEcMBoGA1UEAwwTY2x1c3Rlci1uc3gtbWFuYWdlcjEMMAoGA1UECwwDTlNY
+    MRQwEgYDVQQKDAtWTXdhcmUgSW5jLjESMBAGA1UEBwwJUGFsbyBBbHRvMQswCQYD
+    VQQIDAJDQTELMAkGA1UEBhMCVVMwHhcNMjQxMDAyMTMyOTI1WhcNMjcwMTA1MTMy
+    OTI1WjBwMRwwGgYDVQQDDBNjbHVzdGVyLW5zeC1tYW5hZ2VyMQwwCgYDVQQLDANO
+    U1gxFDASBgNVBAoMC1ZNd2FyZSBJbmMuMRIwEAYDVQQHDAlQYWxvIEFsdG8xCzAJ
+    BgNVBAgMAkNBMQswCQYDVQQGEwJVUzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+    AQoCggEBAKUfdY88V1BaZfM0z8ioqF8AIbDYk8SFxcCFNw+EU9P6i+J3+mPAbbf0
+    9K5YUYie+2ok7Jtmc+Igio8cvfOty0tblCtCednhghFE3jnR6yUB2YCwlty1hwTp
+    NeZj5HcuETejmhz05JSOaW84eq9prQpktlXzyyN7JFvkvlfeSTpRnrVYXItop9Uz
+    q48fiSogtfwVK8UYmk8qRV6Sjcqz1GIKmcQaqG2tvLztOx27xl97Ga3tcVk7QUA3
+    ymKOxFs1Q1FvDnfXtaVi/Yb42vkrmf9QWJa5meGGUD98dmpVNP2fhI7qiQCDUPUf
+    CSW4AB08diIWuJ7bo3ObmiKPKdfJijcCAwEAAaNHMEUwEwYDVR0lBAwwCgYIKwYB
+    BQUHAwEwDwYDVR0RBAgwBocErBQQCzAdBgNVHQ4EFgQU0ax6MLlFoH4wmr7rp3Tq
+    8hEuIhswDQYJKoZIhvcNAQELBQADggEBAJlmiM66GT0tq9/eD6cTOCQlsDuIXnxA
+    yPZ7/bLo7NpGJg0rmrS15MPjvjmdeMQciTKWQKakXKciRIg3eTGtU/Fxkt4SvwxQ
+    wWDDTa/Z6CATxhNTaT/RWn9VHsniind/bnDmtXvNkMFswCkC3+EpUBpFkEBSIw3L
+    +649dT5DrMjyEJT+aB5zO6AxRnFq/cHP0zRETPiMBBYrHWOxWL5eeablHtXHX/hv
+    NpaGnQ6lhEbAUkpTz5Cn6qwQHvgi1c/Ks50g2wOJ9CbZrJA5/IiHqLjL6xcwScui
+    a0g616OFkUEHyfpVWq91NqKrlI//oqEouDVWd8Yc7Kf/WVYpZJpXJHo=
+    -----END CERTIFICATE-----
+  nsx_mode: nsx-t
+  nsx_networking_enabled: true
+  nsx_password: VMware1!VMware1!
+  nsx_t_auth_type: local_user
+  nsx_t_tag_nsx_vm_objects: false
+  nsx_t_use_policy_api: true
+  nsx_t_use_policy_api_migration_mode: false
+  nsx_username: admin
+  persistent_datastore_clusters_string: ""
+  persistent_datastores_string: datastore-esx1
+  ssl_verification_enabled: false
+  vcenter_host: 172.20.16.10
+  vcenter_password: VMware1!
+  vcenter_username: administrator@vsphere.local
+network-assignment:
+  network:
+    name: infra
+  other_availability_zones: []
+  singleton_availability_zone:
+    name: az1
+networks-configuration:
+  icmp_checks_enabled: true
+  networks:
+  - name: infra
+    subnets:
+    - iaas_identifier: infra-seg
+      cidr: 172.30.4.0/26
+      dns: 192.168.178.1
+      gateway: 172.30.4.1
+      reserved_ip_ranges: 172.30.4.2,172.30.4.7,172.30.4.8-172.30.4.10
+      availability_zone_names:
+      - az1
+  - name: tas
+    subnets:
+    - iaas_identifier: tas-seg
+      cidr: 172.30.5.0/25
+      dns: 192.168.178.1
+      gateway: 172.30.5.1
+      reserved_ip_ranges: ""
+      availability_zone_names:
+      - az1
+  - name: tkgi
+    subnets:
+    - iaas_identifier: tkgi-infra-seg
+      cidr: 172.30.6.0/25
+      dns: 192.168.178.1
+      gateway: 172.30.6.1
+      reserved_ip_ranges: ""
+      availability_zone_names:
+      - az1
+properties-configuration:
+  director_configuration:
+    additional_ssh_users: []
+    automatic_certificate_rotation_enabled: false
+    blobstore_type: local
+    bosh_director_recreate_on_next_deploy: false
+    bosh_recreate_on_next_deploy: false
+    bosh_recreate_persistent_disks_on_next_deploy: false
+    ca_certificate_duration: 1460
+    database_type: internal
+    director_metrics_server_enabled: true
+    director_worker_count: 5
+    duration_overrides_enabled: false
+    encryption:
+      keys: []
+      providers: []
+    hm_emailer_options:
+      enabled: false
+    hm_pager_duty_options:
+      enabled: false
+    identification_tags: {}
+    job_configuration_on_tmpfs: false
+    keep_unreachable_vms: false
+    leaf_certificate_duration: 730
+    local_blobstore_options:
+      enable_signed_urls: true
+    ntp_servers_string: 192.168.178.1
+    post_deploy_enabled: false
+    resurrector_enabled: true
+    retry_bosh_deploys: false
+    short_lived_nats_bootstrap_credentials_enabled: false
+    skip_director_drain: false
+    system_metrics_runtime_enabled: true
+  dns_configuration:
+    excluded_recursors: []
+    handlers: []
+  security_configuration:
+    clear_default_trusted_certificates_store: false
+    generate_vm_passwords: true
+    opsmanager_root_ca_trusted_certs: true
+  syslog_configuration:
+    enabled: false
+resource-configuration:
+  compilation:
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+    swap_as_percent_of_memory_size: automatic
+  director:
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+vmextensions-configuration:
+- name: increased-disk
+  cloud_properties:
+    disk: 256000
+vmtypes-configuration: {}
+
