@@ -11,7 +11,7 @@ opsman-configuration:
       resource_pool: /((vcenter_datacenter))/host/((vcenter_cluster))/Resources/sandbox
       insecure: true
     disk_type: thin
-    dns: (( dns_server ))
+    dns: ((dns_server))
     gateway: ((infra_network_gateway))
     hostname: opsman
     netmask: ((infra_network_netmask))
