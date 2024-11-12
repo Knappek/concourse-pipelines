@@ -14,6 +14,7 @@ vcenter_datacenter: Lab
 vcenter_datastore: datastore-esx1
 vcenter_cluster: compute
 dns_server: 192.168.178.1
+nsx_address: 172.20.16.11
 nsx_ca_certificate: |-
   -----BEGIN CERTIFICATE-----
   MIIDtTCCAp2gAwIBAgIULv3yp8PWVqZpiWFoCLtVGPLdjj0wDQYJKoZIhvcNAQEL
