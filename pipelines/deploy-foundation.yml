@@ -8,9 +8,9 @@ groups:
     - upgrade-opsman
     # - expiring-certificates
     # - delete-installation
-    # - download-upload-and-stage-healthwatch-pas-exporter
-    # - download-upload-and-stage-healthwatch
-    # - download-upload-and-stage-tas
+    - download-upload-and-stage-healthwatch-pas-exporter
+    - download-upload-and-stage-healthwatch
+    - download-upload-and-stage-tas
     # - configure-healthwatch-pas-exporter
     # - configure-healthwatch
     # - configure-tas
@@ -360,143 +360,139 @@ jobs:
       ENV_FILE: foundations/config/env.yml
   - do: *export-installation
 
-# - name: download-upload-and-stage-tas
-#   serial: true
-#   serial_groups: [ products ]
-#   plan:
-#   - in_parallel:
-#     - get: platform-automation-image
-#       params:
-#         unpack: true
-#       trigger: true
-#       passed: [ "upgrade-opsman" ]
-#     - get: platform-automation-tasks
-#     - get: configuration
-#   - task: prepare-tasks-with-secrets
-#     <<: *prepare-tasks-with-secrets
-#   - task: download-tas
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/download-product.yml
-#     input_mapping:
-#       config: configuration
-#       vars: configuration
-#     params:
-#       CONFIG_FILE: foundations/((foundation))/config/download-tas.yml
-#       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-#       SOURCE: pivnet
-#     output_mapping:
-#       downloaded-product: tas-product
-#       downloaded-stemcell: tas-stemcell
-#   # code_snippet upload-product-usage start yaml
-#   - task: upload-tas-product
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/upload-product.yml
-#     input_mapping:
-#       product: tas-product
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#   # code_snippet upload-product-usage end
-#   - task: upload-tas-stemcell
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/upload-stemcell.yml
-#     input_mapping:
-#       env: configuration
-#       stemcell: tas-stemcell
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#   # code_snippet stage-product-usage start yaml
-#   - task: upload-and-stage-tas
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/stage-product.yml
-#     input_mapping:
-#       product: tas-product
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#   # code_snippet stage-product-usage end
-# - name: download-upload-and-stage-healthwatch
-#   serial: true
-#   serial_groups: [ products ]
-#   plan:
-#     - in_parallel:
-#         - get: platform-automation-image
-#           params:
-#             unpack: true
-#           trigger: true
-#           passed: [ "upgrade-opsman" ]
-#         - get: platform-automation-tasks
-#           params:
-#             unpack: true
-#         - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-healthwatch
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       input_mapping:
-#         config: configuration
-#         vars: configuration
-#       params:
-#         CONFIG_FILE: foundations/((foundation))/config/download-healthwatch.yml
-#         VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-#         SOURCE: pivnet
-#       output_mapping:
-#         downloaded-product: healthwatch-product
-#         downloaded-stemcell: healthwatch-stemcell
-#     - task: upload-and-stage-healthwatch
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/upload-and-stage-product.yml
-#       input_mapping:
-#         product: healthwatch-product
-#         env: configuration
-#       params:
-#         ENV_FILE: foundations/config/env.yml
-#     - task: upload-healthwatch-stemcell
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/upload-stemcell.yml
-#       input_mapping:
-#         env: configuration
-#         stemcell: healthwatch-stemcell
-#       params:
-#         ENV_FILE: foundations/config/env.yml
+- name: download-upload-and-stage-tas
+  serial: true
+  serial_groups: [ products ]
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      trigger: true
+      passed: [ "upgrade-opsman" ]
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: download-tas
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: configuration
+      vars: configuration
+    params:
+      CONFIG_FILE: foundations/((foundation))/config/download-tas.yml
+      VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+      SOURCE: pivnet
+    output_mapping:
+      downloaded-product: tas-product
+      downloaded-stemcell: tas-stemcell
+  # code_snippet upload-product-usage start yaml
+  - task: upload-tas-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: tas-product
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  # code_snippet upload-product-usage end
+  - task: upload-tas-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: configuration
+      stemcell: tas-stemcell
+    params:
+      ENV_FILE: foundations/config/env.yml
+  # code_snippet stage-product-usage start yaml
+  - task: upload-and-stage-tas
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: tas-product
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  # code_snippet stage-product-usage end
+- name: download-upload-and-stage-healthwatch
+  serial: true
+  serial_groups: [ products ]
+  plan:
+    - in_parallel:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          trigger: true
+          passed: [ "upgrade-opsman" ]
+        - get: platform-automation-tasks
+        - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-healthwatch
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      input_mapping:
+        config: configuration
+        vars: configuration
+      params:
+        CONFIG_FILE: foundations/((foundation))/config/download-healthwatch.yml
+        VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+        SOURCE: pivnet
+      output_mapping:
+        downloaded-product: healthwatch-product
+        downloaded-stemcell: healthwatch-stemcell
+    - task: upload-and-stage-healthwatch
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+      input_mapping:
+        product: healthwatch-product
+        env: configuration
+      params:
+        ENV_FILE: foundations/config/env.yml
+    - task: upload-healthwatch-stemcell
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-stemcell.yml
+      input_mapping:
+        env: configuration
+        stemcell: healthwatch-stemcell
+      params:
+        ENV_FILE: foundations/config/env.yml
 
-# - name: download-upload-and-stage-healthwatch-pas-exporter
-#   serial: true
-#   serial_groups: [ products ]
-#   plan:
-#     - in_parallel:
-#         - get: platform-automation-image
-#           params:
-#             unpack: true
-#           trigger: true
-#           passed: [ "upgrade-opsman" ]
-#         - get: platform-automation-tasks
-#           params:
-#             unpack: true
-#         - get: configuration
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     - task: download-healthwatch
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/download-product.yml
-#       input_mapping:
-#         config: configuration
-#         vars: configuration
-#       params:
-#         CONFIG_FILE: foundations/((foundation))/config/download-healthwatch-pas-exporter.yml
-#         VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-#         SOURCE: pivnet
-#       output_mapping:
-#         downloaded-product: healthwatch-pas-exporter
-#     - task: upload-and-stage-healthwatch-pas-exporter
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/upload-and-stage-product.yml
-#       input_mapping:
-#         product: healthwatch-pas-exporter
-#         env: configuration
-#       params:
-#         ENV_FILE: foundations/config/env.yml
+- name: download-upload-and-stage-healthwatch-pas-exporter
+  serial: true
+  serial_groups: [ products ]
+  plan:
+    - in_parallel:
+        - get: platform-automation-image
+          params:
+            unpack: true
+          trigger: true
+          passed: [ "upgrade-opsman" ]
+        - get: platform-automation-tasks
+        - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-healthwatch
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      input_mapping:
+        config: configuration
+        vars: configuration
+      params:
+        CONFIG_FILE: foundations/((foundation))/config/download-healthwatch-pas-exporter.yml
+        VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+        SOURCE: pivnet
+      output_mapping:
+        downloaded-product: healthwatch-pas-exporter
+    - task: upload-and-stage-healthwatch-pas-exporter
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+      input_mapping:
+        product: healthwatch-pas-exporter
+        env: configuration
+      params:
+        ENV_FILE: foundations/config/env.yml
 
 # - name: configure-tas
 #   serial: true
@@ -510,8 +506,6 @@ jobs:
 #           - download-upload-and-stage-tas
 #         trigger: true
 #       - get: platform-automation-tasks
-#         params:
-#           unpack: true
 #       - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -541,8 +535,6 @@ jobs:
 #           - download-upload-and-stage-healthwatch
 #         trigger: true
 #       - get: platform-automation-tasks
-#         params:
-#           unpack: true
 #       - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -571,8 +563,6 @@ jobs:
 #           - download-upload-and-stage-healthwatch-pas-exporter
 #         trigger: true
 #       - get: platform-automation-tasks
-#         params:
-#           unpack: true
 #       - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -721,8 +711,6 @@ jobs:
 #         params:
 #           unpack: true
 #       - get: platform-automation-tasks
-#         params:
-#           unpack: true
 #       - get: configuration
 #       - get: state
 #     - task: prepare-tasks-with-secrets
@@ -748,8 +736,6 @@ jobs:
 #           - apply-product-changes
 #         trigger: true
 #       - get: platform-automation-tasks
-#         params:
-#           unpack: true
 #       - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -778,8 +764,6 @@ jobs:
 #         params:
 #           unpack: true
 #       - get: platform-automation-tasks
-#         params:
-#           unpack: true
 #       - get: configuration
 #       - get: state
 #     - task: prepare-tasks-with-secrets
@@ -817,8 +801,6 @@ jobs:
 #           params:
 #             unpack: true
 #         - get: platform-automation-tasks
-#           params:
-#             unpack: true
 #         - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -842,8 +824,6 @@ jobs:
 #           passed:
 #             - create-root-ca
 #         - get: platform-automation-tasks
-#           params:
-#             unpack: true
 #         - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -874,8 +854,6 @@ jobs:
 #           passed:
 #             - apply-new-ca
 #         - get: platform-automation-tasks
-#           params:
-#             unpack: true
 #         - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -908,8 +886,6 @@ jobs:
 #           passed:
 #             - activate-new-ca-and-regenerate-certs
 #         - get: platform-automation-tasks
-#           params:
-#             unpack: true
 #         - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
@@ -940,8 +916,6 @@ jobs:
 #           passed:
 #             - apply-certificates
 #         - get: platform-automation-tasks
-#           params:
-#             unpack: true
 #         - get: configuration
 #     - task: prepare-tasks-with-secrets
 #       <<: *prepare-tasks-with-secrets
