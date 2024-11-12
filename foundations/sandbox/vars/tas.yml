@@ -1,24 +1,55 @@
-# All infrastructure was created using https://github.com/pivotal/paving for GCP
-# This file was generated from the location of terraform.tfstate:
-# terraform output stable_config_pas > ~/workspace/docs-platform-automation-reference-pipeline-config/foundations/sandbox/vars/tas.yml
-{
-  "apps_dns_domain": "apps.reference-gcp.gcp.platform-automation.cf-app.com",
-  "backup_bucket_name": "cf-norm-ci-reference-gcp-backup-17391",
-  "buildpacks_bucket_name": "cf-norm-ci-reference-gcp-buildpacks-17391",
-  "doppler_dns": "doppler.sys.reference-gcp.gcp.platform-automation.cf-app.com",
-  "droplets_bucket_name": "cf-norm-ci-reference-gcp-droplets-17391",
-  "http_backend_service_name": "reference-gcp-http-lb",
-  "loggregator_dns": "loggregator.sys.reference-gcp.gcp.platform-automation.cf-app.com",
-  "packages_bucket_name": "cf-norm-ci-reference-gcp-packages-17391",
-  "pas_subnet_cidr": "10.0.4.0/24",
-  "pas_subnet_gateway": "10.0.4.1",
-  "pas_subnet_name": "reference-gcp-pas-subnet",
-  "pas_subnet_reserved_ip_ranges": "10.0.4.1-10.0.4.9",
-  "resources_bucket_name": "cf-norm-ci-reference-gcp-resources-17391",
-  "ssh_dns": "ssh.sys.reference-gcp.gcp.platform-automation.cf-app.com",
-  "ssh_target_pool_name": "reference-gcp-ssh-lb",
-  "sys_dns_domain": "sys.reference-gcp.gcp.platform-automation.cf-app.com",
-  "tcp_dns": "tcp.reference-gcp.gcp.platform-automation.cf-app.com",
-  "tcp_target_pool_name": "reference-gcp-tcp-lb",
-  "web_target_pool_name": "reference-gcp-websocket-lb"
-}
+apps_dns_domain: apps.172.30.5.126.nip.io
+sys_dns_domain: sys.172.30.5.126.nip.io
+blobstore_internal_access_rules: allow 10.0.0.0/8;,allow 172.16.0.0/12;,allow 192.168.0.0/16;,allow 100.64.0.0/10;,allow 172.30.5.0/24;
+ssl_certificate: |
+  -----BEGIN CERTIFICATE-----
+  MIIDlTCCAn2gAwIBAgIUZJ62zhWsiX1v/j0szCMVwKVGpg4wDQYJKoZIhvcNAQEL
+  BQAwHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bpdm90YWwwHhcNMjQxMDA5MTUw
+  MDQ5WhcNMjYxMDEwMTUwMDQ5WjBJMQswCQYDVQQGEwJVUzEQMA4GA1UECgwHUGl2
+  b3RhbDEoMCYGA1UEAwwfKi5sb2dpbi5zeXMuMTcyLjMwLjUuMTI2Lm5pcC5pbzCC
+  ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAO14n+3YTasWiTRUE7UDtor4
+  PJ5UwcCFeLfazHPCg1rLEJc34nfrdPK7CaZKGRwB+dkYY32wlM6ksab8xHBL3z7D
+  b2QwhMop5tk+Q1XpQxWxb4q1RZHN2GG1m4XqNhgDjeINx9lyDhO8cyLk8h+ufc4B
+  F0j0at30J0MzYIRVIyPDhyZKtGNYCubBlMYbqEDg1xLhXGTzTnZTXNHAgEMYi+9x
+  1rxVjkSMRBXYC/6niEsnrCSXimCF5def3feJ8OG0C7RF9oR59DbgZqlY0LYW1QDl
+  qEAearSXjzEUYw92jD70cTIRCbH2vRnGRFqYHUAkq0zlKIXG/7rVu5XGKDOKWaUC
+  AwEAAaOBnjCBmzAdBgNVHQ4EFgQUvhUdBA5P8xlGiPmEQL/Za3ihtawwHwYDVR0j
+  BBgwFoAU1bjcl1EkNnhKc91N739t3XU2dAUwHQYDVR0lBBYwFAYIKwYBBQUHAwIG
+  CCsGAQUFBwMBMA4GA1UdDwEB/wQEAwIFoDAqBgNVHREEIzAhgh8qLmxvZ2luLnN5
+  cy4xNzIuMzAuNS4xMjYubmlwLmlvMA0GCSqGSIb3DQEBCwUAA4IBAQC24vJVVizY
+  rQB/SSj8TMYRmyM+iyjpH2eXG8BVBL2mwhtiST8HLnzm9vaM0t25MHzwxZyjU9xp
+  kqG0JUcthN+5I466hn/UhI1qsMxgWYLL6En4J1lS77hHp+jeBhtX9dGp01s8y41S
+  kAAdYaCfTsjPsUAm1GzD7Zfz6wOscvaUflgYAq4jIMpX+Tzd5CQH2MZEN+H6V05U
+  q0DHCvNZlmruhI5CdXZ5lhGuJ+wk0xjJMrezE6JyuDwb/vOzGXBeX8bOIV1Ls2Uv
+  CRwuWyAFUvO/x5M4RAubEfCN7fXiYw7DdSRBdNHFnSYfOa4Fn5rR13cNKhMpxiys
+  O84CeCEciSfh
+  -----END CERTIFICATE-----
+ssl_private_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  MIIEowIBAAKCAQEA7Xif7dhNqxaJNFQTtQO2ivg8nlTBwIV4t9rMc8KDWssQlzfi
+  d+t08rsJpkoZHAH52RhjfbCUzqSxpvzEcEvfPsNvZDCEyinm2T5DVelDFbFvirVF
+  kc3YYbWbheo2GAON4g3H2XIOE7xzIuTyH659zgEXSPRq3fQnQzNghFUjI8OHJkq0
+  Y1gK5sGUxhuoQODXEuFcZPNOdlNc0cCAQxiL73HWvFWORIxEFdgL/qeISyesJJeK
+  YIXl15/d94nw4bQLtEX2hHn0NuBmqVjQthbVAOWoQB5qtJePMRRjD3aMPvRxMhEJ
+  sfa9GcZEWpgdQCSrTOUohcb/utW7lcYoM4pZpQIDAQABAoIBAC/N7ZwKxC/h3IL9
+  Pe5drfyx1jolY8+mztNsJ2ZSTPEVGeTnKh7r9mH6xwmDtyRNPYe3gifGSV6EBwNP
+  tRfKHknbO+xWXBT6dG9dOl7sE0YlrwekUDn2z010Kre9m2AgLwrHrWiXrj/I2wC2
+  SAuaq9axn4dfNLgzs0ey6wYYwXcsPRtYo1ALnxfIzUjEVxVCGccxuDTtyCsHZ7cN
+  LZmLtymul1zuR436uBAlYL/H56gCuHMSw5+N3cmmxlkvkKvx2rjDl/bnC7yZ1WYl
+  oYauW9UTPAJvovWpE19SeZy2iAJHxVwr+xJGMGRLXgbSOosiMEiEf4U1PaZeFzj+
+  XNqPPQECgYEA+n+FBQqY/8Ag8MxHMQUc7PCx/93P74Y0pyKB8hdULaT5G5jhSOs1
+  sG7xEYrDz1o4B8e4YHYxlfxsfzdgluvjMiI0+/rAlIzyQ4ZyzMJLIyEkn/erhOF8
+  bYAsUxOWZptwIjmfKCz0fcDsgOs9Cj3LtrTtwoQ6ZVZtp27wkGR4R0ECgYEA8q/b
+  vBn0mLddnfMVpcDRB/i1YPCA28nX/HtSGiiPKuaaUaCoPtL6XfaMTe02JKLijf5j
+  bckAtj4I7t3aB5lJR2zhtxlBytwPR5jlIRJv7BkDvhF2z0piEqUhjvYmBuztY60I
+  jNCuIvf9SU0VOzojzJZ5/PoGZ/zU8cQJOwnr/WUCgYAftZS5FqZXeZKx6Kn6YpNO
+  ywk9Qm7X+z0fCxc39gwJ2yBNhgS+nkelleWeOtqenOUK1xVX4J5WRiXV1MS9Vg7k
+  gcADRbKrG0xvj81obg/k2oUwWsGziHefxOHXgls/kd2X94NWKpqocIt/pkeLzFbF
+  QhH21ZYuzcoDr99z58PyAQKBgQDjB8r7HBjq6NcGVQqSRmAGIg+kATm64wdQJhm3
+  aOwOCS6iYDYkl4AqeOPmXpwBB/QDO9DOOnSVCFGZDCfUZfzceapqfJFE8jrFEu5+
+  0t2rM/eBTpsj7oTyxlIviGwonGqzjYLrIKlXA0GK2jabcpdc5AR4uXlWvHqFNYwh
+  E/YV1QKBgHAxBdVLDtEU3CuNnyJSt5DQneBaMAaocyn66aoNQC+JbB0w48ARpqWg
+  JFu+tJHA+YKcia0HQSLiz1hyAYfjWkFON+ahHE50qgV0eOMujQG8ZjO/Rq1XACLb
+  zofGLApLIXXelU5FxDGCdDBu0dQrbld/sPh0oYtKZXhRuFntMAh8
+  -----END RSA PRIVATE KEY-----
+static_gorouter_ip: 172.30.5.126
