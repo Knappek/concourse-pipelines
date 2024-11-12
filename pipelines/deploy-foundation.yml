@@ -13,7 +13,7 @@ groups:
     - download-upload-and-stage-tas
     # - configure-healthwatch-pas-exporter
     # - configure-healthwatch
-    # - configure-tas
+    - configure-tas
     # - apply-product-changes
     # - run-tas-smoketest-errand
     # - collect-telemetry

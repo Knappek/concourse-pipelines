@@ -1,0 +1,7 @@
+---
+pivnet-product-slug: vmware-nsx-t
+
+file-glob: "VMware-NSX-T-*.pivotal"
+product-version: ((ncp-version))
+
+pivnet-api-token: ((pivnet_token))
