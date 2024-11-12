@@ -46,18 +46,18 @@ network_configuration:
   networks:
   - name: infra
     subnets:
-    - iaas_identifier: (( infra_network_name ))
+    - iaas_identifier: ((infra_network_name))
       cidr: 172.30.4.1/26
-      dns: (( dns_server ))
-      gateway: (( infra_network_gateway ))
-      reserved_ip_ranges: 172.30.4.2-172.30.4.7,(( ops_manager_ip ))
+      dns: ((dns_server))
+      gateway: ((infra_network_gateway))
+      reserved_ip_ranges: 172.30.4.2-172.30.4.7,((ops_manager_ip))
       availability_zone_names:
       - az1
   - name: tas
     subnets:
     - iaas_identifier: tas-seg
       cidr: 172.30.5.1/25
-      dns: (( dns_server ))
+      dns: ((dns_server))
       gateway: 172.30.5.1
       reserved_ip_ranges: ""
       availability_zone_names:
@@ -66,9 +66,9 @@ network_configuration:
     subnets:
     - iaas_identifier: tkgi-infra-seg
       cidr: 172.30.6.1/25
-      dns: (( dns_server ))
+      dns: ((dns_server))
       gateway: 172.30.6.1
       reserved_ip_ranges: ""
       availability_zone_names:
       - az1
-ntp_servers_string: (( dns_server ))
+ntp_servers_string: ((dns_server))
