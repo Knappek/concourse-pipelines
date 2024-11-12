@@ -277,17 +277,18 @@ jobs:
     params:
       ENV_FILE: foundations/config/env.yml
   # code_snippet revert-staged-changes-usage end
-  - task: export-installation
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/export-installation.yml
-    input_mapping:
-      env: configuration
-    params:
-      ENV_FILE: foundations/config/env.yml
-      INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
-  - put: installation
-    params:
-      file: installation/((foundation))-installation*.zip
+  - do: &export-installation
+    - task: export-installation
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/export-installation.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: foundations/config/env.yml
+        INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
+    - put: installation
+      params:
+        file: installation/((foundation))-installation*.zip
 
 - name: upgrade-opsman
   serial: true
@@ -297,6 +298,8 @@ jobs:
     - get: platform-automation-image
       params:
         unpack: true
+      # TODO: why a trigger here? it makes more sense to have it on the configuration resource
+      # as this holds the version, no?
       trigger: true
     - get: platform-automation-tasks
     - get: installation
@@ -355,17 +358,7 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-  - task: export-installation
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/export-installation.yml
-    input_mapping:
-      env: configuration
-    params:
-      ENV_FILE: foundations/config/env.yml
-      INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
-  - put: installation
-    params:
-      file: installation/((foundation))-installation*.zip
+  - do: *export-installation
 
 # - name: download-upload-and-stage-tas
 #   serial: true
