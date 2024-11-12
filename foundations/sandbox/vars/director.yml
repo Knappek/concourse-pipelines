@@ -39,24 +39,24 @@ nsx_ca_certificate: |-
   -----END CERTIFICATE-----
 infra_network_gateway: 172.30.4.1
 infra_network_name: infra-seg
-infra_network_netmask: 255.255.255.0
+infra_network_netmask: 255.255.255.192
 ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDNre3RSDIQIbswU/AbFMrdGDTRNIxXs1L1aY9ozDm/TsTKBf85Kr/0Bi3Az1DgOifR3s7SblZFhqKtGueqyv4NKoNy8dgxUsFzGKaRBmwGfCn9rp0hAV/r6BdyhRGloltaZ4KuR3v3AQTTjpyWPsf55wUIMYtOtrQ1tnNspmZmEyh11e8Hbwsq6jaVDCpSWkLPgir4lDTFANRpA/MaU9XUG3PjYszaNFgIScUwQVl0otmCpFgZgf9jXwy4K5CpG4u/1CSIA6H+5XAJaAzDNGcAIGQKaIAj6Cvd8QyUs+UEV5n6rJSsp+gnfu0gEYx4QmeWwcVdGu1Re18qHVgAP56gF58uV7p/V60Tlf9IFqkz67lwLlOuq9dfNmPGIJ/lydcLgcvXmJObyntm1jFi5ChtIrBd7uShh9b6wwOLhekv3TwOn0nHPjXDabVDcmfXVhAgyJyknCFv1Hm3UFwTngoc4WFm38wgxzajOzxt83b8bXXhMNaU8L8VXtVpfIrDHbAKhho6Aaf8JahKa46UxFa4yjkVfN75N4++8CdCpGiruLUp1rW4zYkrjxBuIBcib/06QTsvdPIsYVsPic/mYoxBVTclvLi/ELVdwFFSavwNKI+XwH6ENI7vckkVs6HpM0GJu4qsvmhrlkGVmNM0BkaJN1i1CQgn01OTz+um1rjr+Q== andy.knapp.ak@gmail.com
-ops_manager_ip: 172.30.4.65
+ops_manager_ip: 172.30.4.8
 network_configuration:
   networks:
   - name: infra
     subnets:
     - iaas_identifier: (( infra_network_name ))
-      cidr: 172.30.4.64/26
+      cidr: 172.30.4.1/26
       dns: (( dns_server ))
       gateway: (( infra_network_gateway ))
-      reserved_ip_ranges: (( ops_manager_ip ))
+      reserved_ip_ranges: 172.30.4.2-172.30.4.7,(( ops_manager_ip ))
       availability_zone_names:
       - az1
   - name: tas
     subnets:
     - iaas_identifier: tas-seg
-      cidr: 172.30.5.128/25
+      cidr: 172.30.5.1/25
       dns: (( dns_server ))
       gateway: 172.30.5.1
       reserved_ip_ranges: ""
@@ -65,7 +65,7 @@ network_configuration:
   - name: tkgi
     subnets:
     - iaas_identifier: tkgi-infra-seg
-      cidr: 172.30.6.128/25
+      cidr: 172.30.6.1/25
       dns: (( dns_server ))
       gateway: 172.30.6.1
       reserved_ip_ranges: ""
