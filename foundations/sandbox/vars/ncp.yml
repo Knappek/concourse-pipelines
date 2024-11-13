@@ -4,10 +4,3 @@ external_ip_pools:
   cidr: 172.30.5.128/25
 overlay_tz: tz-overlay
 tier0_router: t0-router
-network_properties:   
-  network:
-    name: tas
-  other_availability_zones:
-  - name: az1
-  singleton_availability_zone:
-    name: az1
