@@ -1,0 +1,139 @@
+product-name: VMware-NSX-T
+product-properties:
+  .properties.container_ip_blocks:
+    value:
+    - cidr: ((container_ip_blocks))
+      name: tas-containers
+  .properties.default_running_asg_use_ip_set:
+    value: false
+  .properties.enable_fqdn_support:
+    value: false
+  .properties.enable_inventory:
+    value: true
+  .properties.enable_policy_api:
+    value: true
+  .properties.enable_snat:
+    value: true
+  .properties.exit_on_disconnection:
+    selected_option: enable
+    value: enable
+  .properties.external_ip_pools:
+    value:
+    - allocation_ranges: ((external_ip_pools.allocation_ranges))
+      cidr: ((external_ip_pools.cidr))
+      name: tas-egress
+  .properties.foundation_name:
+    value: tas
+  .properties.log_firewall_rules:
+    selected_option: disable
+    value: disable
+  .properties.master_timeout:
+    value: 18
+  .properties.migrate_only_manually_created_resources:
+    value: false
+  .properties.mp2p_migration_options:
+    selected_option: noaction
+    value: noaction
+  .properties.natfirewallmatch:
+    selected_option: match_int_addr
+    value: match_int_addr
+  .properties.ncp_debug_log:
+    value: false
+  .properties.nsx_api_ca_cert:
+    value: ((nsx_ca_certificate))
+  .properties.nsx_api_managers:
+    value: https://((nsx_address))
+  .properties.nsx_auth:
+    selected_option: client_cert
+    value: client_cert
+  .properties.nsx_auth.client_cert.nsx_api_client_cert:
+    value:
+      cert_pem: |-
+        -----BEGIN CERTIFICATE-----
+        MIIDaDCCAlCgAwIBAgIUbz/tPuQrBt2uIAkFIP51c+TybecwDQYJKoZIhvcNAQEL
+        BQAwHzELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bpdm90YWwwHhcNMjQxMDAxMTE1
+        NjIxWhcNMjYxMDAyMTE1NjIxWjA3MQswCQYDVQQGEwJVUzEQMA4GA1UECgwHUGl2
+        b3RhbDEWMBQGA1UEAwwNMTcyLjIwLjE2LjEwMTCCASIwDQYJKoZIhvcNAQEBBQAD
+        ggEPADCCAQoCggEBAMcdwWmzvzKL14+4dzUSX7T/hBHbvKLdMBfqU7WOsm9wBpdd
+        rYNFtElSI56MTgyYA9U94PyX/+IkpFznTT56U77TuFgrRBZlmleqDa4MV3+W0s+J
+        UfurdRLzW2vyIJNlNK4urub3YQV6F002GUa7PqA8ILf55CKRhaDYq+9LLMUq7KFG
+        Myl/nuKTfuRrSiKL67A9NElcPnaZTeE8yv3Qs70mv22una13xYqjU9zOZbXMLUxf
+        nuFlsqjzm521uISEK5G9nSilsyMMTfc1WksjSG2qlbBwWCtKp94oaiFJNuk2Pwdz
+        8n4+jYDJpnOTC8JSA6QqCZZWkL6IIgqzYRG7ywcCAwEAAaOBgzCBgDAdBgNVHQ4E
+        FgQUqX1jSYfVxHz/LX96LaI3K8nZEEMwHwYDVR0jBBgwFoAUiXTpjmsD5sGj10LC
+        1V0oRXu2ERIwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA4GA1UdDwEB
+        /wQEAwIFoDAPBgNVHREECDAGhwSsFBBlMA0GCSqGSIb3DQEBCwUAA4IBAQCJIIik
+        nagwmntydYA/m3gHe5xPApysxjUDw6qSKHgNxzu9y7Pdnfh6XZf6puPFci4xH5QE
+        QvEI5t6GrzfuI0OLO89YRQyaK5w/KTRFNhQ0sqvXgETn5i9sxzrv7MPgMlrkPj7Y
+        KcO4Aav9Is2l62kCTpKw4z5L1Q7k8CaJhsjRXmYnrFLFynyXCaCa9oxlGacQltl1
+        VBn7PMM05rrR+s0fFgmKvgH9l0aM2A59qSeSYA1A3F05CZ7nuuKQTw2/mkNuLZKe
+        HUB6jbp935hbOcew6bTUUrJu6T1ek+DQnb4RlNaO5Rnm0xxGabS0Pc0LHw4DlJiH
+        rFAge4ATExlV0+iV
+        -----END CERTIFICATE-----
+      private_key_pem: |-
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEpAIBAAKCAQEAxx3BabO/MovXj7h3NRJftP+EEdu8ot0wF+pTtY6yb3AGl12t
+        g0W0SVIjnoxODJgD1T3g/Jf/4iSkXOdNPnpTvtO4WCtEFmWaV6oNrgxXf5bSz4lR
+        +6t1EvNba/Igk2U0ri6u5vdhBXoXTTYZRrs+oDwgt/nkIpGFoNir70ssxSrsoUYz
+        KX+e4pN+5GtKIovrsD00SVw+dplN4TzK/dCzvSa/ba6drXfFiqNT3M5ltcwtTF+e
+        4WWyqPObnbW4hIQrkb2dKKWzIwxN9zVaSyNIbaqVsHBYK0qn3ihqIUk26TY/B3Py
+        fj6NgMmmc5MLwlIDpCoJllaQvogiCrNhEbvLBwIDAQABAoIBADwx4ilW5jvdK98u
+        iJc6RUW+I0qUz+u6i5IHTKQsDgSDbPKwpsZzOaQa2VrSlrvW7v211cD3IKvYoPnX
+        ETKMn6mmbun0toJA2A6dgcI2x/LyASwtmuPG+z8t49r32WJF682mnkiDy8hwlv/I
+        FY8dBztAwjFsMcxDiw7Lwfq3EsNOBImEpFCm5QWASYGADtW3su1mRy/nYGrRvfzL
+        nGDUVy7X2RHDd+h3JlXGXmkmTHpWEgjiHtbsiejWgjUP4UUtlERtsQ3hDGw8eo1W
+        o+YTglTZ5yJkVMGFs2wgMbYA+zrEYcqLoYqWegxqfIwnCf7m6//rXyLIFJ/QiU4r
+        3upPFW0CgYEA1qthNarOGlrHicC3Y8vsHw4hYYzH062bu+TX8uW32SkLgZ/rN1rZ
+        6PaAfDn7qd7035p+S9yhjumtVVUNWhVK8a/jAnE/lSLkI4Zb6WA5VF2FaSoSzIUV
+        fon6TSBkBENv2qhtgjQXUPy4FNjUwLpsPFm0k0yELHVizRcc/KAisE0CgYEA7XPK
+        DULnlX2kpsGShSerGnz/HH6dmZOUNRUcXFsLjSVxZOvKoHmjQj/k5WCeePogxlVo
+        dqyF2VenjqQp/vJPds4n+5khOxAimXl4xL9GIKLmg1g5d8CqC/fA9SibHjJXsinw
+        jjmgfI+WXcAKAKhVe6PAg4YqzkrFla1g0flQsqMCgYEAoU+RMcHTNGyo6rO9Wyme
+        mkuE/AfNFRytHQk+2RCUEYRNWC+ykhscCnpJXJA5s5GN0wUGCL2XTYv9K1VJPjsn
+        4Ou5m1k8XTYl1ygcowcirWnFWZw7GiKbX0YRp6lCXw3J3LaZ67B3IO126ntxjA3K
+        TaNfFRz3aW0gPFs09gTjbDUCgYEAhqfMJDsVs0u+DKbnXUWCnZHW5iTTYN01BelD
+        3QfwhAmAxZeFn/163L35Iy7oj3hhD7gtdmcdvIQdzCFCg4aME7aTK/XJx4G97UTa
+        fNBvh2B50nA8nrGOfRzxutVdKgGog6uO9EivvxN6VQ3rXjYXy/av3KZALh5u8BOT
+        PV/iKHsCgYBQ/nSZeh8DNOkUxpNmC5mh4ZEjJ1dX8NWzomA2K5tkMqC53vrJLJx/
+        T3GH0STE7JwsFJrwIepKV85BotO/no4OOUyWFcpmu7f+0msKbae8FroRXaN8a5YI
+        lwOMrTuT7Caol9by5h8CT0pZbvzEPCsWJE1npT4QyPDcDI+tya0nBA==
+        -----END RSA PRIVATE KEY-----
+  .properties.nsx_node_agent_debug_log:
+    value: false
+  .properties.nsx_session_read_timeout:
+    value: 3600
+  .properties.overlay_tz:
+    value: ((overlay_tz))
+  .properties.remove_ovs_ports_timeout:
+    value: 1800
+  .properties.snat_rule_logging:
+    selected_option: extended
+    value: extended
+  .properties.subnet_prefix:
+    value: 26
+  .properties.tier0_router:
+    value: ((tier0_router))
+  .properties.wait_for_security_policy_sync:
+    value: false
+network-properties: ((network_properties))
+resource-config:
+  migrate-mp2p:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: 0
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  migrate-mp2p:
+    post-deploy-state: false
+
