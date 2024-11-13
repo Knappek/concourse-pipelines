@@ -15,8 +15,8 @@ groups:
     - configure-healthwatch
     - configure-tas
     - configure-ncp
-    # - apply-product-changes
-    # - run-tas-smoketest-errand
+    - apply-product-changes
+    - run-tas-smoketest-errand
     # - collect-telemetry
     # - stage-configure-apply-telemetry
   name: deploy-foundation
@@ -101,11 +101,6 @@ resources:
   type: time
   source:
     interval: 999999h
-
-# - name: daily-trigger
-#   type: time
-#   source:
-#     interval: 24h
 
 prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   image: platform-automation-image
@@ -634,90 +629,83 @@ jobs:
         VARS_FILES: |
           vars/foundations/((foundation))/vars/director.yml
 
-# - name: apply-product-changes
-#   serial: true
-#   serial_groups: [ install ]
-#   plan:
-#   - in_parallel:
-#     - get: platform-automation-image
-#       params:
-#         unpack: true
-#       passed:
-#       - configure-tas
-#       - configure-healthwatch
-#       - configure-healthwatch-pas-exporter
-#       trigger: true
-#     - get: platform-automation-tasks
-#     - get: configuration
-#   - task: prepare-tasks-with-secrets
-#     <<: *prepare-tasks-with-secrets
-#   # code_snippet pre-deploy-check-usage start yaml
-#   - task: pre-deploy-check
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/pre-deploy-check.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#   # code_snippet pre-deploy-check-usage end
-#   # code_snippet apply-changes-usage start yaml
-#   - task: apply-product-changes
-#     attempts: 3
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/apply-changes.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#   # code_snippet apply-changes-usage end
-#   # code_snippet check-pending-changes-usage start yaml
-#   - task: check-pending-changes
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/check-pending-changes.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#       ALLOW_PENDING_CHANGES: true
-#   # code_snippet check-pending-changes-usage end
-#   - task: export-installation
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/export-installation.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       ENV_FILE: foundations/config/env.yml
-#       INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
-#   - put: installation
-#     params:
-#       file: installation/((foundation))-installation*.zip
-# - name: run-tas-smoketest-errand
-#   serial: true
-#   plan:
-#   - in_parallel:
-#     - get: platform-automation-image
-#       params:
-#         unpack: true
-#       passed:
-#       - configure-tas
-#       - configure-healthwatch
-#       trigger: true
-#     - get: platform-automation-tasks
-#     - get: configuration
-#   - task: prepare-tasks-with-secrets
-#     <<: *prepare-tasks-with-secrets
-#   # code_snippet run-bosh-errand-usage start yaml
-#   - task: run-bosh-errand
-#     image: platform-automation-image
-#     file: platform-automation-tasks/tasks/run-bosh-errand.yml
-#     input_mapping:
-#       env: configuration
-#     params:
-#       PRODUCT_NAME: cf
-#       ERRAND_NAME: smoke_tests
-#       ENV_FILE: foundations/config/env.yml
-#       OPSMAN_SSH_PRIVATE_KEY: ((ops_manager_ssh_private_key))
-#   # code_snippet run-bosh-errand-usage end
+- name: apply-product-changes
+  serial: true
+  serial_groups: [ install ]
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+      - configure-tas
+      - configure-healthwatch
+      - configure-healthwatch-pas-exporter
+      trigger: true
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: pre-deploy-check
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/pre-deploy-check.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: apply-product-changes
+    attempts: 3
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/apply-changes.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: check-pending-changes
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/check-pending-changes.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      ALLOW_PENDING_CHANGES: true
+  - task: export-installation
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/export-installation.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
+  - put: installation
+    params:
+      file: installation/((foundation))-installation*.zip
+- name: run-tas-smoketest-errand
+  serial: true
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+      - configure-tas
+      - configure-healthwatch
+      trigger: true
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: run-bosh-errand
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/run-bosh-errand.yml
+    input_mapping:
+      env: configuration
+    params:
+      PRODUCT_NAME: cf
+      ERRAND_NAME: smoke_tests
+      ENV_FILE: foundations/config/env.yml
+      OPSMAN_SSH_PRIVATE_KEY: ((ops_manager_ssh_private_key))
+
 # - name: collect-telemetry
 #   serial: true
 #   serial_groups: [ install ]
@@ -755,31 +743,31 @@ jobs:
 #     params:
 #       API_KEY: no-op-test-key
 #       DATA_FILE_PATH: collected-telemetry-data/FoundationDetails*.tar
+
 # - name: expiring-certificates
-#   serial: true
-#   serial_groups: [ install ]
-#   plan:
-#     - in_parallel:
-#       - get: daily-trigger
-#         trigger: true
-#       - get: platform-automation-image
-#         params:
-#           unpack: true
-#       - get: platform-automation-tasks
-#       - get: configuration
-#       - get: state
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     # code_snippet expiring-certificates-usage start yaml
-#     - task: expiring-certificates
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/expiring-certificates.yml
-#       input_mapping:
-#         env: configuration
-#       params:
-#         ENV_FILE: foundations/config/env.yml
-#         EXPIRES_WITHIN: 2m
-#     # code_snippet expiring-certificates-usage end
+  # serial: true
+  # serial_groups: [ install ]
+  # plan:
+  #   - in_parallel:
+  #     - get: platform-automation-image
+  #       params:
+  #         unpack: true
+  #       trigger: true
+  #     - get: platform-automation-tasks
+  #     - get: configuration
+  #     - get: state
+  #   - task: prepare-tasks-with-secrets
+  #     <<: *prepare-tasks-with-secrets
+  #   # code_snippet expiring-certificates-usage start yaml
+  #   - task: expiring-certificates
+  #     image: platform-automation-image
+  #     file: platform-automation-tasks/tasks/expiring-certificates.yml
+  #     input_mapping:
+  #       env: configuration
+  #     params:
+  #       ENV_FILE: foundations/config/env.yml
+  #       EXPIRES_WITHIN: 2m
+    
 # - name: stage-configure-apply-telemetry
 #   serial_groups: [install]
 #   plan:
