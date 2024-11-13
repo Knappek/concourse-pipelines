@@ -388,7 +388,18 @@ jobs:
     output_mapping:
       downloaded-product: tas-product
       downloaded-stemcell: tas-stemcell
-  # code_snippet upload-product-usage start yaml
+  - task: download-ncp
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: configuration
+      vars: configuration
+    params:
+      CONFIG_FILE: foundations/((foundation))/config/download-ncp.yml
+      VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+      SOURCE: pivnet
+    output_mapping:
+      downloaded-product: ncp-product
   - task: upload-tas-product
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-product.yml
@@ -397,7 +408,14 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-  # code_snippet upload-product-usage end
+  - task: upload-ncp-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: ncp-product
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
   - task: upload-tas-stemcell
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-stemcell.yml
@@ -406,8 +424,7 @@ jobs:
       stemcell: tas-stemcell
     params:
       ENV_FILE: foundations/config/env.yml
-  # code_snippet stage-product-usage start yaml
-  - task: upload-and-stage-tas
+  - task: stage-tas
     image: platform-automation-image
     file: platform-automation-tasks/tasks/stage-product.yml
     input_mapping:
@@ -415,7 +432,15 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-  # code_snippet stage-product-usage end
+  - task: stage-ncp
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: ncp-product
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+
 - name: download-upload-and-stage-healthwatch
   serial: true
   serial_groups: [ products ]

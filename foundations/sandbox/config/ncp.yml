@@ -116,24 +116,24 @@ product-properties:
   .properties.wait_for_security_policy_sync:
     value: false
 network-properties: ((network_properties))
-resource-config:
-  migrate-mp2p:
-    max_in_flight: 1
-    additional_networks: []
-    additional_vm_extensions: []
-    instance_type:
-      id: automatic
-    instances: 0
-    nsxt:
-      lb:
-        server_pools: []
-      ns_groups: []
-      vif_type: null
-    persistent_disk:
-      name: automatic
-      size_mb: automatic
-    swap_as_percent_of_memory_size: automatic
-errand-config:
-  migrate-mp2p:
-    post-deploy-state: false
+# resource-config:
+#   migrate-mp2p:
+#     max_in_flight: 1
+#     additional_networks: []
+#     additional_vm_extensions: []
+#     instance_type:
+#       id: automatic
+#     instances: 0
+#     nsxt:
+#       lb:
+#         server_pools: []
+#       ns_groups: []
+#       vif_type: null
+#     persistent_disk:
+#       name: automatic
+#       size_mb: automatic
+#     swap_as_percent_of_memory_size: automatic
+# errand-config:
+#   migrate-mp2p:
+#     post-deploy-state: false
 
