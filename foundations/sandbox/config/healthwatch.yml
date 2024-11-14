@@ -14,3 +14,8 @@ product-properties:
   .properties.grafana_route:
     selected_option: tas
     value: tas
+resource-config:
+  tsdb:
+    persistent_disk:
+      name: "102400"
+      size_mb: "102400"
