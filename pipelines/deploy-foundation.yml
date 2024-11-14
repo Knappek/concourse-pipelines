@@ -11,9 +11,11 @@ groups:
     - download-upload-and-stage-healthwatch-pas-exporter
     - download-upload-and-stage-healthwatch
     - download-upload-and-stage-tas
+    - download-upload-and-stage-pks
     - configure-healthwatch-pas-exporter
     - configure-healthwatch
     - configure-tas
+    - configure-pks
     - configure-ncp
     - apply-product-changes
     # - collect-telemetry
