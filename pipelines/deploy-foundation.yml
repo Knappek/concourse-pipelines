@@ -7,7 +7,7 @@ groups:
     - export-installation
     - upgrade-opsman
     # - expiring-certificates
-    # - delete-installation
+    - delete-installation
     - download-upload-and-stage-healthwatch-pas-exporter
     - download-upload-and-stage-healthwatch
     - download-upload-and-stage-tas
@@ -16,7 +16,6 @@ groups:
     - configure-tas
     - configure-ncp
     - apply-product-changes
-    - run-tas-smoketest-errand
     # - collect-telemetry
     # - stage-configure-apply-telemetry
   name: deploy-foundation
@@ -680,31 +679,6 @@ jobs:
   - put: installation
     params:
       file: installation/((foundation))-installation*.zip
-- name: run-tas-smoketest-errand
-  serial: true
-  plan:
-  - in_parallel:
-    - get: platform-automation-image
-      params:
-        unpack: true
-      passed:
-      - configure-tas
-      - configure-healthwatch
-      trigger: true
-    - get: platform-automation-tasks
-    - get: configuration
-  - task: prepare-tasks-with-secrets
-    <<: *prepare-tasks-with-secrets
-  - task: run-bosh-errand
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/run-bosh-errand.yml
-    input_mapping:
-      env: configuration
-    params:
-      PRODUCT_NAME: cf
-      ERRAND_NAME: smoke_tests
-      ENV_FILE: foundations/config/env.yml
-      OPSMAN_SSH_PRIVATE_KEY: ((ops_manager_ssh_private_key))
 
 # - name: collect-telemetry
 #   serial: true
@@ -745,28 +719,28 @@ jobs:
 #       DATA_FILE_PATH: collected-telemetry-data/FoundationDetails*.tar
 
 # - name: expiring-certificates
-  # serial: true
-  # serial_groups: [ install ]
-  # plan:
-  #   - in_parallel:
-  #     - get: platform-automation-image
-  #       params:
-  #         unpack: true
-  #       trigger: true
-  #     - get: platform-automation-tasks
-  #     - get: configuration
-  #     - get: state
-  #   - task: prepare-tasks-with-secrets
-  #     <<: *prepare-tasks-with-secrets
-  #   # code_snippet expiring-certificates-usage start yaml
-  #   - task: expiring-certificates
-  #     image: platform-automation-image
-  #     file: platform-automation-tasks/tasks/expiring-certificates.yml
-  #     input_mapping:
-  #       env: configuration
-  #     params:
-  #       ENV_FILE: foundations/config/env.yml
-  #       EXPIRES_WITHIN: 2m
+#   serial: true
+#   serial_groups: [ install ]
+#   plan:
+#     - in_parallel:
+#       - get: platform-automation-image
+#         params:
+#           unpack: true
+#         trigger: true
+#       - get: platform-automation-tasks
+#       - get: configuration
+#       - get: state
+#     - task: prepare-tasks-with-secrets
+#       <<: *prepare-tasks-with-secrets
+#     # code_snippet expiring-certificates-usage start yaml
+#     - task: expiring-certificates
+#       image: platform-automation-image
+#       file: platform-automation-tasks/tasks/expiring-certificates.yml
+#       input_mapping:
+#         env: configuration
+#       params:
+#         ENV_FILE: foundations/config/env.yml
+#         EXPIRES_WITHIN: 2m
     
 # - name: stage-configure-apply-telemetry
 #   serial_groups: [install]
@@ -798,44 +772,41 @@ jobs:
 #         config: configuration
 #         vars: configuration
 #     # code_snippet stage-configure-apply-usage end
-# - name: delete-installation
-#   serial: true
-#   serial_groups: [install]
-#   plan:
-#     - in_parallel:
-#       - get: platform-automation-image
-#         params:
-#           unpack: true
-#       - get: platform-automation-tasks
-#       - get: configuration
-#       - get: state
-#     - task: prepare-tasks-with-secrets
-#       <<: *prepare-tasks-with-secrets
-#     # code_snippet delete-installation-usage start yaml
-#     - task: delete-installation
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/delete-installation.yml
-#       input_mapping:
-#         env: configuration
-#       params:
-#         ENV_FILE: foundations/config/env.yml
-#       # code_snippet delete-installation-usage end yaml
-#     # code_snippet delete-vm-usage start yaml
-#     - task: delete-vm
-#       image: platform-automation-image
-#       file: platform-automation-tasks/tasks/delete-vm.yml
-#       input_mapping:
-#         config: configuration
-#       params:
-#         OPSMAN_CONFIG_FILE: foundations/((foundation))/config/opsman.yml
-#         STATE_FILE: state-((foundation)).yml
-#         VARS_FILES: config/foundations/((foundation))/vars/director.yml
-#       ensure:
-#         do:
-#         - put: state
-#           params:
-#             file: generated-state/state-((foundation)).yml
-#     # code_snippet delete-vm-usage end
+
+- name: delete-installation
+  serial: true
+  serial_groups: [install]
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+      - get: state
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: delete-installation
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/delete-installation.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: foundations/config/env.yml
+    - task: delete-vm
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/delete-vm.yml
+      input_mapping:
+        config: configuration
+      params:
+        OPSMAN_CONFIG_FILE: foundations/((foundation))/config/opsman.yml
+        STATE_FILE: state-((foundation)).yml
+        VARS_FILES: config/foundations/((foundation))/vars/director.yml
+      ensure:
+        do:
+        - put: state
+          params:
+            file: generated-state/state-((foundation)).yml
 
 # - name: create-root-ca
 #   plan:
