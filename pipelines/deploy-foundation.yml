@@ -435,6 +435,58 @@ jobs:
     params:
       ENV_FILE: foundations/config/env.yml
 
+- name: download-upload-and-stage-pks
+  serial: true
+  serial_groups: [ products ]
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      trigger: true
+      passed: [ "upgrade-opsman" ]
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: download-pks
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: configuration
+      vars: configuration
+    params:
+      CONFIG_FILE: foundations/((foundation))/config/download-pks.yml
+      VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+      SOURCE: pivnet
+    output_mapping:
+      downloaded-product: pks-product
+      downloaded-stemcell: pks-stemcell
+  - task: upload-pks-product
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: pks-product
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: upload-pks-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: configuration
+      stemcell: pks-stemcell
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: stage-pks
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: pks-product
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+
 - name: download-upload-and-stage-healthwatch
   serial: true
   serial_groups: [ products ]
@@ -572,6 +624,35 @@ jobs:
           vars/foundations/((foundation))/vars/ncp.yml
           vars/foundations/((foundation))/vars/director.yml
 
+- name: configure-pks
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - download-upload-and-stage-tas
+        trigger: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: configure-tas
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-product.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+        vars: configuration
+      params:
+        CONFIG_FILE: foundations/((foundation))/config/tas.yml
+        ENV_FILE: foundations/config/env.yml
+        VARS_FILES: |
+          vars/foundations/((foundation))/vars/tas.yml
+          vars/foundations/((foundation))/vars/director.yml
+
 - name: configure-healthwatch
   serial: true
   serial_groups: [ install ]
@@ -638,6 +719,7 @@ jobs:
         unpack: true
       passed:
       - configure-tas
+      - configure-pks
       - configure-healthwatch
       - configure-healthwatch-pas-exporter
       trigger: true
