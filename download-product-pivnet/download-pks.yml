@@ -1,10 +1,11 @@
 ---
-pivnet-api-token: aafc834ffe494c29ad14
+pivnet-api-token: ((pivnet_token))
 pivnet-product-slug: pivotal-container-service
 
 file-glob: "pivotal-container-service*.pivotal"
-product-version-regex: ^1\.19\..*$
+product-version-regex: ^1\.20\..*$
 stemcell-iaas: vsphere
+stemcell-version: 1.631
 
 s3-access-key-id: ((s3_access_key_id))
 s3-secret-access-key: ((s3_secret_access_key))
