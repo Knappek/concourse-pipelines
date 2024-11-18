@@ -3,6 +3,8 @@ product-name: pivotal-container-service
 network-properties:
   network:
     name: tkgi
+  service_network:
+    name: tkgi
   other_availability_zones:
     - name: ((availability_zones.0.name))
   singleton_availability_zone:
