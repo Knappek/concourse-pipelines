@@ -29,6 +29,7 @@ product-properties:
   .properties.plan3_selector:
     value: "Plan Inactive"
   .properties.cloud_provider:
+    selected_option: vsphere
     value: vsphere
   .properties.cloud_provider.vsphere.vcenter_dc:
     value: ((vcenter_datacenter))
