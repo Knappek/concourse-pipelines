@@ -641,7 +641,7 @@ jobs:
       - get: configuration
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
-    - task: configure-tas
+    - task: configure-pks
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
@@ -652,7 +652,7 @@ jobs:
         CONFIG_FILE: foundations/((foundation))/config/tas.yml
         ENV_FILE: foundations/config/env.yml
         VARS_FILES: |
-          vars/foundations/((foundation))/vars/tas.yml
+          vars/foundations/((foundation))/vars/pks.yml
           vars/foundations/((foundation))/vars/director.yml
 
 - name: configure-healthwatch

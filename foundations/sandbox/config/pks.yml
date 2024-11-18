@@ -1,57 +1,130 @@
-# ---
-# product-name: pivotal-container-service
-# network-properties:
-#   network:
-#     name: pks
-#   service_network:
-#     name: services
-#   other_availability_zones:
-#     - name: ((availability_zones.0))
-#     - name: ((availability_zones.1))
-#     - name: ((availability_zones.2))
-#   singleton_availability_zone:
-#     name: ((availability_zones.0))
-# product-properties:
-#   .pivotal-container-service.pks_tls:
-#     value:
-#       cert_pem: |
-#         ((ssl_certificate))
-#       private_key_pem: |
-#         ((ssl_private_key))
-#   .properties.pks_api_hostname:
-#     value: api.((pks_api_dns_domain))
-#   .properties.plan1_selector.active.master_az_placement:
-#     value:
-#       - ((availability_zones.0))
-#   .properties.plan1_selector.active.worker_az_placement:
-#     value:
-#       - ((availability_zones.0))
-#       - ((availability_zones.1))
-#       - ((availability_zones.2))
-#   .properties.plan2_selector:
-#     value: "Plan Inactive"
-#   .properties.plan3_selector:
-#     value: "Plan Inactive"
-#   .properties.cloud_provider:
-#     value: GCP
-#   .properties.cloud_provider.gcp.project_id:
-#     value: ((project))
-#   .properties.cloud_provider.gcp.network:
-#     value: ((network_name))
-#   .properties.cloud_provider.gcp.master_service_account:
-#     value: ((pks_master_node_service_account_id))
-#   .properties.cloud_provider.gcp.worker_service_account:
-#     value: ((pks_worker_node_service_account_id))
-#   .properties.oidc_selector:
-#     value: disabled
-#   .properties.telemetry_selector:
-#     value: disabled
-#   .properties.telemetry_installation_purpose_selector:
-#     value: not_provided
-# resource-config:
-#   pivotal-container-service:
-#     elb_names:
-#       - tcp:((pks_api_target_pool_name))
-# errand-config:
-#   smoke-tests:
-#     post-deploy-state: true
+---
+product-name: pivotal-container-service
+network-properties:
+  network:
+    name: tkgi
+  other_availability_zones:
+    - name: ((availability_zones.0.name))
+  singleton_availability_zone:
+    name: ((availability_zones.0.name))
+product-properties:
+  .pivotal-container-service.pks_tls:
+    value:
+      cert_pem: |
+        ((ssl_certificate))
+      private_key_pem: |
+        ((ssl_private_key))
+  .properties.pks_api_hostname:
+    value: api.((pks_api_dns_domain))
+  .properties.plan1_selector.active.master_az_placement:
+    value:
+      - ((availability_zones.0.name))
+  .properties.plan1_selector.active.worker_az_placement:
+    value:
+      - ((availability_zones.0.name))
+  .properties.plan2_selector:
+    value: "Plan Inactive"
+  .properties.plan3_selector:
+    value: "Plan Inactive"
+  .properties.cloud_provider:
+    value: vsphere
+  .properties.cloud_provider.vsphere.vcenter_dc:
+    value: ((vcenter_datacenter))
+  .properties.cloud_provider.vsphere.vcenter_ds:
+    value: ((vcenter_datastore))
+  .properties.cloud_provider.vsphere.vcenter_ip:
+    value: ((vcenter_server))
+  .properties.cloud_provider.vsphere.vcenter_master_creds:
+    value:
+      identity: ((vcenter_credentials.username))
+      password: ((vcenter_credentials.password))
+  .properties.cloud_provider.vsphere.vcenter_vms:
+    value: ((bosh_vm_folder))
+  .properties.network_selector:
+    selected_option: nsx
+    value: nsx
+  .properties.network_selector.nsx.cloud-config-dns:
+    value: ((dns_server))
+  .properties.network_selector.nsx.feign_client_read_timeout:
+    value: 60000
+  .properties.network_selector.nsx.floating-ip-pool-ids:
+    value: ((nsx_floating_ip_pool_ids))
+  .properties.network_selector.nsx.ip-block-id:
+    value: ((nsx_ip_block_id))
+  .properties.network_selector.nsx.nat_mode:
+    value: true
+  .properties.network_selector.nsx.ncp-ha-heartbeat-period:
+    value: 6
+  .properties.network_selector.nsx.ncp-ha-master-timeout:
+    value: 18
+  .properties.network_selector.nsx.ncp-ha-update-timeout:
+    value: 12
+  .properties.network_selector.nsx.network_automation:
+    value: true
+  .properties.network_selector.nsx.nodes-ip-block-id:
+    value: ((nsx_node_ip_block_id))
+  .properties.network_selector.nsx.nsx-t-ca-cert:
+    value: ((nsx_ca_certificate))
+  .properties.network_selector.nsx.nsx-t-host:
+    value: ((nsx_address))
+  .properties.network_selector.nsx.nsx-t-insecure:
+    value: true
+  .properties.network_selector.nsx.nsx-t-superuser-certificate:
+    value:
+      cert_pem: ((pks_nsx_superuser_certificate.certificate))
+      private_key_pem: ((pks_nsx_superuser_certificate.private_key))
+  .properties.network_selector.nsx.policy_api:
+    value: true
+  .properties.network_selector.nsx.service_cluster_cidr:
+    value: 100.68.0.0/16
+  .properties.network_selector.nsx.t0-router-id:
+    value: ((nsx_t0_router))
+  .properties.network_selector.nsx.vcenter_cluster:
+    value: ((vcenter_cluster))
+  .properties.node_exporter_deploy:
+    value: true
+  .properties.oidc_selector:
+    value: disabled
+  .properties.telemetry_selector:
+    value: disabled
+  .properties.telemetry_installation_purpose_selector:
+    value: not_provided
+  .properties.vsphere_csi:
+    selected_option: enabled
+    value: enabled
+resource-config:
+  pivotal-container-service:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pks-db:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  smoke-tests:
+    post-deploy-state: true
