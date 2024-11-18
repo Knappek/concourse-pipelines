@@ -649,7 +649,7 @@ jobs:
         env: configuration
         vars: configuration
       params:
-        CONFIG_FILE: foundations/((foundation))/config/tas.yml
+        CONFIG_FILE: foundations/((foundation))/config/pks.yml
         ENV_FILE: foundations/config/env.yml
         VARS_FILES: |
           vars/foundations/((foundation))/vars/pks.yml
