@@ -1,7 +1,7 @@
 apps_dns_domain: apps.172.30.5.126.nip.io
 sys_dns_domain: sys.172.30.5.126.nip.io
 blobstore_internal_access_rules: allow 10.0.0.0/8;,allow 172.16.0.0/12;,allow 192.168.0.0/16;,allow 100.64.0.0/10;,allow 172.30.5.0/24;
-ssl_certificate: |
+tas_ssl_certificate: |
   -----BEGIN CERTIFICATE-----
   MIID7TCCAtWgAwIBAgIVANl68HLsjrAEpakfJK0sXHSoN5TXMA0GCSqGSIb3DQEB
   CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTExMjEx
@@ -26,7 +26,7 @@ ssl_certificate: |
   i06A1O/01blmikolaL1Y+5+QuijpoFDHpf62c1uijdibK4pzolVkQH3UZP9mSG7s
   iA==
   -----END CERTIFICATE-----
-ssl_private_key: |
+tas_ssl_private_key: |
   -----BEGIN RSA PRIVATE KEY-----
   MIIEpAIBAAKCAQEAwpkxxlGYEkB3c4DBgdwpiB9zyEV3s6mVmC6yxFE8jpto8ZJg
   kej5QTgelhhAikyYVwrbTJ8wUqI8OcU5yspJTg6ZoiTw9IRhPKrXNXPLomhkzzqk
