@@ -31,6 +31,9 @@ product-properties:
         secret: VMware1!VMware1!VMware1!VMware1!
       name: int-encrypt
       primary: true
+  .properties.isolated_routing:
+    selected_option: reject_all
+    value: reject_all
   .properties.networking_poe_ssl_certs:
     value:
       - certificate:
@@ -152,7 +155,7 @@ resource-config:
     additional_vm_extensions: []
     instance_type:
       id: automatic
-    instances: 2
+    instances: automatic
     nsxt:
       lb:
         server_pools: []

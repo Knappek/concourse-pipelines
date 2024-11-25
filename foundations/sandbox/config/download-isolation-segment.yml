@@ -1,0 +1,6 @@
+---
+pivnet-product-slug: p-isolation-segment
+file-glob: "p-isolation-segment-*.pivotal"
+product-version: ((isolation-segment-version))
+
+pivnet-api-token: ((pivnet_token))

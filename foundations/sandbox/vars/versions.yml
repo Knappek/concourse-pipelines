@@ -3,3 +3,4 @@ pks-version: 1.20.0
 tas-version: 6.0.9+LTS-T
 healthwatch-version: 2.3.1
 ncp-version: 4.2.1.0
+isolation-segment-version: 6.0.10+LTS-T
