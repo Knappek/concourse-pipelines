@@ -54,4 +54,4 @@ tas_ssl_private_key: |
   jJdGIe88NFUvIB0Ucv571BdmClxFlkzsoAtilVGr93HGBBK23eJJmt9EG0j4ed4h
   b0hq7NFONrYRGGFtr2GzN2pK/5/5m8PlmQSlIZTlucAnBJa7ebNrdw==
   -----END RSA PRIVATE KEY-----
-static_gorouter_ip: 172.30.5.126
+static_gorouter_ips: 172.30.5.126,172.30.5.127
