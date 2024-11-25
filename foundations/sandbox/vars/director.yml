@@ -63,6 +63,15 @@ network_configuration:
       reserved_ip_ranges: ""
       availability_zone_names:
       - az1
+  - name: tas-isolation
+    subnets:
+    - iaas_identifier: tas-seg
+      cidr: 172.30.5.128/28
+      dns: ((dns_server))
+      gateway: 172.30.5.1
+      reserved_ip_ranges: ""
+      availability_zone_names:
+      - az1
   - name: tkgi
     subnets:
     - iaas_identifier: tkgi-infra-seg
