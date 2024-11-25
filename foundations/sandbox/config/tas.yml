@@ -57,7 +57,7 @@ product-properties:
   .properties.security_acknowledgement:
     value: x
   .router.static_ips:
-    value: ((static_gorouter_ip))
+    value: ((static_gorouter_ips))
 resource-config:
   backup_restore:
     max_in_flight: 1
