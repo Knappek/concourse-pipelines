@@ -63,7 +63,7 @@ network_configuration:
       reserved_ip_ranges: ""
       availability_zone_names:
       - az1
-  - name: tas-isolation
+  - name: tas-isolation-1
     subnets:
     - iaas_identifier: tas-iso-seg-1
       cidr: 172.30.7.0/27
