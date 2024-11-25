@@ -65,10 +65,10 @@ network_configuration:
       - az1
   - name: tas-isolation
     subnets:
-    - iaas_identifier: tas-seg
-      cidr: 172.30.5.128/28
+    - iaas_identifier: tas-iso-seg-1
+      cidr: 172.30.7.0/27
       dns: ((dns_server))
-      gateway: 172.30.5.1
+      gateway: 172.30.7.1
       reserved_ip_ranges: ""
       availability_zone_names:
       - az1
