@@ -63,6 +63,16 @@ resources:
     bucket: ((s3_pivnet_products_bucket))
     regexp: tas-stemcell/\[stemcells-ubuntu-jammy,(.*)\]bosh-stemcell-.*-vsphere.*\.tgz
 
+- name: isolation-segment
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[p-isolation-segment,(.*)\]p-isolation-segment-.*\.tgz
+
 - name: ncp-product
   type: s3
   source:
@@ -256,6 +266,29 @@ jobs:
         - put: tas-stemcell
           params:
             file: tas-stemcell/*.tgz
+
+- name: fetch-isolation-segment
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        passed: [ fetch-platform-automation ]
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-isolation-segment
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-isolation-segment.yml
+      input_mapping:
+        config: configuration
+    - in_parallel:
+        - put: isolation-segment
+          params:
+            file: downloaded-product/*.pivotal
 
 - name: fetch-ncp
   plan:
