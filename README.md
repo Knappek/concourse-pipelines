@@ -10,7 +10,7 @@ and is an opinionated deployment of
 
 ### Login to Concourse
 
-In order to easily login to Concourse, you can simply adapt the IP addresses in [login_to_concourse](./login_to_concourse) and then execute
+In order to easily login to Concourse, you can simply adapt [login_to_concourse](./login_to_concourse) and then execute
 
 ```shell
 source ./login_to_concourse
