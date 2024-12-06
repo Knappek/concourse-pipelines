@@ -4,7 +4,7 @@ opsman-configuration:
     vcenter:
       datacenter: ((vcenter_datacenter))
       datastore: ((vcenter_datastore))
-      folder: /((vcenter_datacenter))/vm
+      folder: ""
       url: ((vcenter_server))
       username: ((vcenter_credentials.username))
       password: ((vcenter_credentials.password))
