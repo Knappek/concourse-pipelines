@@ -74,8 +74,55 @@ product-properties:
     value: true
   .properties.network_selector.nsx.nsx-t-superuser-certificate:
     value:
-      cert_pem: ((pks_nsx_superuser_certificate.certificate))
-      private_key_pem: ((pks_nsx_superuser_certificate.private_key))
+      cert_pem: |
+        -----BEGIN CERTIFICATE-----
+        MIIDADCCAeigAwIBAgIUJdyN7pMx9a5rFluqWIdBu05GGIcwDQYJKoZIhvcNAQEL
+        BQAwHjEcMBoGA1UEAwwTcGtzLW5zeC10LXN1cGVydXNlcjAeFw0yMzA0MDQxNDIy
+        NDlaFw0yNTA0MDMxNDIyNDlaMB4xHDAaBgNVBAMME3Brcy1uc3gtdC1zdXBlcnVz
+        ZXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDXUJoCuRXNvfG24gCB
+        H367P3BjeCJ04utTCwgsj0fnk/MbUQagXidL/0azIoCvEJ6eA8n1SfD14kErnrOi
+        9TwOvy9E2MRoFYwpLcjv1oKm0SUsldFfEU0TWTIt2zJcintIWZkEzb63YK2gud0k
+        g/snCcggK1rH91SwUgi3qlXzIdsrxxaKyL5G/u2P9zUKIfYIq+S4K5hh6PNM/7Pd
+        BaSeu1Tv9AKTUrRMnporO1iopcZhcwX43YkSnSHcZqvOIOsi8cry3iaFgRbhxtEE
+        QCG0IMmtFWTFrtoNBhtjLCIQvje2pWCM5dRRHos+LN1IigtcoZAORAwtN+05z6+M
+        tZ7RAgMBAAGjNjA0MBMGA1UdJQQMMAoGCCsGAQUFBwMCMB0GA1UdDgQWBBTT5Fot
+        BYKTSO49UJHpIKZusO0ZezANBgkqhkiG9w0BAQsFAAOCAQEAw3afcTvhnbCwlzeY
+        cWOiRK+gJ3YWN+4pzY04y3A+mFhHDFZGy01eUuW1qPnV9HWyfB1GpnEtnu3aw89h
+        F0bBIJ9Tvx8bXCVnSIn/+Zea39/hOYqXHewVrennpMyCCiDu6lxadHKJVUCBDcqV
+        e9uUhEcPupNs6f8P8FflHf5jCQ95464d9sZ5caM19vfomg3bC7iLlo/Owo23nZlw
+        X2gpUu8hJFDbAeeW6Sx6ZbtVikTUFaiwTzMmSAt+xLeGmYqXNxUPDP8ORxAEcrKN
+        J9fWUWc/BhKzlXGqOf/EGjYs41OiAY/2ok1gODPZW/2nwPlFNrrq1Qv72jJ0GaWW
+        onRhDA==
+        -----END CERTIFICATE-----
+      private_key_pem: |
+        -----BEGIN PRIVATE KEY-----
+        MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDXUJoCuRXNvfG2
+        4gCBH367P3BjeCJ04utTCwgsj0fnk/MbUQagXidL/0azIoCvEJ6eA8n1SfD14kEr
+        nrOi9TwOvy9E2MRoFYwpLcjv1oKm0SUsldFfEU0TWTIt2zJcintIWZkEzb63YK2g
+        ud0kg/snCcggK1rH91SwUgi3qlXzIdsrxxaKyL5G/u2P9zUKIfYIq+S4K5hh6PNM
+        /7PdBaSeu1Tv9AKTUrRMnporO1iopcZhcwX43YkSnSHcZqvOIOsi8cry3iaFgRbh
+        xtEEQCG0IMmtFWTFrtoNBhtjLCIQvje2pWCM5dRRHos+LN1IigtcoZAORAwtN+05
+        z6+MtZ7RAgMBAAECggEAAeLouS23mq9XfvODmfNVhWdyC8phfDusCx9gHsp8kJ3+
+        YGwOePjfiENqx6aoO6Bo0K1A0jTSdx0DLCd+Sbxd89UfTA+dcjn/bzGW/pRBsxtx
+        o26GleTNaOYm/I7ckJdSqtjExe2AMRQYQVMPicKG60R4gTZQBnYiGE9dAzBAri9x
+        d2CMUYv+u8MgIz4UcNlOGT2m9pvOC/CX5YbDKP7GX3xuJ3Zg/XHmjvuEyBfKEGx2
+        9D7KKI9d8ra+KMJVqAR8NzubVVz0VDALXpFumbL2jJQb1jccyDbSTx619n4kRnIO
+        GtJqLWjuSAuRFk+PV6Vb48gmaKWSo5uXpvqeat/cdwKBgQDxq5J8xlXz/rzPLUS4
+        fraFTlR+MnwmN65FQyqHPYaGI4o9/DJJO7DuuUbj7fNta2FDuzR+ZQZgZhiBNqiq
+        RYL0sL6AHSnduka5XSbXRCDiwl7nfO6i4+iy52VeKdacrhV3YVDydx6hfxGPHDPo
+        F8pMpYC2mizFYPvTu1httfISgwKBgQDkFPgGSvWZt5BpkofTJfNNtQcg2eiFhnXn
+        bVaKScVmvk7AWpZ/FkmQRc1gXGKszDp1Zx7EgUBhCiN8YgxK8bQT2aVBViIaqG7N
+        mkN1RUIisBIaOPFURt1T1XAaZJxLPFD30ufv1dKhoNm50/SBUp6DITnhpNjNcT/s
+        DvQSIm+5GwKBgGQUbUGG0SmOIJqbYI4Wy3dBDPSF66vX+y9rtTz0WbVLGoC45Ao3
+        0fnKeHUDoX96rHjkGcUOCSn6ncNE42xABQ9X8kwTx7au4YL59I/JAuVlIPA0aI7E
+        WyVbdjsckGeqH/GkN2VxtxmiCZ9+SnCfCYPcNgVoq4nBtAfm2aP1aR4JAoGAHZay
+        zm4vCnAL5gZCZJwJwkz3zcU3KwtUhF9k2K/VUgziPoYB/B6yEGtdx2B01KHx+4UT
+        Mr7p0Sz1iY9WtOpCSEj17VH1PqwXI8kdczs25zUcRBabCCnhUJzh3CqtM/1xK5VK
+        zYxZtOofFMJwd852DeDjl2hBT/WfK0qNU0TwZX0CgYAm+wjS++HJBv9f2oZM2PjF
+        GVM9Bp/uEiG1z/4O7Rpsv9qJHCgVaZ3q2Qebppq4D4o7ELLcV15djClmv7qkaR9B
+        ZauGoYXF2AwcdX8JO4bWHc985IwdAfZohGEqYSOIDkwgOoDXbrtK3LE/R8XtmJJk
+        MQTQCVfQMqNNIHcVkgWBNg==
+        -----END PRIVATE KEY-----
   .properties.network_selector.nsx.policy_api:
     value: true
   .properties.network_selector.nsx.service_cluster_cidr:
