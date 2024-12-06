@@ -3,4 +3,4 @@ external_ip_pools:
   allocation_ranges: 172.30.5.129-172.30.5.254
   cidr: 172.30.5.128/25
 overlay_tz: tz-overlay
-tier0_router: t0-router
+tier0_router: tas-tkgi-t0
