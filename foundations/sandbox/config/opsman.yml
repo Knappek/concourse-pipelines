@@ -8,7 +8,7 @@ opsman-configuration:
       url: ((vcenter_server))
       username: ((vcenter_credentials.username))
       password: ((vcenter_credentials.password))
-      resource_pool: /((vcenter_datacenter))/host/((vcenter_cluster))/Resources/sandbox
+      resource_pool: /((vcenter_datacenter))/host/((vcenter_cluster))/Resources
       insecure: true
     disk_type: thin
     dns: ((dns_server))

@@ -4,7 +4,6 @@ availability_zones:
   clusters:
   - cluster: compute
     drs_rule: MUST
-    resource_pool: sandbox
 bosh_disk_path: pcf_disk_sandbox
 bosh_template_folder: pcf_templates_sandbox
 bosh_vm_folder: pcf_vms_sandbox
