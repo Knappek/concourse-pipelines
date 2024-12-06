@@ -83,7 +83,7 @@ network_configuration:
       - az1
   - name: tkgi
     subnets:
-    - iaas_identifier: tkgi-infra-seg
+    - iaas_identifier: tkgi-mgmt-seg
       cidr: 172.30.6.0/25
       dns: ((dns_server))
       gateway: 172.30.6.1
