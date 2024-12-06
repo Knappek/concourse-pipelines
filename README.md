@@ -7,7 +7,6 @@ and is an opinionated deployment of
 * TKGI
 * plus some components like Healthwatch etc
 
-
 ### Login to Concourse
 
 In order to easily login to Concourse, you can simply adapt [login_to_concourse](./login_to_concourse) and then execute
