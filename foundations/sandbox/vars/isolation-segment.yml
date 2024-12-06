@@ -1,0 +1,6 @@
+isolation_segment_name: tas-iso-seg-1
+isolation_segment_gorouter_static_ips: 172.30.7.30
+isolation_segment_domain: apps.172.30.7.30.nip.io
+isolation_segment_compute_isolation: enabled
+isolation_segment_routing_table_sharding_mode: isolation_segment_only
+isolation_segment_network_name: tas-isolation-1

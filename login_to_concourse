@@ -1,5 +1,5 @@
-export CONCOURSE_URL="172.30.4.4"
-export OM_TARGET=172.30.4.2 OM_USERNAME=admin OM_PASSWORD='VMware1!'
+export CONCOURSE_URL="172.20.16.23"
+export OM_TARGET=172.20.16.21 OM_USERNAME=admin OM_PASSWORD='VMware1!'
 eval "$(om -k bosh-env --ssh-private-key=${HOME}/.ssh/id_rsa)"
 export OM_SKIP_SSL_VALIDATION=true
 export CONCOURSE_CREDHUB_SECRET="$(credhub get -n /p-bosh/concourse/credhub_admin_secret -q)"

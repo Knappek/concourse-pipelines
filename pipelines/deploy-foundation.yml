@@ -678,13 +678,13 @@ jobs:
         params:
           unpack: true
         passed:
-          - download-upload-and-stage-tas
+          - download-upload-and-stage-isolation-segment
         trigger: true
       - get: platform-automation-tasks
       - get: configuration
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
-    - task: configure-pks
+    - task: configure-isolation-segment
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
@@ -692,10 +692,10 @@ jobs:
         env: configuration
         vars: configuration
       params:
-        CONFIG_FILE: foundations/((foundation))/config/pks.yml
+        CONFIG_FILE: foundations/((foundation))/config/isolation-segment.yml
         ENV_FILE: foundations/config/env.yml
         VARS_FILES: |
-          vars/foundations/((foundation))/vars/pks.yml
+          vars/foundations/((foundation))/vars/isolation-segment.yml
           vars/foundations/((foundation))/vars/director.yml
 
 - name: configure-pks

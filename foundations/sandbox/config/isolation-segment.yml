@@ -1,0 +1,222 @@
+product-name: p-isolation-segment
+product-properties:
+  .isolated_router.disable_insecure_cookies:
+    value: false
+  .isolated_router.drain_timeout:
+    value: 900
+  .isolated_router.drain_wait:
+    value: 20
+  .isolated_router.enable_nontls_health_checks:
+    value: true
+  .isolated_router.enable_w3c:
+    value: false
+  .isolated_router.enable_write_access_logs:
+    value: true
+  .isolated_router.enable_zipkin:
+    value: true
+  .isolated_router.lb_healthy_threshold:
+    value: 20
+  .isolated_router.max_header_kb:
+    value: 48
+  .isolated_router.request_timeout_in_seconds:
+    value: 900
+  .isolated_router.static_ips:
+    value: ((isolation_segment_gorouter_static_ips))
+  .properties.app_graceful_shutdown_period_in_seconds:
+    value: 10
+  .properties.app_log_rate_limiting:
+    selected_option: disable
+    value: disable
+  .properties.compute_isolation:
+    selected_option: ((isolation_segment_compute_isolation))
+    value: ((isolation_segment_compute_isolation))
+  .properties.compute_isolation.enabled.isolation_segment_name:
+    value: ((isolation_segment_name))
+  .properties.container_networking:
+    selected_option: enable
+    value: enable
+  .properties.enable_cpu_throttling:
+    value: false
+  .properties.enable_garden_containerd_mode:
+    value: true
+  .properties.enable_silk_policy_enforcement:
+    value: false
+  .properties.enable_smb_volume_driver:
+    value: true
+  .properties.enable_smb_volume_driver_force_nodfs:
+    value: false
+  .properties.enable_smb_volume_driver_force_noserverino:
+    value: false
+  .properties.garden_disk_cleanup:
+    selected_option: reserved
+    value: reserved
+  .properties.garden_disk_cleanup.reserved.reserved_space_for_other_jobs_in_mb:
+    value: 15360
+  .properties.gorouter_customize_metrics_reporting:
+    selected_option: disable
+    value: disable
+  .properties.gorouter_ssl_ciphers:
+    value: ECDHE-RSA-AES128-GCM-SHA256:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+  .properties.isolation_segment_domain:
+    value: ((isolation_segment_domain))
+  # .properties.networking_poe_ssl_certs:
+  #   value:
+  #   - certificate:
+  #       cert_pem: |
+  #         -----BEGIN CERTIFICATE-----
+  #         MIIDlDCCAnygAwIBAgIVAJ+eCXVK473nciPj73RiU18LhPu/MA0GCSqGSIb3DQEB
+  #         CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTEyNDE0
+  #         MjIwOFoXDTI2MTEyNTE0MjIwOFowNjELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
+  #         dm90YWwxFTATBgNVBAMMDDE3Mi4zMC41LjEyNTCCASIwDQYJKoZIhvcNAQEBBQAD
+  #         ggEPADCCAQoCggEBAKH7PvHvg4tSdQd1Gz1hgFc1DqUCxmdjunNw4szl7geK00J+
+  #         1lz7eddzbi5IQxQI+2grok8Qe0FR9fZv6pQlTKQQggvpboC+Se8Ri/eaShqazukb
+  #         b85ICd01iAWctuXsLY8P09WsXXbIP4pxLMXKqg5Nb4Gt7wQ9BF5ge2N6Qo+Q2xXt
+  #         qS5AE4EQzvAewxfjvDIHnZ9PNsrYIwzodg2tkRjnvcchpaBomEeJ4Icl6spq5FN8
+  #         AKWJyv/t1N8gjj8mbT9P16RwfISoyVZLNJfb/LJ1a5+2K2/cRqUG7EKQGRm7RWSq
+  #         UAnRr1MP3GLb1J4gcuv4da3cXB5R+/pB/ISeG48CAwEAAaOBrzCBrDAdBgNVHQ4E
+  #         FgQU6L2/3PlL+ZgjkViRYg5yyV/8CFUwHwYDVR0jBBgwFoAUN+3uEg6Q3vl6mcGo
+  #         gXID5zGg+TkwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA4GA1UdDwEB
+  #         /wQEAwIFoDA7BgNVHREENDAyhwSsHgV9ghMxNzIuMzAuNS4xMjUubmlwLmlvghUq
+  #         LjE3Mi4zMC41LjEyNS5uaXAuaW8wDQYJKoZIhvcNAQELBQADggEBAE+1vzNAZB37
+  #         hnt3/nZ4sTTgiPkuYyZr23m/+xz5qIXbHku5kAg0ZWe6R7TkrUT5HIv4EfS7hxsy
+  #         yypR21+HbEEG9+fHnmg5y8XyqinMKk4u5Dd5cDXo4yCUyF8MgOAijKDbGEDVsgDZ
+  #         xYnegKQNWYtGj1d+eCxfxB/f+2cYgYR0dWcEDLYv8roqyt7yQ0clpOlEVSiu3DuO
+  #         5KScdw/gAIbKaSlPbgbFg3viU+i8xcrpmC3upZF58n4vjlDLDfCuKL2U1F53qyr4
+  #         8ElPiJZ+cRr/wYxG4xRmJ2xVk9UpcoXZt9oMpR0IUQ9Aq8HPr+LwopemmNoYCQ+q
+  #         JKNaM9zeqgg=
+  #         -----END CERTIFICATE-----
+  #       private_key_pem: |
+  #         -----BEGIN RSA PRIVATE KEY-----
+  #         MIIEogIBAAKCAQEAofs+8e+Di1J1B3UbPWGAVzUOpQLGZ2O6c3DizOXuB4rTQn7W
+  #         XPt513NuLkhDFAj7aCuiTxB7QVH19m/qlCVMpBCCC+lugL5J7xGL95pKGprO6Rtv
+  #         zkgJ3TWIBZy25ewtjw/T1axddsg/inEsxcqqDk1vga3vBD0EXmB7Y3pCj5DbFe2p
+  #         LkATgRDO8B7DF+O8Mgedn082ytgjDOh2Da2RGOe9xyGloGiYR4nghyXqymrkU3wA
+  #         pYnK/+3U3yCOPyZtP0/XpHB8hKjJVks0l9v8snVrn7Yrb9xGpQbsQpAZGbtFZKpQ
+  #         CdGvUw/cYtvUniBy6/h1rdxcHlH7+kH8hJ4bjwIDAQABAoIBAAtaBlsXJs1Z6H4E
+  #         IiC8QgMajUhZeEULnf1JcSOHOOtfZRcZDiBzC+K3ogZCpdd0GlupCdVnpB5Q8PSl
+  #         0Dc0oU6IIkz/vXDupP4ePoRfftz8HLmvugynS3BXYuJzIqAyBoQAScoE1oH6CPXv
+  #         S4IgW1LoRgMSXkNE8WxEb7E/grBOi8oAliShdc172sYv4OZDtcWrpWLxnEB67v8c
+  #         iYLP9gYstfeFVmTJGRDwOtFcCHHz8A8Hwwuu+7f8YrZvsSZvN903ShUUiGmw6e5b
+  #         OwjIM7S4QPxArN+v9PbPNYCHwL+DvVnDklAzg5M20BHCpOhd6MVyknKgqq4cF2eg
+  #         +t5bsjECgYEA0wAszTX7U41R7uhzzsfby49er/vsr9VPCBhN7FMNR31qMJaYBtYK
+  #         ibQmaslgjxHAES81sI4wnQB1gs04Ifg2fDu4uf87GIWvrYsLWJTHvk1X+aLsh/Ql
+  #         gkOWLr8NmV8OT2Ta1J2bWsiI2Sl5CZjsp/9A+0L5O79BFQ5nuTyYvj8CgYEAxIbO
+  #         7N19T18qHKTQv/c5LvCPSP+t9+P+zK1D4CbFSezKkM8bfnk9X9A2DjXcEtMmXECN
+  #         upfJu0LJoftUYnXBjyr4fAmPazYEBs/NP125tKZQNkplMJqAJywnTivFiZbh8GgV
+  #         fGuLL9CifqUUkpMdYL2UW/HtWyH6wRcQ5+Dc7rECgYBeNtLKYpMxMIXoJlUnfKgQ
+  #         0ZiW/ecmcBmU5L1Oi5r/U+mpfmStkL8t04nf3sFFwMhBJBJWHndocz8FQ7sPt/Qk
+  #         LsqCCowJnA/gbpiHWg+CUqi4p93zqrlg2+rgPqDE3ePW4ZKwoxsuQyKPzOvltCnf
+  #         raMHTlVZL0HRNBhuZrdRIwKBgCKkIJVf9VaoT6P86U7tJQdBIACeEOxBJAiwAebg
+  #         7qW5N3uPBimk9UyORvj6RXCMB5b7SgA6ATUg8Km8w4MXfqbdzC8RAFbFjrAksOka
+  #         fEF7j2gCdRO8KBq/ja4ZyRgXoHvf3OmxizdCb2IjdxzfEa6bvCr42f3WX3zps/Er
+  #         kcYBAoGABkGUySkBVJ8K9U3oabolPa+DzkdWegSSlxGLLOcaVC3SM0e2v0a2eH66
+  #         jqyStuJDy7MDJej0eizcxZ8A3fprj/ANpUImYeVC1M/dlXqzvy8/tUsDUcFUTjRM
+  #         +Ti46/pgqVMMKSbVzpJAKWhCfiIw6uzecVLyvknWfKDNstRh2h0=
+  #         -----END RSA PRIVATE KEY-----
+  #     name: certificate
+  .properties.networking_point_of_entry:
+    selected_option: terminate_at_router
+    value: terminate_at_router
+  .properties.nfs_volume_driver:
+    selected_option: enable
+    value: enable
+  .properties.nfs_volume_driver.enable.ldap_service_account_password:
+    value: {}
+  .properties.policy_enforcement_poll_interval:
+    value: 5
+  .properties.route_integrity:
+    selected_option: tls_verify
+    value: tls_verify
+  .properties.route_services_internal_lookup:
+    value: false
+  .properties.route_services_internal_server_port:
+    value: 7070
+  .properties.router_backend_max_conn:
+    value: 500
+  .properties.router_balancing_algorithm:
+    selected_option: round_robin
+    value: round-robin
+  .properties.router_balancing_algorithm_az_preference:
+    selected_option: none
+    value: none
+  .properties.router_client_cert_validation:
+    selected_option: request
+    value: request
+  .properties.router_enable_proxy:
+    value: false
+  .properties.router_keepalive_connections:
+    selected_option: enable
+    value: enable
+  .properties.router_only_trust_client_ca_certs:
+    selected_option: disable
+    value: disable
+  .properties.router_redact_query_parameters:
+    selected_option: none
+    value: none
+  .properties.router_sticky_session_cookie_names:
+    value:
+    - name: JSESSIONID
+  .properties.router_sticky_sessions_for_auth_negotiate:
+    value: true
+  .properties.routing_disable_http:
+    value: false
+  .properties.routing_log_client_ips:
+    selected_option: log_client_ips
+    value: log_client_ips
+  .properties.routing_table_sharding_mode:
+    selected_option: ((isolation_segment_routing_table_sharding_mode))
+    value: ((isolation_segment_routing_table_sharding_mode))
+  .properties.routing_tls_termination:
+    selected_option: load_balancer
+    value: load_balancer
+  .properties.routing_tls_version_range:
+    selected_option: tls_v1_2_v1_3
+    value: tls_v1_2_v1_3
+  .properties.smoke_tests_isolation:
+    selected_option: on_demand
+    value: on_demand
+  .properties.system_logging:
+    selected_option: disabled
+    value: disabled
+network-properties:
+  network:
+    name: ((isolation_segment_network_name))
+  other_availability_zones:
+    - name: ((availability_zones.0.name))
+  singleton_availability_zone:
+    name: ((availability_zones.0.name))
+resource-config:
+  isolated_diego_cell:
+    max_in_flight: 4%
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: 2xlarge.cpu
+    instances: 1
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+  isolated_router:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: 1
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  smoke_tests_isolation:
+    post-deploy-state: true
+

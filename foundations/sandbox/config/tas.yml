@@ -155,7 +155,7 @@ resource-config:
     additional_vm_extensions: []
     instance_type:
       id: automatic
-    instances: automatic
+    instances: 2
     nsxt:
       lb:
         server_pools: []
