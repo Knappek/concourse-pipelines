@@ -795,9 +795,10 @@ jobs:
         unpack: true
       passed:
       - configure-tas
+      - configure-ncp
       - configure-pks
-      - configure-healthwatch
-      - configure-healthwatch-pas-exporter
+      # - configure-healthwatch
+      # - configure-healthwatch-pas-exporter
       trigger: true
     - get: platform-automation-tasks
     - get: configuration

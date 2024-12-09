@@ -59,61 +59,60 @@ product-properties:
     value: ECDHE-RSA-AES128-GCM-SHA256:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
   .properties.isolation_segment_domain:
     value: ((isolation_segment_domain))
-  # .properties.networking_poe_ssl_certs:
-  #   value:
-  #   - certificate:
-  #       cert_pem: |
-  #         -----BEGIN CERTIFICATE-----
-  #         MIIDlDCCAnygAwIBAgIVAJ+eCXVK473nciPj73RiU18LhPu/MA0GCSqGSIb3DQEB
-  #         CwUAMB8xCzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMB4XDTI0MTEyNDE0
-  #         MjIwOFoXDTI2MTEyNTE0MjIwOFowNjELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bp
-  #         dm90YWwxFTATBgNVBAMMDDE3Mi4zMC41LjEyNTCCASIwDQYJKoZIhvcNAQEBBQAD
-  #         ggEPADCCAQoCggEBAKH7PvHvg4tSdQd1Gz1hgFc1DqUCxmdjunNw4szl7geK00J+
-  #         1lz7eddzbi5IQxQI+2grok8Qe0FR9fZv6pQlTKQQggvpboC+Se8Ri/eaShqazukb
-  #         b85ICd01iAWctuXsLY8P09WsXXbIP4pxLMXKqg5Nb4Gt7wQ9BF5ge2N6Qo+Q2xXt
-  #         qS5AE4EQzvAewxfjvDIHnZ9PNsrYIwzodg2tkRjnvcchpaBomEeJ4Icl6spq5FN8
-  #         AKWJyv/t1N8gjj8mbT9P16RwfISoyVZLNJfb/LJ1a5+2K2/cRqUG7EKQGRm7RWSq
-  #         UAnRr1MP3GLb1J4gcuv4da3cXB5R+/pB/ISeG48CAwEAAaOBrzCBrDAdBgNVHQ4E
-  #         FgQU6L2/3PlL+ZgjkViRYg5yyV/8CFUwHwYDVR0jBBgwFoAUN+3uEg6Q3vl6mcGo
-  #         gXID5zGg+TkwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA4GA1UdDwEB
-  #         /wQEAwIFoDA7BgNVHREENDAyhwSsHgV9ghMxNzIuMzAuNS4xMjUubmlwLmlvghUq
-  #         LjE3Mi4zMC41LjEyNS5uaXAuaW8wDQYJKoZIhvcNAQELBQADggEBAE+1vzNAZB37
-  #         hnt3/nZ4sTTgiPkuYyZr23m/+xz5qIXbHku5kAg0ZWe6R7TkrUT5HIv4EfS7hxsy
-  #         yypR21+HbEEG9+fHnmg5y8XyqinMKk4u5Dd5cDXo4yCUyF8MgOAijKDbGEDVsgDZ
-  #         xYnegKQNWYtGj1d+eCxfxB/f+2cYgYR0dWcEDLYv8roqyt7yQ0clpOlEVSiu3DuO
-  #         5KScdw/gAIbKaSlPbgbFg3viU+i8xcrpmC3upZF58n4vjlDLDfCuKL2U1F53qyr4
-  #         8ElPiJZ+cRr/wYxG4xRmJ2xVk9UpcoXZt9oMpR0IUQ9Aq8HPr+LwopemmNoYCQ+q
-  #         JKNaM9zeqgg=
-  #         -----END CERTIFICATE-----
-  #       private_key_pem: |
-  #         -----BEGIN RSA PRIVATE KEY-----
-  #         MIIEogIBAAKCAQEAofs+8e+Di1J1B3UbPWGAVzUOpQLGZ2O6c3DizOXuB4rTQn7W
-  #         XPt513NuLkhDFAj7aCuiTxB7QVH19m/qlCVMpBCCC+lugL5J7xGL95pKGprO6Rtv
-  #         zkgJ3TWIBZy25ewtjw/T1axddsg/inEsxcqqDk1vga3vBD0EXmB7Y3pCj5DbFe2p
-  #         LkATgRDO8B7DF+O8Mgedn082ytgjDOh2Da2RGOe9xyGloGiYR4nghyXqymrkU3wA
-  #         pYnK/+3U3yCOPyZtP0/XpHB8hKjJVks0l9v8snVrn7Yrb9xGpQbsQpAZGbtFZKpQ
-  #         CdGvUw/cYtvUniBy6/h1rdxcHlH7+kH8hJ4bjwIDAQABAoIBAAtaBlsXJs1Z6H4E
-  #         IiC8QgMajUhZeEULnf1JcSOHOOtfZRcZDiBzC+K3ogZCpdd0GlupCdVnpB5Q8PSl
-  #         0Dc0oU6IIkz/vXDupP4ePoRfftz8HLmvugynS3BXYuJzIqAyBoQAScoE1oH6CPXv
-  #         S4IgW1LoRgMSXkNE8WxEb7E/grBOi8oAliShdc172sYv4OZDtcWrpWLxnEB67v8c
-  #         iYLP9gYstfeFVmTJGRDwOtFcCHHz8A8Hwwuu+7f8YrZvsSZvN903ShUUiGmw6e5b
-  #         OwjIM7S4QPxArN+v9PbPNYCHwL+DvVnDklAzg5M20BHCpOhd6MVyknKgqq4cF2eg
-  #         +t5bsjECgYEA0wAszTX7U41R7uhzzsfby49er/vsr9VPCBhN7FMNR31qMJaYBtYK
-  #         ibQmaslgjxHAES81sI4wnQB1gs04Ifg2fDu4uf87GIWvrYsLWJTHvk1X+aLsh/Ql
-  #         gkOWLr8NmV8OT2Ta1J2bWsiI2Sl5CZjsp/9A+0L5O79BFQ5nuTyYvj8CgYEAxIbO
-  #         7N19T18qHKTQv/c5LvCPSP+t9+P+zK1D4CbFSezKkM8bfnk9X9A2DjXcEtMmXECN
-  #         upfJu0LJoftUYnXBjyr4fAmPazYEBs/NP125tKZQNkplMJqAJywnTivFiZbh8GgV
-  #         fGuLL9CifqUUkpMdYL2UW/HtWyH6wRcQ5+Dc7rECgYBeNtLKYpMxMIXoJlUnfKgQ
-  #         0ZiW/ecmcBmU5L1Oi5r/U+mpfmStkL8t04nf3sFFwMhBJBJWHndocz8FQ7sPt/Qk
-  #         LsqCCowJnA/gbpiHWg+CUqi4p93zqrlg2+rgPqDE3ePW4ZKwoxsuQyKPzOvltCnf
-  #         raMHTlVZL0HRNBhuZrdRIwKBgCKkIJVf9VaoT6P86U7tJQdBIACeEOxBJAiwAebg
-  #         7qW5N3uPBimk9UyORvj6RXCMB5b7SgA6ATUg8Km8w4MXfqbdzC8RAFbFjrAksOka
-  #         fEF7j2gCdRO8KBq/ja4ZyRgXoHvf3OmxizdCb2IjdxzfEa6bvCr42f3WX3zps/Er
-  #         kcYBAoGABkGUySkBVJ8K9U3oabolPa+DzkdWegSSlxGLLOcaVC3SM0e2v0a2eH66
-  #         jqyStuJDy7MDJej0eizcxZ8A3fprj/ANpUImYeVC1M/dlXqzvy8/tUsDUcFUTjRM
-  #         +Ti46/pgqVMMKSbVzpJAKWhCfiIw6uzecVLyvknWfKDNstRh2h0=
-  #         -----END RSA PRIVATE KEY-----
-  #     name: certificate
+  .properties.networking_poe_ssl_certs:
+    value:
+    - certificate:
+        cert_pem: |
+          -----BEGIN CERTIFICATE-----
+          MIIDPzCCAiegAwIBAgIJAPn+z5f0PVV4MA0GCSqGSIb3DQEBCwUAMDUxCzAJBgNV
+          BAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMRQwEgYDVQQDDAsxNzIuMzAuNy4zMDAe
+          Fw0yNDEyMDkwODM2NTRaFw0yNTEyMDkwODM2NTRaMDUxCzAJBgNVBAYTAlVTMRAw
+          DgYDVQQKDAdQaXZvdGFsMRQwEgYDVQQDDAsxNzIuMzAuNy4zMDCCASIwDQYJKoZI
+          hvcNAQEBBQADggEPADCCAQoCggEBAJ85RlHb++SRvkkPmyTNoA5kRPEbQQg1kuxE
+          VinPb/bOgMtl+TwlFtQlc0vTmVfbZ9J0+OKGqvBheDXjHlWc2xub1mKPmBBJjL97
+          m3XXwmrHjzJNsOy66Kx4PjkZ6TvHg+Z6JlbRUVWQtMXjrU6atn6bfztKbEeNdVmO
+          8qcD3hXDrxbmD/P7Cs/9ARRhc4L+lSXYEn/V6BsZgLrOd+1hWN4lE1QmgNb2DdLv
+          qnTUVS7FNWubs3zdDF0A6Dy9b2NcZtT/CLzqlF5e7NbraEVHaGbS2kD+jPmwCLPy
+          CrJvw2GxNb5ihR6SF5/7rY2ClAM7QBcEXpARb5RtQdFDvxXeHIcCAwEAAaNSMFAw
+          TgYDVR0RBEcwRYIZKi5hcHBzLjE3Mi4zMC43LjMwLm5pcC5pb4IUKi4xNzIuMzAu
+          Ny4zMC5uaXAuaW+CEjE3Mi4zMC43LjMwLm5pcC5pbzANBgkqhkiG9w0BAQsFAAOC
+          AQEAffBipCX0oVdSQdTRoxDO5o5yBK9KTJJScUxnEU/Ard/q+CZ4v5wZKbw/nzm+
+          vfvUYMskaSMPsDjDv0/zlwA2pe9krQRvzcHtSDn+Nri8tkRUBfg0yXEhoOSjLSaJ
+          GH+TPsWwRRadkI/kcT7Xtd5FmB/Do0tYs5ZrBZVOQ7QCwospWIQEOToZHu20aeY0
+          z2utYafAovUyW2BwzM+avjysLi8roGSSnpi28LMWg6o2bbrJvKAZL5pTW77bdAlN
+          bE8t5leY47IRAp2Y9Chcs693LNC9KHLjmJYaDBch5ekxMkQ9wz84QtnypEblx5+4
+          +EzUL50ASPF8lldPa+3ZYYf93w==
+          -----END CERTIFICATE-----
+        private_key_pem: |
+          -----BEGIN PRIVATE KEY-----
+          MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCfOUZR2/vkkb5J
+          D5skzaAOZETxG0EINZLsRFYpz2/2zoDLZfk8JRbUJXNL05lX22fSdPjihqrwYXg1
+          4x5VnNsbm9Zij5gQSYy/e5t118Jqx48yTbDsuuiseD45Gek7x4PmeiZW0VFVkLTF
+          461OmrZ+m387SmxHjXVZjvKnA94Vw68W5g/z+wrP/QEUYXOC/pUl2BJ/1egbGYC6
+          znftYVjeJRNUJoDW9g3S76p01FUuxTVrm7N83QxdAOg8vW9jXGbU/wi86pReXuzW
+          62hFR2hm0tpA/oz5sAiz8gqyb8NhsTW+YoUekhef+62NgpQDO0AXBF6QEW+UbUHR
+          Q78V3hyHAgMBAAECggEADOaZGfzW9fgREN5g1aSLeV8KbvakWEPu+ZG34X9bNQYa
+          TWCfxw3CQcIfC1/DpuiyCs1LdR8wLnXXRZZ3WLxyzFPeFPJJgdhTvRgIyo2GxRwS
+          MCM3WJb0TzUW5Y2B5kQOHdh7zsD69BHbc8U0v4+thaiXsHghOdLuVSlN49ZeYiju
+          BTc5qTaNzpT7zHvX3p5QWJ8c/nQL/ygUUNo9PIJc20Cv628buSHuuw6CoER34eKM
+          TC43H4CGlLvTXA0hi66SCqorNVofwZS/3g/i8+/KilaN02AedrkasS4vgoREK7vf
+          RHxyEwf1RryvPOn58ReC6zORVRfOe3iwF/+KgqoXcQKBgQDQVzJuZMHkewzOQRHQ
+          8im6VZkidumRQNCC7+ANa/cThPPNrHoh4AiLB0qEKes7IcIFlcuvpbWqVk6XFHFh
+          HuuINgLWidTYzfWrTbF9EeXwmsC8pPNZa6pAhaE2/G+yGUhQZDMZDx0omsX65EaL
+          NnI6w+8DLvMDqzL1wWLV8iCJKwKBgQDDpbRDhuusfwlYpgKTscyEFcrEkcrDROyM
+          Ww4icTxO6aeGcdIEH6Jnpzv3+P7iyLmbsjVKoLFDHEaDTX4FjNkdbbQUI5fZRrhx
+          5pMPXg9LJcln25ail5bUH54HEeas6F8b6OdFhFGIM35/Yk5QMnCyqBqiaREiwvz+
+          aMwPHrKUFQKBgGdnD7moum76/5USyJPqzPkVaOapHC2ifJqwEYS31C5U62hmNUvA
+          1JykJsDHyV9U1uZMvYZU+YAsS99CHy+z1/SH0grG5+Qe/NJjwjav/m7Xb9dxCvKT
+          tDFH4YbX7Vv4nmKACLhkPvWbM63dRIHtqO4vtt3enHBytN0yeSp0fN93AoGBAJzT
+          ldTPMNi7mA1UPRqQ2gRCx5+b0fGGrSqwznqzVAlZaCzvzc36YZ8+wWY7VG0LQyTX
+          y7n/ZzgJUUhs9IiUZ3Ecf83o3g6PjsfWcKlP12iAaJp0vaGla4Srt2upYMPXHG3t
+          2nyx3P0Vcd/AOFA2rnm3IGpxWAgKTuvLq06vZ6wlAoGADsUQfKcKLobjSgoRO7AE
+          TW1s2N9+HTYwA3yGA83VmfokSAWjU7W+jq8+PBwC+SEFeya7iiPIrmk2t8l/+1ai
+          XOSXyyxMbzH+Xh5wYnxnx48ALw3qrvdsQ8b368WhBVBcID2NVcVtwEE3Wk0ncTYr
+          lAAUti2TCd4ZyUpEGDJ1QiI=
+          -----END PRIVATE KEY-----
+      name: certificate
   .properties.networking_point_of_entry:
     selected_option: terminate_at_router
     value: terminate_at_router
