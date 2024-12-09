@@ -639,7 +639,7 @@ jobs:
       <<: *prepare-tasks-with-secrets
     - task: generate-certificate-for-gorouter
       image: platform-automation-image
-      file: platform-automation-tasks/tasks/generate-certificate
+      file: platform-automation-tasks/tasks/generate-certificate.yml
       input_mapping:
         env: configuration
       params:
