@@ -35,7 +35,11 @@ product-properties:
     selected_option: reject_all
     value: reject_all
   .properties.networking_poe_ssl_certs:
-    value: ((tas_gorouter_ssl_certs))
+    value: 
+    - certificate:
+        cert_pem: ((tas_gorouter_ssl_cert))
+        private_key_pem: ((tas_gorouter_ssl_key))
+      name: "gorouter"
   .properties.security_acknowledgement:
     value: X
   .properties.system_blobstore:

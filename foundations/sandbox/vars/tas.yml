@@ -1,85 +1,8 @@
 apps_dns_domain: apps.172.30.5.126.nip.io
 sys_dns_domain: sys.172.30.5.126.nip.io
 blobstore_internal_access_rules: allow 10.0.0.0/8;,allow 172.16.0.0/12;,allow 192.168.0.0/16;,allow 100.64.0.0/10;
-tas_gorouter_ssl_certs:
-  - certificate:
-      cert_pem: |
-        -----BEGIN CERTIFICATE-----
-        MIIEGDCCAwCgAwIBAgIJAMERQmMboy8sMA0GCSqGSIb3DQEBCwUAMEQxCzAJBgNV
-        BAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMSMwIQYDVQQDDBoqLmFwcHMuMTcyLjMw
-        LjUuMTI1Lm5pcC5pbzAeFw0yNDEyMDkxMDQyMDdaFw0yNTEyMDkxMDQyMDdaMEQx
-        CzAJBgNVBAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMSMwIQYDVQQDDBoqLmFwcHMu
-        MTcyLjMwLjUuMTI1Lm5pcC5pbzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-        ggEBANriDkyUKtS9hvW7opO4//dUeTQzy+fqeupiPrhe6qwclqXaYeT/8vt+j4lg
-        7/mnRdCOxejRxCSvsb7WbP1YzmVbZTVKcLIiUz/8Ga5Js2AxydiWxy5D61sjUYBf
-        ZslOCWsmjvi3eCVQLiu0r4ojUZFwwIGpXo7r6NhctK6XSF8Mh5WYCpTcXspKG8DU
-        8Tzq1shqmucK5eSOWc/76rzo6emJlKjh+I4QCI2KZTuQimWjFqa/wNuU2zZRIT3D
-        o/l7CK+B4DzXuvbDYgxyGArfU72KHvs/GR+GMWsn9jdCLrurFNCmYr9qBlOkcIo1
-        FNPVEeq9aEByxEelqahxgMg4gPsCAwEAAaOCAQswggEHMIIBAwYDVR0RBIH7MIH4
-        ghoqLmFwcHMuMTcyLjMwLjUuMTI1Lm5pcC5pb4IZKi5zeXMuMTcyLjMwLjUuMTI1
-        Lm5pcC5pb4IXc3lzLjE3Mi4zMC41LjEyNS5uaXAuaW+CFSouMTcyLjMwLjUuMTI1
-        Lm5pcC5pb4ITMTcyLjMwLjUuMTI1Lm5pcC5pb4IaKi5hcHBzLjE3Mi4zMC41LjEy
-        Ni5uaXAuaW+CGSouc3lzLjE3Mi4zMC41LjEyNi5uaXAuaW+CF3N5cy4xNzIuMzAu
-        NS4xMjYubmlwLmlvghUqLjE3Mi4zMC41LjEyNi5uaXAuaW+CEzE3Mi4zMC41LjEy
-        Ni5uaXAuaW8wDQYJKoZIhvcNAQELBQADggEBAJ/tGPXiJQQ+6yJuNQktZ/IH/fP/
-        zpEEAtdQw0OicSCzrfmvbgKYClY7R8bnGqrXJt9v5Ebqd6Dhcdu1bek1UwuA0Jhi
-        esNqwdO/KXX1HvsA3HN2fJvo1qXuY3gHJS3VoE8qmUy0Uow5wpH7lFBwTtJ/ynLn
-        B2kzRl3oRCRrWosSm5nO8L16MFkid6TzfBqnK9tW8wbbyrBfezWkvCs4KaTfs5qk
-        aUUx0D+/E85RZpIF5IQbudfYR5rbKXXp8oGj7ZhbgfgjFdg88M+xOFOcg8IZYrYg
-        7rxfgQszac71Und/XddLSQk326XjhdiHuyBvyXCHNzlxwcxca4QCq3O4Ta4=
-        -----END CERTIFICATE-----
-      private_key_pem: |
-        -----BEGIN PRIVATE KEY-----
-        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDa4g5MlCrUvYb1
-        u6KTuP/3VHk0M8vn6nrqYj64XuqsHJal2mHk//L7fo+JYO/5p0XQjsXo0cQkr7G+
-        1mz9WM5lW2U1SnCyIlM//BmuSbNgMcnYlscuQ+tbI1GAX2bJTglrJo74t3glUC4r
-        tK+KI1GRcMCBqV6O6+jYXLSul0hfDIeVmAqU3F7KShvA1PE86tbIaprnCuXkjlnP
-        ++q86OnpiZSo4fiOEAiNimU7kIploxamv8DblNs2USE9w6P5ewivgeA817r2w2IM
-        chgK31O9ih77PxkfhjFrJ/Y3Qi67qxTQpmK/agZTpHCKNRTT1RHqvWhAcsRHpamo
-        cYDIOID7AgMBAAECggEBAMM5PpG00aLfzEDeczoYlkyuDlCuJh8atzjYGaLuHZcX
-        BJK2/ft3AeyoTDO2vzNHq3BB92kZtz0Va46Px7QLgkNKyjFGzM9E6EW4f9tApvmU
-        TricetjcAU5PaQD7ljzUGnh0cq6JTWLSaevXg33M1JLJIxpCyzDkXtCjlw/lpMoI
-        RszKkksOTKtEaoa/UnY4UcZN/A9rE2qTWRoX4AjL4wgz0fqKIE+TGsh4/93jPAi6
-        MNHDUstGT71idu+WfDS2AoW2U3WLbrVn3AiJTB2ZUPuPdNcVjX5MUGh1f6GFX5g9
-        WzDMBKjMgsA7XHyQtDDKI8hdsBXpcK1VppTNeW0MtgkCgYEA++7Tv7jHZSSInQGX
-        ZxoErY6vL90pTpF9IpdVeejwzwL3BdruNZKQc3dIj+aERur6wV3rqPdHfbzqUvzI
-        bSiR/rTs1goSB5A1GZdWBNd/Lao6HHiWmodEycBk5ERoIzDfh8M4KjYDbKunfDLD
-        u9o2BZgnEHpxzu38RnLB1ONd750CgYEA3mqkZUCyKySh0YZfQvGad/n8/xfY3QJ2
-        RG/b/UhlfYquPqpNSRLTnKgeyVCsGNJ2gRJhfp8ERQ8yGa7oN2SvdaOZkUzmv39r
-        rHIyH5UNNt4IbrXIpHzSlc13XBusgXE9jduODddHIWcSyJb+fnQT1OoLYqZUCV2u
-        QgzEelYt63cCgYEA5p4BCAfFvzhqNg824RJYJefvRglVvq4/tmKBxE8P4O/94EZA
-        uJmp0Yjny5Jgk+qWEFxBVTLHJrrAZacwcXwp6NcF1gjx6CqB8SMvgs8hhFPHTji0
-        5E/fEDAmKy7ThSM/+68gwsMe72NStcZilptxyD03xUXQ2HPR80spVA+t9aECgYAL
-        6J/WwAkKIFL9ufkdx3vi0qLGMcutwbT9YxPfUuIEP8mml02+DOEBsUq8srIUPiiU
-        LpzDv9XlsLOZBnFujdiLLvBJBFoShMsKF68xW7SybF79NoSAsiJAXRj3+I9a+uo1
-        zzyi5xTq5+7siJElyidJriJf7NHxEnADH1Xhyv14bwKBgEMlcNHdhU64KthwcUXO
-        qZjjJBQsn055N1UMT067SMJJNtkanXqyj+iNGvINUdQFRQpSwPkRQldvyS7ucVSB
-        98YxKUeUJx0M1Ai/hSnntQSvBTtlGa4sPEYFYxUhqqljTaRPdlJiOh9hRditjt3y
-        jzxY+tBl3otiVqSe6AfuCUcr
-        -----END PRIVATE KEY-----
-    name: "gorouter"
-tas_uaa_certificate: |
-  -----BEGIN CERTIFICATE-----
-  MIIDZDCCAkygAwIBAgIJAI76dicvZ+37MA0GCSqGSIb3DQEBCwUAMEkxCzAJBgNV
-  BAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMSgwJgYDVQQDDB8qLmxvZ2luLnN5cy4x
-  NzIuMzAuNS4xMjUubmlwLmlvMB4XDTI0MTIwOTA5NTYzMVoXDTI1MTIwOTA5NTYz
-  MVowSTELMAkGA1UEBhMCVVMxEDAOBgNVBAoMB1Bpdm90YWwxKDAmBgNVBAMMHyou
-  bG9naW4uc3lzLjE3Mi4zMC41LjEyNS5uaXAuaW8wggEiMA0GCSqGSIb3DQEBAQUA
-  A4IBDwAwggEKAoIBAQC9pZkxcCj/10m+1WvEa3PO7cD444eDYRPyzAMH7LPLy+n2
-  1OQrurTwa8WUM+ZlON47VzSQlv7qgfBXaFtd7VupslCLO1sEChAx9JNfFEBre9Mz
-  /h3ev1LXXD7Mngj5hEZdptY9rfhe84G+UDA/wGRGuWLXjlZa0vbQ8bAMkGpxlDI6
-  mRP3kZ+0gki1U+WR1p6jONRh4XPm9evTTiwPGH9QbpAPkt/dYgSke1hj4tLBsSWo
-  fgbupDeH5YOID4yjtmxhf3CZo0H4Bk2XcMDMNe8ddJRq3WDnQWfJY2AOGZXhNjtz
-  Y+c4iByLLvmwkNTkb4XTv5LvXhNToZQs4w4I5V0/AgMBAAGjTzBNMEsGA1UdEQRE
-  MEKCHyoubG9naW4uc3lzLjE3Mi4zMC41LjEyNS5uaXAuaW+CHyoubG9naW4uc3lz
-  LjE3Mi4zMC41LjEyNi5uaXAuaW8wDQYJKoZIhvcNAQELBQADggEBABwUKvnshVyC
-  yWCQQZ5/v8MbHREqovHzB248smqY2tWDdZ1R+zH8zTLPD5ypeGH3eFB4eSePDwdB
-  6Tff0wcitg15Ko/qDNVrMFWG9ed/fut4VN3cDvqXRoWg8t7w8kjsh8C6BYDtGqle
-  b5wdbTJr5rIhLS5jyCxEONBNELd+r3h/TwYmKap95Y/fvD/amW4SKc+RagLdMXsE
-  XGt/qk7uFIBfZuUt0l8buixq8rZ8JxtHThjTB9QOxojBxiQMPFx2J9AQtVgIv6+I
-  pXYkbtMEHm3cSG39PGt6rW/WEeqvIC62HLLf33+ZRipx/l2j5FS1wBYVk9F79O2+
-  KPfIjh3vkA8=
-  -----END CERTIFICATE-----
+static_gorouter_ips: 172.30.5.125,172.30.5.126
+tas_ssl_domains: "*.apps.172.30.5.125.nip.io,*.sys.172.30.5.125.nip.io,sys.172.30.5.125.nip.io,*.172.30.5.125.nip.io,172.30.5.125.nip.io,*.apps.172.30.5.126.nip.io,*.sys.172.30.5.126.nip.io,sys.172.30.5.126.nip.io,*.172.30.5.126.nip.io,172.30.5.126.nip.io"
 tas_uaa_private_key: |
   -----BEGIN PRIVATE KEY-----
   MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9pZkxcCj/10m+
@@ -109,4 +32,3 @@ tas_uaa_private_key: |
   tycGrby/hHtCvQqRAnVz2EuOoPhQ1iuTXYk0MigGdCRcgKirkPmcJ+9+R+akxKi2
   asFHAoG2zuovm1UbIJtNw7w=
   -----END PRIVATE KEY-----
-static_gorouter_ips: 172.30.5.125,172.30.5.126

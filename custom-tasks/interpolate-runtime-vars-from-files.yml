@@ -1,0 +1,27 @@
+---
+platform: linux
+
+inputs:
+- name: custom-tasks
+- name: config
+  # the template of the runtime vars file with (()) parameterized variables
+
+- name: files # contains files to be interpolated into runtime-vars-tmpl
+
+outputs:
+  - name: interpolated-files
+    # the runtime-vars file generated from runtime-vars-tmpl
+
+params:
+  CONFIG_PATH:
+  # - Required
+  # - config filepath to be interpolated
+
+  VAR_FILEPATH_MAPPING:
+  # - Required
+  # - space-separated array of "VariableKey:FilePath" that will be interpolated.
+  #   example: my_var:files/foundation/sandbox/vars/certificate.pem will be translated into:
+  #            om interpolate -c [...] -v my_var="$(cat files/foundation/sandbox/vars/certificate.pem)"
+
+run:
+  path: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.sh

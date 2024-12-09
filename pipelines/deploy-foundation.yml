@@ -99,6 +99,14 @@ resources:
     branch: main
     depth: 1
 
+- name: custom-tasks
+  type: git
+  source:
+    private_key: ((pipeline-git-repo-key.private_key))
+    uri: ((pipeline-git-repo-uri))
+    branch: main
+    depth: 1
+
 # triggers used to have jobs do something in a timely manner
 - name: one-time-trigger
   type: time
@@ -626,8 +634,30 @@ jobs:
         trigger: true
       - get: platform-automation-tasks
       - get: configuration
+      - get: custom-tasks
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
+    - task: generate-certificate-for-gorouter
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/generate-certificate
+      input_mapping:
+        env: configuration
+      params:
+        DOMAINS: ((tas_ssl_domains))
+        ENV_FILE: foundations/config/env.yml
+      output_mapping:
+        certificate: gorouter-certificate
+    - task: interpolate-runtime-vars
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.yml
+      input_mapping:
+        config: configuration
+        files: gorouter-certificate
+      params:
+        CONFIG_PATH: config/foundations/((foundation))/vars/runtime-vars-tmpl.yml
+        VAR_FILEPATH_MAPPING: tas_gorouter_ssl_cert:certificate.pem tas_gorouter_ssl_key:certificate.key
+      output_mapping:
+        interpolated-files: gorouter-ssl-cert-vars
     - task: configure-tas
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
@@ -641,6 +671,7 @@ jobs:
         VARS_FILES: |
           vars/foundations/((foundation))/vars/tas.yml
           vars/foundations/((foundation))/vars/director.yml
+          gorouter-ssl-cert-vars/runtime-vars.yml
 
 - name: configure-ncp
   serial: true

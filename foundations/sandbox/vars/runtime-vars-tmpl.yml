@@ -1,0 +1,3 @@
+# will be interpolated from task custom-tasks/interpolate-runtime-vars-from-files.yml
+tas_gorouter_ssl_cert: ((tas_gorouter_ssl_cert))
+tas_gorouter_ssl_key: ((tas_gorouter_ssl_key))
