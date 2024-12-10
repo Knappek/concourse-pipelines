@@ -11,7 +11,7 @@ inputs:
 - name: vars # variable files to be made available, which will be used to store the interpolated vars file
 
 outputs:
-  - name: interpolated-files
+  - name: vars
     # the runtime-vars file generated from runtime-vars-tmpl
 
 params:
@@ -28,6 +28,9 @@ params:
   VARS_OUTPUT_PATH:
   # - Required
   # - the path to the folder where the runtime-vars.yml should be stored
+
+  RUNTIME_VARS_FILENAME: runtime-vars.yml
+  # - Optional
 
 run:
   path: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.sh

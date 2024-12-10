@@ -14,4 +14,4 @@ done
 mkdir -p interpolated-files
 # ${flags[@] needs to be globbed to pass through properly
 # shellcheck disable=SC2068
-om interpolate --config "${CONFIG_PATH}" "${flags[@]}" > "${VARS_OUTPUT_PATH}/runtime-vars.yml"
+om interpolate --config "${CONFIG_PATH}" "${flags[@]}" > "${VARS_OUTPUT_PATH}/${RUNTIME_VARS_FILENAME}"

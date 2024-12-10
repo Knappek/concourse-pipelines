@@ -658,6 +658,7 @@ jobs:
         CONFIG_PATH: config/foundations/((foundation))/vars/runtime-vars-tmpl.yml
         VAR_FILEPATH_MAPPING: tas_gorouter_ssl_cert:certificate.pem tas_gorouter_ssl_key:privatekey.pem
         VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
+        RUNTIME_VARS_FILENAME: gorouter-certs.yml
       output_mapping:
         interpolated-files: vars/foundations/((foundation))/vars
     - task: configure-tas
@@ -673,7 +674,7 @@ jobs:
         VARS_FILES: |
           vars/foundations/((foundation))/vars/tas.yml
           vars/foundations/((foundation))/vars/director.yml
-          vars/foundations/((foundation))/vars/runtime-vars.yml
+          vars/foundations/((foundation))/vars/gorouter-certs.yml
 
 - name: configure-ncp
   serial: true
