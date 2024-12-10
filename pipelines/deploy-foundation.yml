@@ -643,11 +643,11 @@ jobs:
       input_mapping:
         env: configuration
       params:
-        DOMAINS: ((tas_ssl_domains))
+        DOMAINS: "*.apps.((tas_domain)),*.sys.((tas_domain)),*.login.((tas_domain)),*.uaa.sys.((tas_domain))"
         ENV_FILE: foundations/config/env.yml
       output_mapping:
         certificate: gorouter-certificate
-    - task: interpolate-runtime-vars
+    - task: interpolate-gorouter-certs
       image: platform-automation-image
       file: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.yml
       input_mapping:
@@ -655,10 +655,34 @@ jobs:
         vars: configuration
         files: gorouter-certificate
       params:
-        CONFIG_PATH: config/foundations/((foundation))/vars/runtime-vars-tmpl.yml
+        CONFIG_PATH: config/foundations/((foundation))/vars/gorouter-certs-vars-tmpl.yml
         VAR_FILEPATH_MAPPING: tas_gorouter_ssl_cert:certificate.pem tas_gorouter_ssl_key:privatekey.pem
         VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
         RUNTIME_VARS_FILENAME: gorouter-certs.yml
+      output_mapping:
+        vars: vars-interpolated
+    - task: generate-certificate-for-uaa
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/generate-certificate.yml
+      input_mapping:
+        env: configuration
+      params:
+        DOMAINS: "*.login.sys.((tas_domain))"
+        ENV_FILE: foundations/config/env.yml
+      output_mapping:
+        certificate: uaa-certificate
+    - task: interpolate-uaa-certs
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.yml
+      input_mapping:
+        config: configuration
+        vars: vars-interpolated
+        files: uaa-certificate
+      params:
+        CONFIG_PATH: config/foundations/((foundation))/vars/uaa-certs-vars-tmpl.yml
+        VAR_FILEPATH_MAPPING: tas_uaa_certificate:certificate.pem tas_uaa_private_key:privatekey.pem
+        VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
+        RUNTIME_VARS_FILENAME: uaa-certs.yml
       output_mapping:
         vars: vars-interpolated
     - task: configure-tas
@@ -675,6 +699,7 @@ jobs:
           vars/foundations/((foundation))/vars/tas.yml
           vars/foundations/((foundation))/vars/director.yml
           vars/foundations/((foundation))/vars/gorouter-certs.yml
+          vars/foundations/((foundation))/vars/uaa-certs.yml
 
 - name: configure-ncp
   serial: true

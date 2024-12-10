@@ -1,0 +1,3 @@
+# will be interpolated from task custom-tasks/interpolate-runtime-vars-from-files.yml
+tas_uaa_certificate: ((tas_uaa_certificate))
+tas_uaa_private_key: ((tas_uaa_private_key))

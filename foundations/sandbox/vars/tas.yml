@@ -1,8 +1,7 @@
-apps_dns_domain: apps.172.30.5.126.nip.io
-sys_dns_domain: sys.172.30.5.126.nip.io
+tas_domain: 172.30.5.126.nip.io
 blobstore_internal_access_rules: allow 10.0.0.0/8;,allow 172.16.0.0/12;,allow 192.168.0.0/16;,allow 100.64.0.0/10;
-static_gorouter_ips: 172.30.5.125,172.30.5.126
-tas_ssl_domains: "*.apps.172.30.5.125.nip.io,*.sys.172.30.5.125.nip.io,sys.172.30.5.125.nip.io,*.172.30.5.125.nip.io,172.30.5.125.nip.io,*.apps.172.30.5.126.nip.io,*.sys.172.30.5.126.nip.io,sys.172.30.5.126.nip.io,*.172.30.5.126.nip.io,172.30.5.126.nip.io"
+static_gorouter_ips: 172.30.5.126
+
 tas_uaa_certificate: |
   -----BEGIN CERTIFICATE-----
   MIIDZDCCAkygAwIBAgIJAI76dicvZ+37MA0GCSqGSIb3DQEBCwUAMEkxCzAJBgNV

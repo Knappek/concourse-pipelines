@@ -9,9 +9,9 @@ network-properties:
     name: ((availability_zones.0.name))
 product-properties:
   .cloud_controller.apps_domain:
-    value: ((apps_dns_domain))
+    value: apps.((tas_domain))
   .cloud_controller.system_domain:
-    value: ((sys_dns_domain))
+    value: sys.((tas_domain))
   .mysql_monitor.recipient_email:
     value: cf-infra@pivotal.io
   .nfs_server.blobstore_internal_access_rules:
