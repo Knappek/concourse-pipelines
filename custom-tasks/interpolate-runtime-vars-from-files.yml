@@ -8,6 +8,8 @@ inputs:
 
 - name: files # contains files to be interpolated into runtime-vars-tmpl
 
+- name: vars # variable files to be made available, which will be used to store the interpolated vars file
+
 outputs:
   - name: interpolated-files
     # the runtime-vars file generated from runtime-vars-tmpl
@@ -22,6 +24,10 @@ params:
   # - space-separated array of "VariableKey:FilePath" that will be interpolated.
   #   example: my_var:files/foundation/sandbox/vars/certificate.pem will be translated into:
   #            om interpolate -c [...] -v my_var="$(cat files/foundation/sandbox/vars/certificate.pem)"
+
+  VARS_OUTPUT_PATH:
+  # - Required
+  # - the path to the folder where the runtime-vars.yml should be stored
 
 run:
   path: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.sh

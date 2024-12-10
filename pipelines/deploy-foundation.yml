@@ -652,12 +652,14 @@ jobs:
       file: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.yml
       input_mapping:
         config: configuration
+        vars: configuration
         files: gorouter-certificate
       params:
         CONFIG_PATH: config/foundations/((foundation))/vars/runtime-vars-tmpl.yml
         VAR_FILEPATH_MAPPING: tas_gorouter_ssl_cert:certificate.pem tas_gorouter_ssl_key:privatekey.pem
+        VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
       output_mapping:
-        interpolated-files: gorouter-ssl-cert-vars
+        interpolated-files: vars/foundations/((foundation))/vars
     - task: configure-tas
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
@@ -671,7 +673,7 @@ jobs:
         VARS_FILES: |
           vars/foundations/((foundation))/vars/tas.yml
           vars/foundations/((foundation))/vars/director.yml
-          gorouter-ssl-cert-vars/runtime-vars.yml
+          vars/foundations/((foundation))/vars/runtime-vars.yml
 
 - name: configure-ncp
   serial: true
