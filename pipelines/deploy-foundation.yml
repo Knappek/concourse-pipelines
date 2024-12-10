@@ -655,7 +655,7 @@ jobs:
         files: gorouter-certificate
       params:
         CONFIG_PATH: config/foundations/((foundation))/vars/runtime-vars-tmpl.yml
-        VAR_FILEPATH_MAPPING: tas_gorouter_ssl_cert:certificate.pem tas_gorouter_ssl_key:certificate.key
+        VAR_FILEPATH_MAPPING: tas_gorouter_ssl_cert:certificate.pem tas_gorouter_ssl_key:privatekey.pem
       output_mapping:
         interpolated-files: gorouter-ssl-cert-vars
     - task: configure-tas
