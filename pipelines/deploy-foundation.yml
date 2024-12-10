@@ -660,14 +660,14 @@ jobs:
         VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
         RUNTIME_VARS_FILENAME: gorouter-certs.yml
       output_mapping:
-        interpolated-files: vars/foundations/((foundation))/vars
+        vars: vars-interpolated
     - task: configure-tas
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
         config: configuration
         env: configuration
-        vars: configuration
+        vars: vars-interpolated
       params:
         CONFIG_FILE: foundations/((foundation))/config/tas.yml
         ENV_FILE: foundations/config/env.yml
