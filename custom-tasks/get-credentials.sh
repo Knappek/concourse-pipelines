@@ -3,7 +3,6 @@
 cat /var/version && echo ""
 set -eux
 
-mkdir custom-credentials
 touch custom-credentials/creds.yml
 for credential in ${CREDENTIAL_FIELD_TO_ENV_NAME_MAPPINGS}; do
   field=$(echo "${credential}" | cut -d":" -f1)
