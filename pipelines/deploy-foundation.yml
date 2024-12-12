@@ -19,7 +19,8 @@ groups:
     - configure-ncp
     - configure-isolation-segment
     - configure-pks
-    - apply-product-changes
+    - apply-main-product-changes
+    - apply-subproduct-changes
     # - collect-telemetry
     # - stage-configure-apply-telemetry
   name: deploy-foundation
@@ -37,6 +38,12 @@ resource_types:
   source:
     repository: concourse/s3-resource
     tag: 1.2.1-ubuntu
+
+- name: cf-cli-resource
+  type: registry-image
+  source:
+    repository: nulldriver/cf-cli-resource
+    tag: latest
 
 resources:
 - name: platform-automation-tasks
@@ -112,6 +119,14 @@ resources:
   type: time
   source:
     interval: 999999h
+
+- name: cloud-foundry
+  type: cf-cli-resource
+  source:
+    api: https://api.example.com
+    username: name@example.com
+    password: my password
+    cf_cli_version: 8
 
 prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   image: platform-automation-image
@@ -730,35 +745,6 @@ jobs:
           vars/foundations/((foundation))/vars/ncp.yml
           vars/foundations/((foundation))/vars/director.yml
 
-- name: configure-isolation-segment
-  serial: true
-  serial_groups: [ install ]
-  plan:
-    - in_parallel:
-      - get: platform-automation-image
-        params:
-          unpack: true
-        passed:
-          - download-upload-and-stage-isolation-segment
-        trigger: true
-      - get: platform-automation-tasks
-      - get: configuration
-    - task: prepare-tasks-with-secrets
-      <<: *prepare-tasks-with-secrets
-    - task: configure-isolation-segment
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/configure-product.yml
-      input_mapping:
-        config: configuration
-        env: configuration
-        vars: configuration
-      params:
-        CONFIG_FILE: foundations/((foundation))/config/isolation-segment.yml
-        ENV_FILE: foundations/config/env.yml
-        VARS_FILES: |
-          vars/foundations/((foundation))/vars/isolation-segment.yml
-          vars/foundations/((foundation))/vars/director.yml
-
 - name: configure-pks
   serial: true
   serial_groups: [ install ]
@@ -788,6 +774,115 @@ jobs:
           vars/foundations/((foundation))/vars/pks.yml
           vars/foundations/((foundation))/vars/director.yml
 
+- name: apply-main-product-changes
+  serial: true
+  serial_groups: [ install ]
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+      passed:
+      - configure-tas
+      - configure-ncp
+      - configure-pks
+      trigger: true
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: pre-deploy-check
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/pre-deploy-check.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: apply-product-changes
+    attempts: 3
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/apply-changes.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,cf,VMware-NSX-T,pivotal-container-service"
+  - task: check-pending-changes
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/check-pending-changes.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      ALLOW_PENDING_CHANGES: true
+  - task: export-installation
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/export-installation.yml
+    input_mapping:
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+      INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
+  - put: installation
+    params:
+      file: installation/((foundation))-installation*.zip
+
+- name: configure-isolation-segment
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        params:
+          unpack: true
+        passed:
+          - download-upload-and-stage-isolation-segment
+          - apply-main-product-changes
+        trigger: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: get-cf-credentials
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/get-credentials.yml
+      input_mapping:
+        custom-tasks: custom-tasks
+        env: configuration
+      params:
+        ENV_FILE: foundations/config/env.yml
+        PRODUCT: cf
+        CREDENTIAL_REFERENCE: .uaa.admin_credentials
+        CREDENTIAL_FIELD_TO_ENV_NAME_MAPPINGS: identity:CF_USERNAME password:CF_PASSWORD
+      output_mapping:
+        credentials: cf-credentials
+    - task: cf-create-shared-domain
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/execute-cf-command.yml
+      input_mapping:
+        custom-tasks: custom-tasks
+        cf-env: cf-credentials
+      params:
+        CF_API_URL: api.sys.((tas_domain))
+        CF_LOGIN_OPTIONS: --skip-ssl-validation
+        CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml
+        CF_COMMAND: create-shared-domain ((isolation_segment_domain))
+      output_mapping:
+        credentials: cf-credentials
+    - task: configure-isolation-segment
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-product.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+        vars: configuration
+      params:
+        CONFIG_FILE: foundations/((foundation))/config/isolation-segment.yml
+        ENV_FILE: foundations/config/env.yml
+        VARS_FILES: |
+          vars/foundations/((foundation))/vars/isolation-segment.yml
+          vars/foundations/((foundation))/vars/director.yml
+
 - name: configure-healthwatch
   serial: true
   serial_groups: [ install ]
@@ -798,6 +893,7 @@ jobs:
           unpack: true
         passed:
           - download-upload-and-stage-healthwatch
+          - apply-main-product-changes
         trigger: true
       - get: platform-automation-tasks
       - get: configuration
@@ -826,6 +922,7 @@ jobs:
           unpack: true
         passed:
           - download-upload-and-stage-healthwatch-pas-exporter
+          - apply-main-product-changes
         trigger: true
       - get: platform-automation-tasks
       - get: configuration
@@ -844,7 +941,7 @@ jobs:
         VARS_FILES: |
           vars/foundations/((foundation))/vars/director.yml
 
-- name: apply-product-changes
+- name: apply-subproduct-changes
   serial: true
   serial_groups: [ install ]
   plan:
@@ -853,12 +950,9 @@ jobs:
       params:
         unpack: true
       passed:
-      - configure-tas
-      - configure-ncp
-      - configure-pks
       - configure-isolation-segment
-      # - configure-healthwatch
-      # - configure-healthwatch-pas-exporter
+      - configure-healthwatch
+      - configure-healthwatch-pas-exporter
       trigger: true
     - get: platform-automation-tasks
     - get: configuration
@@ -879,25 +973,7 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-  - task: check-pending-changes
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/check-pending-changes.yml
-    input_mapping:
-      env: configuration
-    params:
-      ENV_FILE: foundations/config/env.yml
-      ALLOW_PENDING_CHANGES: true
-  - task: export-installation
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/export-installation.yml
-    input_mapping:
-      env: configuration
-    params:
-      ENV_FILE: foundations/config/env.yml
-      INSTALLATION_FILE: ((foundation))-installation-$timestamp.zip
-  - put: installation
-    params:
-      file: installation/((foundation))-installation*.zip
+      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment"
 
 # - name: collect-telemetry
 #   serial: true

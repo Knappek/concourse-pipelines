@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+cat /var/version && echo ""
+set -eux
+
+mkdir credentials
+touch credentials/creds.yml
+for credential in ${CREDENTIAL_FIELD_TO_ENV_NAME_MAPPINGS}; do
+  field=$(echo "${credential}" | cut -d":" -f1)
+  env_name=$(echo "${credential}" | cut -d":" -f2)
+  echo "${env_name}=$(om --env env/${ENV_FILE} credentials \
+    -p ${PRODUCT} \
+    -c ${CREDENTIAL_REFERENCE} \
+    -f ${field})" >> credentials/creds.yml
+done

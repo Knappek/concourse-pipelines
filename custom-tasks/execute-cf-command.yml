@@ -1,0 +1,27 @@
+---
+platform: linux
+
+inputs:
+- name: custom-tasks
+- name: cf-env
+  optional: true
+  # environment variables file
+
+params:
+  CF_API_URL:
+  # - Required
+
+  CF_LOGIN_OPTIONS:
+  # - Optional
+  # - see "cf login -h" for available options
+
+  CF_ENVIRONMENT_VARIABLES_FILE:
+  # - Optional
+  # - a key-value environment file to be sourced before executing any cf commands
+
+  CF_COMMAND:
+  # - Required
+  # - the command after "cf"
+
+run:
+  path: custom-tasks/custom-tasks/execute-cf-command.sh
