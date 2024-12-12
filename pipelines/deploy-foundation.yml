@@ -847,7 +847,7 @@ jobs:
         CREDENTIAL_REFERENCE: .uaa.admin_credentials
         CREDENTIAL_FIELD_TO_ENV_NAME_MAPPINGS: identity:CF_USERNAME password:CF_PASSWORD
       output_mapping:
-        credentials: cf-credentials
+        custom-credentials: cf-credentials
     - task: cf-create-shared-domain
       image: platform-automation-image
       file: custom-tasks/custom-tasks/execute-cf-command.yml
