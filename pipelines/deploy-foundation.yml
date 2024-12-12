@@ -120,14 +120,6 @@ resources:
   source:
     interval: 999999h
 
-- name: cloud-foundry
-  type: cf-cli-resource
-  source:
-    api: https://api.example.com
-    username: name@example.com
-    password: my password
-    cf_cli_version: 8
-
 prepare-tasks-with-secrets: &prepare-tasks-with-secrets
   image: platform-automation-image
   file: platform-automation-tasks/tasks/prepare-tasks-with-secrets.yml
@@ -837,17 +829,17 @@ jobs:
           unpack: true
         passed:
           - download-upload-and-stage-isolation-segment
-          - apply-main-product-changes
+          # - apply-main-product-changes
         trigger: true
       - get: platform-automation-tasks
       - get: configuration
+      - get: custom-tasks
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
     - task: get-cf-credentials
       image: platform-automation-image
       file: custom-tasks/custom-tasks/get-credentials.yml
       input_mapping:
-        custom-tasks: custom-tasks
         env: configuration
       params:
         ENV_FILE: foundations/config/env.yml
@@ -865,6 +857,8 @@ jobs:
       params:
         CF_API_URL: api.sys.((tas_domain))
         CF_LOGIN_OPTIONS: --skip-ssl-validation
+        CF_ORG: system
+        CF_SYSTEM: system
         CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml
         CF_COMMAND: create-shared-domain ((isolation_segment_domain))
       output_mapping:

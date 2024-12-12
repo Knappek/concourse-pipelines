@@ -15,6 +15,12 @@ params:
   # - Optional
   # - see "cf login -h" for available options
 
+  CF_ORG:
+  # - Required
+
+  CF_SPACE:
+  # - Required
+
   CF_ENVIRONMENT_VARIABLES_FILE:
   # - Optional
   # - a key-value environment file to be sourced before executing any cf commands
