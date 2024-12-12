@@ -39,12 +39,6 @@ resource_types:
     repository: concourse/s3-resource
     tag: 1.2.1-ubuntu
 
-- name: cf-cli-resource
-  type: registry-image
-  source:
-    repository: nulldriver/cf-cli-resource
-    tag: latest
-
 resources:
 - name: platform-automation-tasks
   type: git
@@ -63,6 +57,12 @@ resources:
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
     regexp: platform-automation-image-(.*).tgz
+
+- name: cf
+  type: registry-image
+  source:
+    repository: cloudfoundry/cli
+    tag: "8"
 
 # - name: telemetry-collector-binary
 #   type: s3
@@ -834,6 +834,7 @@ jobs:
       - get: platform-automation-tasks
       - get: configuration
       - get: custom-tasks
+      - get: cf
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
     - task: get-cf-credentials
@@ -849,7 +850,7 @@ jobs:
       output_mapping:
         custom-credentials: cf-credentials
     - task: cf-create-shared-domain
-      image: cf-cli-resource
+      image: cf
       file: custom-tasks/custom-tasks/execute-cf-command.yml
       input_mapping:
         custom-tasks: custom-tasks
