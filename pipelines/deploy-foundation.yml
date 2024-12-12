@@ -849,7 +849,7 @@ jobs:
       output_mapping:
         custom-credentials: cf-credentials
     - task: cf-create-shared-domain
-      image: platform-automation-image
+      image: cf-cli-resource
       file: custom-tasks/custom-tasks/execute-cf-command.yml
       input_mapping:
         custom-tasks: custom-tasks
