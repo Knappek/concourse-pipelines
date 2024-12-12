@@ -20,7 +20,7 @@ if [ "${CF_SKIP_SSL_VALIDATION}" = "true" ]; then
   cf_skip_ssl_validation="--skip-ssl-validation"
 fi
 
-cf api "${CF_API_URL}" "${cf_skip_ssl_validation}"
+cf api "${CF_API_URL}" ${cf_skip_ssl_validation}
 cf auth
 cf target -o "${CF_ORG}" -s "${CF_SPACE}"
 cf "${CF_COMMAND}"

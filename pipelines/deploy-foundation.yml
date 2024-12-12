@@ -873,7 +873,7 @@ jobs:
         cf-env: cf-credentials
       params:
         CF_API_URL: api.sys.((tas_domain))
-        CF_SKIP_SSL_VALIDATION: true
+        CF_SKIP_SSL_VALIDATION: false
         CF_ORG: system
         CF_SPACE: system
         CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml
