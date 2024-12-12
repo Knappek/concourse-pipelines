@@ -11,9 +11,9 @@ params:
   CF_API_URL:
   # - Required
 
-  CF_LOGIN_OPTIONS:
+  CF_SKIP_SSL_VALIDATION: false
   # - Optional
-  # - see "cf login -h" for available options
+  # - can be set to true
 
   CF_ORG:
   # - Required

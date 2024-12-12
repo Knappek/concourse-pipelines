@@ -14,6 +14,13 @@ if [ -n "${CF_ENVIRONMENT_VARIABLES_FILE}" ]; then
   . "${CF_ENVIRONMENT_VARIABLES_FILE}"
 fi
 
-cf login -a "${CF_API_URL}" "${CF_LOGIN_OPTIONS}" -s "${CF_SPACE}"
-cf target -o "${CF_ORG}"
+cf_skip_ssl_validation=""
+# shellcheck disable=SC2153
+if [ "${CF_SKIP_SSL_VALIDATION}" = "true" ]; then
+  cf_skip_ssl_validation="--skip-ssl-validation"
+fi
+
+cf api "${CF_API_URL}" "${cf_skip_ssl_validation}"
+cf auth
+cf target -o "${CF_ORG}" -s "${CF_SPACE}"
 cf "${CF_COMMAND}"

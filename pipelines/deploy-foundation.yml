@@ -132,6 +132,20 @@ prepare-tasks-with-secrets: &prepare-tasks-with-secrets
     VARS_PATHS: vars/foundations/((foundation))/vars
   output_mapping:
     tasks: platform-automation-tasks
+    interval: 999999h
+
+prepare-tasks-with-secrets-for-custom-tasks: &prepare-tasks-with-secrets-for-custom-tasks
+  image: platform-automation-image
+  file: platform-automation-tasks/tasks/prepare-tasks-with-secrets.yml
+  input_mapping:
+    tasks: custom-tasks
+    config: configuration
+    vars: configuration
+  params:
+    CONFIG_PATHS: config/foundations/config config/foundations/((foundation))/config
+    VARS_PATHS: vars/foundations/((foundation))/vars
+  output_mapping:
+    tasks: custom-tasks
 
 jobs:
 - name: test-platform-automation
@@ -837,6 +851,8 @@ jobs:
       - get: cf
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
+    - task: prepare-tasks-with-secrets-for-custom-tasks
+      <<: *prepare-tasks-with-secrets-for-custom-tasks
     - task: get-cf-credentials
       image: platform-automation-image
       file: custom-tasks/custom-tasks/get-credentials.yml
@@ -857,9 +873,9 @@ jobs:
         cf-env: cf-credentials
       params:
         CF_API_URL: api.sys.((tas_domain))
-        CF_LOGIN_OPTIONS: --skip-ssl-validation
+        CF_SKIP_SSL_VALIDATION: true
         CF_ORG: system
-        CF_SYSTEM: system
+        CF_SPACE: system
         CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml
         CF_COMMAND: create-shared-domain ((isolation_segment_domain))
       output_mapping:
