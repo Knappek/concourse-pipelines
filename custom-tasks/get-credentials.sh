@@ -10,5 +10,5 @@ for credential in ${CREDENTIAL_FIELD_TO_ENV_NAME_MAPPINGS}; do
   echo "${env_name}=$(om --env env/${ENV_FILE} credentials \
     -p ${PRODUCT} \
     -c ${CREDENTIAL_REFERENCE} \
-    -f ${field})" >> credentials/creds.yml
+    -f ${field})" >> custom-credentials/creds.yml
 done
