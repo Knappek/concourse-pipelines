@@ -4,9 +4,10 @@ cat /var/version && echo ""
 set -eux
 
 if [ -n "${CF_ENVIRONMENT_VARIABLES_FILE}" ]; then
+  set +x
   # shellcheck disable=SC1090
-  # source "${CF_ENVIRONMENT_VARIABLES_FILE}"
   . "${CF_ENVIRONMENT_VARIABLES_FILE}"
+  set -x
 fi
 
 cf_skip_ssl_validation=""
