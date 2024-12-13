@@ -1,7 +1,8 @@
 ---
 pivnet-product-slug: p-healthwatch
 
-file-glob: "healthwatch-2*.pivotal"
+file-glob: "healthwatch-2*-.47.pivotal"
+product-version-regex: 
 product-version: ((healthwatch-version))
 stemcell-iaas: vsphere
 
