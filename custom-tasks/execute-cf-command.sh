@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-cat /var/version && echo ""
 set -eux
 
 if [ -n "${CF_ENVIRONMENT_VARIABLES_FILE}" ]; then
@@ -29,5 +28,5 @@ if [ -n "${CF_COMMAND_FILE}" ]; then
   # shellcheck disable=SC2086
   chmod +x ${CF_COMMAND_FILE}
   # shellcheck disable=SC2086
-  ./cf-command-file/${CF_COMMAND_FILE} ${CF_COMMAND_FILE_INPUT_PARAMETERS}
+  ./${CF_COMMAND_FILE} ${CF_COMMAND_FILE_INPUT_PARAMETERS}
 fi

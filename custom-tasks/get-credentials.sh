@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-cat /var/version && echo ""
 set -eux
 
 touch custom-credentials/creds.yml

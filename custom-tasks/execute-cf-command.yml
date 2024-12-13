@@ -30,7 +30,7 @@ params:
   CF_COMMAND:
   # - Optional
   # - either provide CF_COMMAND or CF_COMMAND_FILE
-  # - the command after "cf"
+  # - the cf command, including "cf"
 
   CF_COMMAND_FILE:
   # - Optional
