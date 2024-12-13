@@ -871,13 +871,15 @@ jobs:
       input_mapping:
         custom-tasks: custom-tasks
         cf-env: cf-credentials
+        cf-command-file: configuration
       params:
         CF_API_URL: api.sys.((tas_domain))
         CF_SKIP_SSL_VALIDATION: true
         CF_ORG: system
         CF_SPACE: system
-        CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml
-        CF_COMMAND: create-shared-domain ((isolation_segment_domain))
+        CF_ENVIRONMENT_VARIABLES_FILES: cf-env/creds.yml 
+        CF_COMMAND_FILE: cf-command-file/foundations/((foundation))/scripts/create_shared_domain_for_iso_segment.sh
+        CF_COMMAND_FILE_INPUT_PARAMETERS: ((isolation_segment_domain))
       output_mapping:
         credentials: cf-credentials
     - task: configure-isolation-segment

@@ -6,6 +6,8 @@ inputs:
 - name: cf-env
   optional: true
   # environment variables file
+- name: cf-command-file
+  optional: true
 
 params:
   CF_API_URL:
@@ -26,8 +28,17 @@ params:
   # - a key-value environment file to be sourced before executing any cf commands
 
   CF_COMMAND:
-  # - Required
+  # - Optional
+  # - either provide CF_COMMAND or CF_COMMAND_FILE
   # - the command after "cf"
+
+  CF_COMMAND_FILE:
+  # - Optional
+  # - either provide CF_COMMAND or CF_COMMAND_FILE
+  # - path to file that contains the cf command(s)
+
+  CF_COMMAND_FILE_INPUT_PARAMETERS:
+  # - Optional
 
 run:
   path: custom-tasks/custom-tasks/execute-cf-command.sh
