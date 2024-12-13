@@ -879,22 +879,47 @@ jobs:
         CF_SPACE: system
         CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml 
         CF_COMMAND_FILE: cf-command-file/foundations/((foundation))/scripts/create_shared_domain_for_iso_segment.sh
-        CF_COMMAND_FILE_INPUT_PARAMETERS: ((isolation_segment_domain))
+        CF_COMMAND_FILE_INPUT_PARAMETERS: apps.((isolation_segment_domain))
       output_mapping:
         credentials: cf-credentials
+    - task: generate-certificate-for-iso-segment-gorouter
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/generate-certificate.yml
+      input_mapping:
+        env: configuration
+      params:
+        DOMAINS: "172.30.7.30,*.apps.((isolation_segment_domain)),*.((isolation_segment_domain)),((isolation_segment_domain))"
+        ENV_FILE: foundations/config/env.yml
+      output_mapping:
+        certificate: iso-segment-gorouter-certificate
+    - task: interpolate-gorouter-certs
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.yml
+      input_mapping:
+        config: configuration
+        vars: configuration
+        files: iso-segment-gorouter-certificate
+      params:
+        CONFIG_PATH: config/foundations/((foundation))/vars/iso-segment-gorouter-certs-vars-tmpl.yml
+        VAR_FILEPATH_MAPPING: iso_segment_gorouter_ssl_cert:certificate.pem iso_segment_gorouter_ssl_key:privatekey.pem
+        VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
+        RUNTIME_VARS_FILENAME: iso-segment-gorouter-certs.yml
+      output_mapping:
+        vars: vars-interpolated
     - task: configure-isolation-segment
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
         config: configuration
         env: configuration
-        vars: configuration
+        vars: vars-interpolated
       params:
         CONFIG_FILE: foundations/((foundation))/config/isolation-segment.yml
         ENV_FILE: foundations/config/env.yml
         VARS_FILES: |
           vars/foundations/((foundation))/vars/isolation-segment.yml
           vars/foundations/((foundation))/vars/director.yml
+          vars/foundations/((foundation))/vars/iso-segment-gorouter-certs.yml
 
 - name: configure-healthwatch
   serial: true

@@ -1,0 +1,3 @@
+# will be interpolated from task custom-tasks/interpolate-runtime-vars-from-files.yml
+iso_segment_gorouter_ssl_cert: ((iso_segment_gorouter_ssl_cert))
+iso_segment_gorouter_ssl_key: ((iso_segment_gorouter_ssl_key))

@@ -58,61 +58,13 @@ product-properties:
   .properties.gorouter_ssl_ciphers:
     value: ECDHE-RSA-AES128-GCM-SHA256:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
   .properties.isolation_segment_domain:
-    value: ((isolation_segment_domain))
+    value: apps.((isolation_segment_domain))
   .properties.networking_poe_ssl_certs:
-    value:
+    value: 
     - certificate:
-        cert_pem: |
-          -----BEGIN CERTIFICATE-----
-          MIIDPzCCAiegAwIBAgIJAPn+z5f0PVV4MA0GCSqGSIb3DQEBCwUAMDUxCzAJBgNV
-          BAYTAlVTMRAwDgYDVQQKDAdQaXZvdGFsMRQwEgYDVQQDDAsxNzIuMzAuNy4zMDAe
-          Fw0yNDEyMDkwODM2NTRaFw0yNTEyMDkwODM2NTRaMDUxCzAJBgNVBAYTAlVTMRAw
-          DgYDVQQKDAdQaXZvdGFsMRQwEgYDVQQDDAsxNzIuMzAuNy4zMDCCASIwDQYJKoZI
-          hvcNAQEBBQADggEPADCCAQoCggEBAJ85RlHb++SRvkkPmyTNoA5kRPEbQQg1kuxE
-          VinPb/bOgMtl+TwlFtQlc0vTmVfbZ9J0+OKGqvBheDXjHlWc2xub1mKPmBBJjL97
-          m3XXwmrHjzJNsOy66Kx4PjkZ6TvHg+Z6JlbRUVWQtMXjrU6atn6bfztKbEeNdVmO
-          8qcD3hXDrxbmD/P7Cs/9ARRhc4L+lSXYEn/V6BsZgLrOd+1hWN4lE1QmgNb2DdLv
-          qnTUVS7FNWubs3zdDF0A6Dy9b2NcZtT/CLzqlF5e7NbraEVHaGbS2kD+jPmwCLPy
-          CrJvw2GxNb5ihR6SF5/7rY2ClAM7QBcEXpARb5RtQdFDvxXeHIcCAwEAAaNSMFAw
-          TgYDVR0RBEcwRYIZKi5hcHBzLjE3Mi4zMC43LjMwLm5pcC5pb4IUKi4xNzIuMzAu
-          Ny4zMC5uaXAuaW+CEjE3Mi4zMC43LjMwLm5pcC5pbzANBgkqhkiG9w0BAQsFAAOC
-          AQEAffBipCX0oVdSQdTRoxDO5o5yBK9KTJJScUxnEU/Ard/q+CZ4v5wZKbw/nzm+
-          vfvUYMskaSMPsDjDv0/zlwA2pe9krQRvzcHtSDn+Nri8tkRUBfg0yXEhoOSjLSaJ
-          GH+TPsWwRRadkI/kcT7Xtd5FmB/Do0tYs5ZrBZVOQ7QCwospWIQEOToZHu20aeY0
-          z2utYafAovUyW2BwzM+avjysLi8roGSSnpi28LMWg6o2bbrJvKAZL5pTW77bdAlN
-          bE8t5leY47IRAp2Y9Chcs693LNC9KHLjmJYaDBch5ekxMkQ9wz84QtnypEblx5+4
-          +EzUL50ASPF8lldPa+3ZYYf93w==
-          -----END CERTIFICATE-----
-        private_key_pem: |
-          -----BEGIN PRIVATE KEY-----
-          MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCfOUZR2/vkkb5J
-          D5skzaAOZETxG0EINZLsRFYpz2/2zoDLZfk8JRbUJXNL05lX22fSdPjihqrwYXg1
-          4x5VnNsbm9Zij5gQSYy/e5t118Jqx48yTbDsuuiseD45Gek7x4PmeiZW0VFVkLTF
-          461OmrZ+m387SmxHjXVZjvKnA94Vw68W5g/z+wrP/QEUYXOC/pUl2BJ/1egbGYC6
-          znftYVjeJRNUJoDW9g3S76p01FUuxTVrm7N83QxdAOg8vW9jXGbU/wi86pReXuzW
-          62hFR2hm0tpA/oz5sAiz8gqyb8NhsTW+YoUekhef+62NgpQDO0AXBF6QEW+UbUHR
-          Q78V3hyHAgMBAAECggEADOaZGfzW9fgREN5g1aSLeV8KbvakWEPu+ZG34X9bNQYa
-          TWCfxw3CQcIfC1/DpuiyCs1LdR8wLnXXRZZ3WLxyzFPeFPJJgdhTvRgIyo2GxRwS
-          MCM3WJb0TzUW5Y2B5kQOHdh7zsD69BHbc8U0v4+thaiXsHghOdLuVSlN49ZeYiju
-          BTc5qTaNzpT7zHvX3p5QWJ8c/nQL/ygUUNo9PIJc20Cv628buSHuuw6CoER34eKM
-          TC43H4CGlLvTXA0hi66SCqorNVofwZS/3g/i8+/KilaN02AedrkasS4vgoREK7vf
-          RHxyEwf1RryvPOn58ReC6zORVRfOe3iwF/+KgqoXcQKBgQDQVzJuZMHkewzOQRHQ
-          8im6VZkidumRQNCC7+ANa/cThPPNrHoh4AiLB0qEKes7IcIFlcuvpbWqVk6XFHFh
-          HuuINgLWidTYzfWrTbF9EeXwmsC8pPNZa6pAhaE2/G+yGUhQZDMZDx0omsX65EaL
-          NnI6w+8DLvMDqzL1wWLV8iCJKwKBgQDDpbRDhuusfwlYpgKTscyEFcrEkcrDROyM
-          Ww4icTxO6aeGcdIEH6Jnpzv3+P7iyLmbsjVKoLFDHEaDTX4FjNkdbbQUI5fZRrhx
-          5pMPXg9LJcln25ail5bUH54HEeas6F8b6OdFhFGIM35/Yk5QMnCyqBqiaREiwvz+
-          aMwPHrKUFQKBgGdnD7moum76/5USyJPqzPkVaOapHC2ifJqwEYS31C5U62hmNUvA
-          1JykJsDHyV9U1uZMvYZU+YAsS99CHy+z1/SH0grG5+Qe/NJjwjav/m7Xb9dxCvKT
-          tDFH4YbX7Vv4nmKACLhkPvWbM63dRIHtqO4vtt3enHBytN0yeSp0fN93AoGBAJzT
-          ldTPMNi7mA1UPRqQ2gRCx5+b0fGGrSqwznqzVAlZaCzvzc36YZ8+wWY7VG0LQyTX
-          y7n/ZzgJUUhs9IiUZ3Ecf83o3g6PjsfWcKlP12iAaJp0vaGla4Srt2upYMPXHG3t
-          2nyx3P0Vcd/AOFA2rnm3IGpxWAgKTuvLq06vZ6wlAoGADsUQfKcKLobjSgoRO7AE
-          TW1s2N9+HTYwA3yGA83VmfokSAWjU7W+jq8+PBwC+SEFeya7iiPIrmk2t8l/+1ai
-          XOSXyyxMbzH+Xh5wYnxnx48ALw3qrvdsQ8b368WhBVBcID2NVcVtwEE3Wk0ncTYr
-          lAAUti2TCd4ZyUpEGDJ1QiI=
-          -----END PRIVATE KEY-----
-      name: certificate
+        cert_pem: ((iso_segment_gorouter_ssl_cert))
+        private_key_pem: ((iso_segment_gorouter_ssl_key))
+      name: "gorouter"
   .properties.networking_point_of_entry:
     selected_option: terminate_at_router
     value: terminate_at_router
