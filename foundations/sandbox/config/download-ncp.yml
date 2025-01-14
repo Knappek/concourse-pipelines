@@ -4,4 +4,8 @@ pivnet-product-slug: vmware-nsx-t
 file-glob: "VMware-NSX-T-*.pivotal"
 product-version: ((ncp-version))
 
-pivnet-api-token: ((pivnet_token))
+s3-access-key-id: ((s3_access_key_id))
+s3-secret-access-key: ((s3_secret_access_key))
+s3-bucket: ((s3_pivnet_products_bucket))
+s3-region-name: us-east-1
+s3-endpoint: ((s3_endpoint))

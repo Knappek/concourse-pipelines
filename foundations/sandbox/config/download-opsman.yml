@@ -9,4 +9,3 @@ s3-secret-access-key: ((s3_secret_access_key))
 s3-bucket: ((s3_pivnet_products_bucket))
 s3-region-name: us-east-1
 s3-endpoint: ((s3_endpoint))
-# code_snippet download-ops-manager-from-pivnet-usage end

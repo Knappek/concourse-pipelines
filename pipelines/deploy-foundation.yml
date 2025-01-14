@@ -345,7 +345,7 @@ jobs:
     params:
       CONFIG_FILE: foundations/((foundation))/config/download-opsman.yml
       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-      SOURCE: pivnet
+      SOURCE: s3
     output_mapping:
       downloaded-product: opsman-image
   # code_snippet upgrade-opsman-usage start yaml
@@ -411,7 +411,7 @@ jobs:
     params:
       CONFIG_FILE: foundations/((foundation))/config/download-tas.yml
       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-      SOURCE: pivnet
+      SOURCE: s3
     output_mapping:
       downloaded-product: tas-product
       downloaded-stemcell: tas-stemcell
@@ -424,7 +424,7 @@ jobs:
     params:
       CONFIG_FILE: foundations/((foundation))/config/download-ncp.yml
       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-      SOURCE: pivnet
+      SOURCE: s3
     output_mapping:
       downloaded-product: ncp-product
   - task: upload-tas-product
@@ -491,7 +491,7 @@ jobs:
     params:
       CONFIG_FILE: foundations/((foundation))/config/download-isolation-segment.yml
       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-      SOURCE: pivnet
+      SOURCE: s3
     output_mapping:
       downloaded-product: isolation-segment
   - task: upload-isolation-segment
@@ -534,7 +534,7 @@ jobs:
     params:
       CONFIG_FILE: foundations/((foundation))/config/download-pks.yml
       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-      SOURCE: pivnet
+      SOURCE: s3
     output_mapping:
       downloaded-product: pks-product
       downloaded-stemcell: pks-stemcell
@@ -586,7 +586,7 @@ jobs:
       params:
         CONFIG_FILE: foundations/((foundation))/config/download-healthwatch.yml
         VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-        SOURCE: pivnet
+        SOURCE: s3
       output_mapping:
         downloaded-product: healthwatch-product
         downloaded-stemcell: healthwatch-stemcell
@@ -630,7 +630,7 @@ jobs:
       params:
         CONFIG_FILE: foundations/((foundation))/config/download-healthwatch-pas-exporter.yml
         VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-        SOURCE: pivnet
+        SOURCE: s3
       output_mapping:
         downloaded-product: healthwatch-pas-exporter
     - task: upload-and-stage-healthwatch-pas-exporter
