@@ -5,6 +5,7 @@ file-glob: "srt*.pivotal"
 product-version: ((tas-version))
 blobstore-stemcell-path: tas-stemcell
 stemcell-version: "1.651"
+stemcell-iaas: vsphere
 
 s3-access-key-id: ((s3_access_key_id))
 s3-secret-access-key: ((s3_secret_access_key))
