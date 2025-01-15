@@ -3,7 +3,7 @@ pivnet-product-slug: p-healthwatch
 
 file-glob: "healthwatch-pas-exporter*.pivotal"
 product-version: ((healthwatch-version))
-stemcell-iaas: vsphere
+blobstore-stemcell-path: healthwatch-stemcell
 stemcell-version: "1.651"
 stemcell-iaas: vsphere
 
