@@ -926,7 +926,7 @@ jobs:
       - get: configuration
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
-    - task: configure-healthwatch
+    - task: configure-healthwatch-pas-exporter
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
@@ -955,7 +955,7 @@ jobs:
       - get: configuration
     - task: prepare-tasks-with-secrets
       <<: *prepare-tasks-with-secrets
-    - task: configure-healthwatch
+    - task: configure-healthwatch-pks-exporter
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-product.yml
       input_mapping:
