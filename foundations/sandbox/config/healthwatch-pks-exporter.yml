@@ -12,3 +12,22 @@ network-properties:
 product-properties:
   .bosh-health-exporter.health_check_az:
     value: ((availability_zones.0.name))
+resource-config:
+  bosh-health-exporter:
+    max_in_flight: 2
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: 0
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
