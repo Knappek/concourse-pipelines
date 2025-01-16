@@ -779,7 +779,7 @@ jobs:
     - get: configuration
   - task: prepare-tasks-with-secrets
     <<: *prepare-tasks-with-secrets
-  - task: download-healthwatch
+  - task: download-healthwatch-pas-exporter
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     input_mapping:
@@ -816,7 +816,7 @@ jobs:
     - get: configuration
   - task: prepare-tasks-with-secrets
     <<: *prepare-tasks-with-secrets
-  - task: download-healthwatch
+  - task: download-healthwatch-pks-exporter
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     input_mapping:
