@@ -24,6 +24,43 @@ product-properties:
   .properties.plan1_selector.active.worker_az_placement:
     value:
       - ((availability_zones.0.name))
+  .properties.plan1_selector.active.addons_spec:
+    value: |-
+      ---
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRole
+      metadata:
+        name: healthwatch
+      rules:
+      - resources:
+          - pods/proxy
+          - pods
+          - nodes
+          - nodes/proxy
+          - namespace/pods
+          - endpoints
+          - services
+        verbs:
+          - get
+          - watch
+          - list
+        apiGroups:
+          - ""
+      - nonResourceURLs: ["/metrics"]
+        verbs: ["get"]
+      ---
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata:
+        name: healthwatch
+      roleRef:
+        apiGroup: ""
+        kind: ClusterRole
+        name: healthwatch
+      subjects:
+      - apiGroup: ""
+        kind: User
+        name: healthwatch
   .properties.plan2_selector:
     value: "Plan Inactive"
   .properties.plan3_selector:
@@ -135,6 +172,50 @@ product-properties:
     value: true
   .properties.oidc_selector:
     value: disabled
+  .properties.telegraf_selector:
+    selected_option: enabled
+    value: enabled
+  .properties.telegraf_selector.enabled.bosh-metric-sink-agent:
+    value: |
+      [agent]
+        interval = "60s"
+        round_interval = true
+        metric_batch_size = 200
+        metric_buffer_limit = 200000
+        collection_jitter = "0s"
+        flush_interval = "20s"
+        flush_jitter = "0s"
+        precision = ""
+        debug = false
+        quiet = false
+        logfile = ""
+        hostname = ""
+        omit_hostname = false
+  .properties.telegraf_selector.enabled.bosh-metric-sink-etcd:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-kube-apiserver:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-kube-controller-manager:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-kube-scheduler:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-kubelet:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-node-exporter-master:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-node-exporter-pks-api:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-node-exporter-worker:
+    value: true
+  .properties.telegraf_selector.enabled.bosh-metric-sink-outputs:
+    value: |-
+      [[outputs.prometheus_client]]
+        listen = ":10200"
+        metric_version = 2
+  .properties.telegraf_selector.enabled.bosh-metric-sink-telegraf:
+    value: false
+  .properties.telegraf_selector.enabled.metric-version:
+    value: "2"
   .properties.telemetry_selector:
     value: disabled
   .properties.telemetry_installation_purpose_selector:

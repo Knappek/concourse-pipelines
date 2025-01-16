@@ -14,6 +14,8 @@ product-properties:
   .properties.grafana_route:
     selected_option: tas
     value: tas
+  .properties.pks_cluster_discovery.enabled.pks_skip_ssl_verification:
+    value: true
 resource-config:
   tsdb:
     persistent_disk:
