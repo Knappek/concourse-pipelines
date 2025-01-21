@@ -73,6 +73,16 @@ resources:
     bucket: ((s3_pivnet_products_bucket))
     regexp: \[p-isolation-segment,(.*)\]p-isolation-segment-.*\.pivotal
 
+- name: isolation-segment-replicator
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: replicator-.*\.zip
+
 - name: ncp-product
   type: s3
   source:
