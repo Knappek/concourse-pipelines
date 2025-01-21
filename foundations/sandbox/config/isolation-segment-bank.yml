@@ -21,7 +21,7 @@ product-properties:
   .isolated_router.request_timeout_in_seconds:
     value: 900
   .isolated_router.static_ips:
-    value: ((bank_bank_isolation_segment_gorouter_static_ips))
+    value: ((bank_isolation_segment_gorouter_static_ips))
   .properties.app_graceful_shutdown_period_in_seconds:
     value: 10
   .properties.app_log_rate_limiting:
