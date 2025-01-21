@@ -1,4 +1,4 @@
-product-name: p-isolation-segment
+product-name: p-isolation-segment-iso-bank
 product-properties:
   .isolated_router.disable_insecure_cookies:
     value: false
