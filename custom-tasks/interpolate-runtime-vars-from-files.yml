@@ -1,4 +1,6 @@
 ---
+# this task will read one or more files and save the content to a variable
+# 
 platform: linux
 
 inputs:
@@ -22,8 +24,9 @@ params:
   VAR_FILEPATH_MAPPING:
   # - Required
   # - space-separated array of "VariableKey:FilePath" that will be interpolated.
-  #   example: my_var:files/foundation/sandbox/vars/certificate.pem will be translated into:
-  #            om interpolate -c [...] -v my_var="$(cat files/foundation/sandbox/vars/certificate.pem)"
+  #   example: my_var:certificate.pem will be translated into:
+  #            om interpolate -c [...] -v my_var="$(cat files/certificate.pem)"
+  #            This will interpolate the variable "my_var" used in CONFIG_PATH with the value from the file files/certificate.pem
 
   VARS_OUTPUT_PATH:
   # - Required

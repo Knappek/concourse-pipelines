@@ -285,10 +285,20 @@ jobs:
         CONFIG_FILE: download-product-pivnet/download-isolation-segment.yml
       input_mapping:
         config: configuration
+    - task: download-isolation-segment-replicator
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-isolation-segment-replicator.yml
+      input_mapping:
+        config: configuration
     - in_parallel:
         - put: isolation-segment
           params:
             file: downloaded-product/*.pivotal
+        - put: isolation-segment-replicator
+          params:
+            file: downloaded-product/*.zip
 
 - name: fetch-ncp
   plan:
