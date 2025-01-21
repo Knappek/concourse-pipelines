@@ -30,7 +30,7 @@ product-properties:
   .properties.compute_isolation:
     selected_option: ((bank_isolation_segment_compute_isolation))
     value: ((bank_isolation_segment_compute_isolation))
-  .properties.compute_isolation.enabled.bank_isolation_segment_name:
+  .properties.compute_isolation.enabled.isolation_segment_name:
     value: ((bank_isolation_segment_name))
   .properties.container_networking:
     selected_option: enable
@@ -57,7 +57,7 @@ product-properties:
     value: disable
   .properties.gorouter_ssl_ciphers:
     value: ECDHE-RSA-AES128-GCM-SHA256:TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-  .properties.bank_isolation_segment_domain:
+  .properties.isolation_segment_domain:
     value: apps.((bank_isolation_segment_domain))
   .properties.networking_poe_ssl_certs:
     value: 
