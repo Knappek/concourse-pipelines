@@ -1,26 +1,26 @@
 product-name: p-isolation-segment-iso-bank
 product-properties:
-  .isolated_router.disable_insecure_cookies:
+  .isolated_router_iso_bank.disable_insecure_cookies:
     value: false
-  .isolated_router.drain_timeout:
+  .isolated_router_iso_bank.drain_timeout:
     value: 900
-  .isolated_router.drain_wait:
+  .isolated_router_iso_bank.drain_wait:
     value: 20
-  .isolated_router.enable_nontls_health_checks:
+  .isolated_router_iso_bank.enable_nontls_health_checks:
     value: true
-  .isolated_router.enable_w3c:
+  .isolated_router_iso_bank.enable_w3c:
     value: false
-  .isolated_router.enable_write_access_logs:
+  .isolated_router_iso_bank.enable_write_access_logs:
     value: true
-  .isolated_router.enable_zipkin:
+  .isolated_router_iso_bank.enable_zipkin:
     value: true
-  .isolated_router.lb_healthy_threshold:
+  .isolated_router_iso_bank.lb_healthy_threshold:
     value: 20
-  .isolated_router.max_header_kb:
+  .isolated_router_iso_bank.max_header_kb:
     value: 48
-  .isolated_router.request_timeout_in_seconds:
+  .isolated_router_iso_bank.request_timeout_in_seconds:
     value: 900
-  .isolated_router.static_ips:
+  .isolated_router_iso_bank.static_ips:
     value: ((bank_isolation_segment_gorouter_static_ips))
   .properties.app_graceful_shutdown_period_in_seconds:
     value: 10
@@ -64,15 +64,13 @@ product-properties:
     - certificate:
         cert_pem: ((iso_segment_gorouter_ssl_cert))
         private_key_pem: ((iso_segment_gorouter_ssl_key))
-      name: "gorouter"
+      name: "gorouter"  
   .properties.networking_point_of_entry:
     selected_option: terminate_at_router
     value: terminate_at_router
   .properties.nfs_volume_driver:
     selected_option: enable
     value: enable
-  .properties.nfs_volume_driver.enable.ldap_service_account_password:
-    value: {}
   .properties.policy_enforcement_poll_interval:
     value: 5
   .properties.route_integrity:
@@ -137,14 +135,14 @@ network-properties:
   singleton_availability_zone:
     name: ((availability_zones.0.name))
 resource-config:
-  isolated_diego_cell:
+  isolated_diego_cell_iso_bank:
     max_in_flight: 4%
     additional_networks: []
     additional_vm_extensions: []
     avi:
       pools: []
     instance_type:
-      id: 2xlarge.cpu
+      id: automatic
     instances: 1
     nsxt:
       lb:
@@ -152,7 +150,7 @@ resource-config:
       ns_groups: []
       vif_type: null
     swap_as_percent_of_memory_size: automatic
-  isolated_router:
+  isolated_router_iso_bank:
     max_in_flight: 1
     additional_networks: []
     additional_vm_extensions: []
@@ -170,4 +168,3 @@ resource-config:
 errand-config:
   smoke_tests_isolation:
     post-deploy-state: true
-
