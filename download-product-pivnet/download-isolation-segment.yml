@@ -4,7 +4,7 @@ pivnet-api-token: ((pivnet_token))
 pivnet-product-slug:  p-isolation-segment
 
 file-glob: "p-isolation-segment-*.pivotal"
-product-version-regex: ^6\.0\..*$
+product-version-regex: ^6\.0\.10$
 
 s3-access-key-id: ((s3_access_key_id))
 s3-secret-access-key: ((s3_secret_access_key))
