@@ -81,6 +81,15 @@ network_configuration:
       reserved_ip_ranges: ""
       availability_zone_names:
       - az1
+  - name: bank-isolation
+    subnets:
+    - iaas_identifier: bank-iso-seg
+      cidr: 172.30.7.32/27
+      dns: ((dns_server))
+      gateway: 172.30.7.33
+      reserved_ip_ranges: ""
+      availability_zone_names:
+      - az1
   - name: tkgi
     subnets:
     - iaas_identifier: tkgi-mgmt-seg

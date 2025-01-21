@@ -20,6 +20,7 @@ groups:
     - configure-tas
     - configure-ncp
     - configure-isolation-segment
+    - configure-isolation-segment-bank
     - configure-pks
     - apply-main-product-changes
     - apply-subproduct-changes
@@ -871,11 +872,20 @@ jobs:
       config: configuration
       vars: configuration
     params:
-      CONFIG_FILE: foundations/((foundation))/config/download-isolation-segment.yml
+      CONFIG_FILE: foundations/((foundation))/config/download-isolation-segment-replicator.yml
       VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
       SOURCE: s3
     output_mapping:
-      downloaded-product: isolation-segment
+      downloaded-product: isolation-segment-replicator
+  - task: replicate-isolation-segment
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/replicate-product.yml
+    input_mapping:
+      product: isolation-segment
+    params:
+      REPLICATED_NAME: "Iso Bank"
+    output_mapping:
+      replicated-product: isolation-segment-bank
   - task: upload-isolation-segment
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-product.yml
@@ -884,11 +894,27 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
+  - task: upload-isolation-segment-bank
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: isolation-segment-bank
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
   - task: stage-isolation-segment
     image: platform-automation-image
     file: platform-automation-tasks/tasks/stage-product.yml
     input_mapping:
       product: isolation-segment
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: stage-isolation-segment-bank
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: isolation-segment-bank
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
@@ -1025,7 +1051,7 @@ jobs:
         CF_ORG: system
         CF_SPACE: system
         CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml 
-        CF_COMMAND_FILE: cf-command-file/foundations/((foundation))/scripts/create_shared_domain_for_iso_segment.sh
+        CF_COMMAND_FILE: cf-command-file/foundations/((foundation))/scripts/create_shared_domain.sh
         CF_COMMAND_FILE_INPUT_PARAMETERS: apps.((isolation_segment_domain))
       output_mapping:
         credentials: cf-credentials
@@ -1065,6 +1091,94 @@ jobs:
         ENV_FILE: foundations/config/env.yml
         VARS_FILES: |
           vars/foundations/((foundation))/vars/isolation-segment.yml
+          vars/foundations/((foundation))/vars/director.yml
+          vars/foundations/((foundation))/vars/iso-segment-gorouter-certs.yml
+
+- name: configure-isolation-segment-bank
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: state
+        trigger: true
+        passed: 
+        - download-upload-and-stage-isolation-segment
+      - get: platform-automation-tasks
+      - get: configuration
+      - get: custom-tasks
+      - get: cf
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: prepare-tasks-with-secrets-for-custom-tasks
+      <<: *prepare-tasks-with-secrets-for-custom-tasks
+    - task: get-cf-credentials
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/get-credentials.yml
+      input_mapping:
+        env: configuration
+      params:
+        ENV_FILE: foundations/config/env.yml
+        PRODUCT: cf
+        CREDENTIAL_REFERENCE: .uaa.admin_credentials
+        CREDENTIAL_FIELD_TO_ENV_NAME_MAPPINGS: identity:CF_USERNAME password:CF_PASSWORD
+      output_mapping:
+        custom-credentials: cf-credentials
+    - task: cf-create-shared-domain
+      image: cf
+      file: custom-tasks/custom-tasks/execute-cf-command.yml
+      input_mapping:
+        custom-tasks: custom-tasks
+        cf-env: cf-credentials
+        cf-command-file: configuration
+      params:
+        CF_API_URL: api.sys.((tas_domain))
+        CF_SKIP_SSL_VALIDATION: true
+        CF_ORG: system
+        CF_SPACE: system
+        CF_ENVIRONMENT_VARIABLES_FILE: cf-env/creds.yml 
+        CF_COMMAND_FILE: cf-command-file/foundations/((foundation))/scripts/create_shared_domain.sh
+        CF_COMMAND_FILE_INPUT_PARAMETERS: apps.((bank_isolation_segment_domain))
+      output_mapping:
+        credentials: cf-credentials
+    - task: generate-certificate-for-iso-segment-gorouter
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/generate-certificate.yml
+      input_mapping:
+        env: configuration
+      params:
+        DOMAINS: "172.30.7.62,*.apps.((bank_isolation_segment_domain)),*.((bank_isolation_segment_domain)),((bank_isolation_segment_domain))"
+        ENV_FILE: foundations/config/env.yml
+      output_mapping:
+        certificate: iso-segment-gorouter-certificate
+    - task: interpolate-gorouter-certs
+      image: platform-automation-image
+      file: custom-tasks/custom-tasks/interpolate-runtime-vars-from-files.yml
+      input_mapping:
+        config: configuration
+        vars: configuration
+        files: iso-segment-gorouter-certificate
+      params:
+        CONFIG_PATH: config/foundations/((foundation))/vars/iso-segment-gorouter-certs-vars-tmpl.yml
+        VAR_FILEPATH_MAPPING: iso_segment_gorouter_ssl_cert:certificate.pem iso_segment_gorouter_ssl_key:privatekey.pem
+        VARS_OUTPUT_PATH: vars/foundations/((foundation))/vars
+        RUNTIME_VARS_FILENAME: iso-segment-gorouter-certs.yml
+      output_mapping:
+        vars: vars-interpolated
+    - task: configure-isolation-segment
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-product.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+        vars: vars-interpolated
+      params:
+        CONFIG_FILE: foundations/((foundation))/config/isolation-segment.yml
+        ENV_FILE: foundations/config/env.yml
+        VARS_FILES: |
+          vars/foundations/((foundation))/vars/isolation-segment-bank.yml
           vars/foundations/((foundation))/vars/director.yml
           vars/foundations/((foundation))/vars/iso-segment-gorouter-certs.yml
 
