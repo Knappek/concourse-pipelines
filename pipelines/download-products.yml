@@ -73,16 +73,6 @@ resources:
     bucket: ((s3_pivnet_products_bucket))
     regexp: \[p-isolation-segment,(.*)\]p-isolation-segment-.*\.pivotal
 
-- name: isolation-segment-replicator
-  type: s3
-  source:
-    endpoint: ((s3_endpoint))
-    disable_ssl: true
-    access_key_id: ((s3_access_key_id))
-    secret_access_key: ((s3_secret_access_key))
-    bucket: ((s3_pivnet_products_bucket))
-    regexp: \[p-isolation-segment,(.*)\]replicator-.*\.zip
-
 - name: ncp-product
   type: s3
   source:
@@ -295,22 +285,10 @@ jobs:
         CONFIG_FILE: download-product-pivnet/download-isolation-segment.yml
       input_mapping:
         config: configuration
-    - task: download-isolation-segment-replicator
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/download-product.yml
-      params:
-        CONFIG_FILE: download-product-pivnet/download-isolation-segment-replicator.yml
-      input_mapping:
-        config: configuration
-      output_mapping:
-        downloaded-product: downloaded-replicator
     - in_parallel:
         - put: isolation-segment
           params:
             file: downloaded-product/*.pivotal
-        - put: isolation-segment-replicator
-          params:
-            file: downloaded-replicator/*.zip
 
 - name: fetch-ncp
   plan:

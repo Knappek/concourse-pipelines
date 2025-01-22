@@ -865,18 +865,6 @@ jobs:
       SOURCE: s3
     output_mapping:
       downloaded-product: isolation-segment
-  # - task: download-isolation-segment-replicator
-  #   image: platform-automation-image
-  #   file: platform-automation-tasks/tasks/download-product.yml
-  #   input_mapping:
-  #     config: configuration
-  #     vars: configuration
-  #   params:
-  #     CONFIG_FILE: foundations/((foundation))/config/download-isolation-segment-replicator.yml
-  #     VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
-  #     SOURCE: s3
-  #   output_mapping:
-  #     downloaded-product: isolation-segment-replicator
   - task: replicate-isolation-segment
     image: platform-automation-image
     file: platform-automation-tasks/tasks/replicate-product.yml
@@ -1216,7 +1204,7 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-healthwatch2,p-healthwatch2-pas-exporter,p-healthwatch2-pks-exporter"
+      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,p-healthwatch2,p-healthwatch2-pas-exporter,p-healthwatch2-pks-exporter"
 
 # - name: collect-telemetry
 #   serial: true
