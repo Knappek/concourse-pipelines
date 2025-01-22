@@ -51,7 +51,7 @@ resources:
     access_key_id: ((s3_access_key_id))
     secret_access_key: ((s3_secret_access_key))
     bucket: ((s3_pivnet_products_bucket))
-    regexp: \[elastic-runtime,(.*)\]srt-.*.pivotal
+    regexp: \[elastic-runtime,(.*)\]cf-.*.pivotal
 
 - name: tas-stemcell
   type: s3
