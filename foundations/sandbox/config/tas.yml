@@ -23,7 +23,7 @@ product-properties:
       private_key_pem: |
         ((tas_uaa_private_key))
   .properties.allow_srt_to_ert_upgrade:
-    value: true
+    value: false
   .properties.container_networking_interface_plugin:
     selected_option: external
     value: external
