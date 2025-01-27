@@ -99,4 +99,4 @@ network_configuration:
       reserved_ip_ranges: ""
       availability_zone_names:
       - az1
-ntp_servers_string: ((dns_server))
+ntp_servers_string: 0.de.pool.ntp.org,1.de.pool.ntp.org,2.de.pool.ntp.org,3.de.pool.ntp.org
