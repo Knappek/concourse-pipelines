@@ -3,4 +3,4 @@ bank_isolation_segment_gorouter_static_ips: 172.30.7.70
 bank_isolation_segment_domain: 172.30.7.70.nip.io
 bank_isolation_segment_compute_isolation: enabled
 bank_isolation_segment_routing_table_sharding_mode: isolation_segment_only
-bank_isolation_segment_network_name: bank-isolation
+bank_isolation_segment_network_name: bank-isolation-small
