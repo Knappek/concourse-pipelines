@@ -122,8 +122,14 @@ product-properties:
     selected_option: tls_v1_2_v1_3
     value: tls_v1_2_v1_3
   .properties.smoke_tests_isolation:
-    selected_option: on_demand
-    value: on_demand
+    selected_option: specified
+    value: specified
+  .properties.smoke_tests_isolation.specified.apps_domain:
+    value: apps.172.30.7.70.nip.io
+  .properties.smoke_tests_isolation.specified.org_name:
+    value: org_a
+  .properties.smoke_tests_isolation.specified.space_name:
+    value: smoke-tests
   .properties.system_logging:
     selected_option: disabled
     value: disabled
