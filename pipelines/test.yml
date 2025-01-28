@@ -1,14 +1,14 @@
+somekey: hello
+
+resources:
+- name: every-30s
+  type: time
+  source:
+    interval: 5s
+
 jobs:
-- name: test-job
+- name: job
+  public: true
   plan:
-  - task: display-cred
-    config:
-      platform: linux
-      platform: windows
-      image_resource:
-        type: registry-image
-        source:
-          repository: ubuntu
-      run:
-        path: bash
-        args: [-c, "echo ((sandbox/vcenter_server))"]
+  - get: every-30s
+    trigger: true
