@@ -133,6 +133,16 @@ resources:
     bucket: ((s3_pivnet_products_bucket))
     regexp: \[pivotal-telemetry-collector,(.*)\]telemetry-collector-.*.tgz
 
+- name: postgres-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    disable_ssl: true
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+    bucket: ((s3_pivnet_products_bucket))
+    regexp: \[vmware-postgres-for-tas,(.*)\]postgres-\d.*.pivotal
+
 - name: platform-automation-pivnet
   type: pivnet
   source:
@@ -410,3 +420,25 @@ jobs:
             file: downloaded-product/*
 
 
+- name: fetch-postgres
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        passed: [ fetch-platform-automation ]
+        params:
+          unpack: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: download-postgres-product
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/download-product.yml
+      params:
+        CONFIG_FILE: download-product-pivnet/download-postgres.yml
+      input_mapping:
+        config: configuration
+    - in_parallel:
+        - put: postgres-product
+          params:
+            file: downloaded-product/*
