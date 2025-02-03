@@ -908,6 +908,50 @@ jobs:
     params:
       ENV_FILE: foundations/config/env.yml
 
+- name: download-upload-and-stage-postgres
+  serial: true
+  serial_groups: [ products ]
+  plan:
+  - in_parallel:
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: state
+      trigger: true
+      passed: [ "apply-main-product-changes" ]
+    - get: platform-automation-tasks
+    - get: configuration
+  - task: prepare-tasks-with-secrets
+    <<: *prepare-tasks-with-secrets
+  - task: download-postgres
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    input_mapping:
+      config: configuration
+      vars: configuration
+    params:
+      CONFIG_FILE: foundations/((foundation))/config/download-postgres.yml
+      VARS_FILES: vars/foundations/((foundation))/vars/versions.yml
+      SOURCE: s3
+    output_mapping:
+      downloaded-product: postgres
+  - task: upload-postgres
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-product.yml
+    input_mapping:
+      product: postgres
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+  - task: stage-postgres
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/stage-product.yml
+    input_mapping:
+      product: postgres
+      env: configuration
+    params:
+      ENV_FILE: foundations/config/env.yml
+
 - name: configure-healthwatch
   serial: true
   serial_groups: [ install ]
@@ -1486,4 +1530,4 @@ jobs:
 #       params:
 #         ENV_FILE: foundations/config/env.yml
 #         SELECTIVE_DEPLOY_PRODUCTS: "cf,p-bosh,p-healthwatch2,p-healthwatch2-pas-exporter,pivotal-telemetry-om"
-# # The previous line helps maintain current documentation at http://docs.pivotal.io.
+
