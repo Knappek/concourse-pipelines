@@ -1216,6 +1216,35 @@ jobs:
           vars/foundations/((foundation))/vars/director.yml
           vars/foundations/((foundation))/vars/iso-segment-gorouter-certs.yml
 
+- name: configure-postgres
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - in_parallel:
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: state
+        passed:
+          - download-upload-and-stage-postgres
+        trigger: true
+      - get: platform-automation-tasks
+      - get: configuration
+    - task: prepare-tasks-with-secrets
+      <<: *prepare-tasks-with-secrets
+    - task: postgres
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-product.yml
+      input_mapping:
+        config: configuration
+        env: configuration
+        vars: configuration
+      params:
+        CONFIG_FILE: foundations/((foundation))/config/postgres.yml
+        ENV_FILE: foundations/config/env.yml
+        VARS_FILES: |
+          vars/foundations/((foundation))/vars/director.yml
+
 - name: apply-subproduct-changes
   serial: true
   serial_groups: [ install ]
@@ -1229,6 +1258,7 @@ jobs:
       - apply-main-product-changes
       - configure-healthwatch
       - configure-healthwatch-pas-exporter
+      - configure-postgres
       - configure-isolation-segment
       trigger: true
     - get: platform-automation-tasks
@@ -1250,7 +1280,7 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,p-healthwatch2,p-healthwatch2-pas-exporter"
+      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,p-healthwatch2,p-healthwatch2-pas-exporter,postgres"
       # SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,p-healthwatch2,p-healthwatch2-pas-exporter,p-healthwatch2-pks-exporter"
 
 # - name: collect-telemetry
