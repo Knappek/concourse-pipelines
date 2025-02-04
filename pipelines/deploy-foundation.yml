@@ -22,6 +22,7 @@ groups:
     - configure-ncp
     - configure-isolation-segment
     - configure-isolation-segment-bank
+    - configure-postgres
     # - configure-pks
     - apply-main-product-changes
     - apply-subproduct-changes
