@@ -1281,7 +1281,7 @@ jobs:
       env: configuration
     params:
       ENV_FILE: foundations/config/env.yml
-      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,p-healthwatch2,p-healthwatch2-pas-exporter,postgres"
+      SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,postgres"
       # SELECTIVE_DEPLOY_PRODUCTS: "p-bosh,p-isolation-segment,p-isolation-segment-iso-bank,p-healthwatch2,p-healthwatch2-pas-exporter,p-healthwatch2-pks-exporter, postgres"
 
 # - name: collect-telemetry
