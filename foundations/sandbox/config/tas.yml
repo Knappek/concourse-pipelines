@@ -532,7 +532,7 @@ resource-config:
     additional_vm_extensions: []
     avi:
       pools:
-      - tas-web-pool-pool
+      - tas-web-pool
     instance_type:
       id: automatic
     instances: automatic
