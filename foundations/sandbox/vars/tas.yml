@@ -1,2 +1,2 @@
-tas_domain: 172.30.7.98.nip.io
+tas_domain: 172.30.7.130.nip.io
 blobstore_internal_access_rules: allow 10.0.0.0/8;,allow 172.16.0.0/12;,allow 192.168.0.0/16;,allow 100.64.0.0/10;
